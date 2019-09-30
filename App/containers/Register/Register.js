@@ -7,9 +7,10 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
+import Register from '../../components/Register/Register'
 
 // Action Creators
-import { doSomething } from '../store/reducer';
+import { sendDataRegister } from '../../store/reducer';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -19,7 +20,7 @@ import { doSomething } from '../store/reducer';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-  message: state.message,
+  receiveResponseRegister: state.receiveResponseRegister
 });
 
 /* === Actions ===
@@ -30,24 +31,21 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  doSomething: () => {
-    dispatch(doSomething());
+  sendDataRegister: (login , email, password, confPWD ) => {
+    dispatch(sendDataRegister(login , email , password , confPWD));
   },
 });
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
-// const ExampleContainer = connect(
-//   mapStateToProps,
-//   mapDispatchToProps,
-// )(Example);
+ const RegisterContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Register);
 
-/* 2 temps
-const createContainer = connect(mapStateToProps, mapDispatchToProps);
-const ExampleContainer = createContainer(Example);
-*/
+
 
 /**
  * Export
  */
-export default ExampleContainer;
+export default RegisterContainer;

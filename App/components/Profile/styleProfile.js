@@ -7,7 +7,8 @@ export const Style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        top:150
+        paddingBottom:20
+        
    
     },
     
@@ -18,13 +19,13 @@ export const Style = StyleSheet.create({
     },
     form:{
         width:300,
-        height:200 ,
+        height:350 ,
         marginTop:marginTop
         
     },
     button:{
         width:300,
-       marginTop:20,
+        marginTop:10,
         justifyContent:"center"
     },
     textRegister:{
@@ -33,6 +34,20 @@ export const Style = StyleSheet.create({
      
        
     },
+    header:{
+        height:50,
+        paddingBottom:25,
+       
+    },
+    avatar:{
+        marginTop:30,
+        marginLeft:80
+    },
+    scrollview:{
+        marginHorizontal: 0,
+        backgroundColor:'white',
+        
+    }
   
     
 

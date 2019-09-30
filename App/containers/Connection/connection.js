@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import Connection from '../../../App/components/connection/Connection'
+import Connection from '../../components/Connection/Connection'
 
 // Action Creators
-import { doSomething } from '../store/reducer';
+import { sendDataConnection } from '../../store/reducer';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,7 +20,7 @@ import { doSomething } from '../store/reducer';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-  message: state.message,
+    receiveResponseConnection: state.receiveResponseConnection,
 });
 
 /* === Actions ===
@@ -31,14 +31,14 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  doSomething: () => {
-    dispatch(doSomething());
+  sendDataConnection: (login , password ) => {
+    dispatch(sendDataConnection(login , password));
   },
 });
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
- const ExampleContainer = connect(
+ const ConnectionContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Connection);
@@ -48,4 +48,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 /**
  * Export
  */
-export default ExampleContainer;
+export default ConnectionContainer;

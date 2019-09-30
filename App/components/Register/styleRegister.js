@@ -7,24 +7,26 @@ export const Style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        top:150
-   
+        top:100
+        
+        
+    },
+    label:{
+        marginTop:10
     },
     
     containerInput:{
         borderRadius:10,
-        marginBottom:10,
         
     },
     form:{
         width:300,
-        height:200 ,
+        height:400 ,
         marginTop:marginTop
         
     },
     button:{
         width:300,
-       marginTop:20,
         justifyContent:"center"
     },
     textRegister:{

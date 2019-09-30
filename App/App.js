@@ -4,9 +4,11 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 import { Provider } from "react-redux";
 import store from './store/';
-import Connection from './components/connection/Connection';
-
-
+import ConnectionContainer from './containers/Connection/Connection';
+import RegisterContainer from './containers/Register/Register';
+import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
+import Profile from './components/Profile/Profile'
+import ChatHome from './components/ChatHome/ChatHome'
 class App extends Component {
     constructor(props) {
         super(props);
@@ -32,18 +34,21 @@ const StackNavigator = createStackNavigator(
     {
       // Create the application routes here (the key is the route name, the value is the target screen)
       // See https://reactnavigation.org/docs/en/stack-navigator.html#routeconfigs
-      Connection: Connection,
+      Connection:ConnectionContainer,
+      Register: RegisterContainer,
+      ChatHome:ChatHome,
+      ResetPassword:ResetPasswordContainer,
+      Profile:Profile
       // The main application screen is our "ExampleScreen". Feel free to replace it with your
       // own screen and remove the example.
       
     },
     {
       // By default the application will show the splash screen
-      initialRouteName: 'Connection',
+      initialRouteName: 'Profile',
       // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
       headerMode: 'none',
     }
   )
   
   const Routes = createAppContainer(StackNavigator)
-  

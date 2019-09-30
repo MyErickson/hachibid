@@ -7,7 +7,7 @@ export const Style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        top:150
+        top:200
    
     },
     
@@ -24,7 +24,7 @@ export const Style = StyleSheet.create({
     },
     button:{
         width:300,
-       marginTop:20,
+        marginTop:60,
         justifyContent:"center"
     },
     textRegister:{
