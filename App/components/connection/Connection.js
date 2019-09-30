@@ -69,7 +69,7 @@ class Connection extends Component {
                             <Item last  regular style={Style.containerInput}>
                          
                                 <Input 
-                                 style={Style.input}  
+                               
                                  placeholder="Identitfiant *" 
                                  name="login"
                                  maxLength={255}
@@ -81,7 +81,7 @@ class Connection extends Component {
                             <Item last regular style={Style.containerInput}>
                              
                                 <Input 
-                                style={Style.input} 
+                             
                                 placeholder="Mot de passe *" 
                                 name="password"
                                 maxLength={255}

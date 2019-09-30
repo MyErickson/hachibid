@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { View, Text, TouchableOpacity , ScrollView } from 'react-native';
-import { Button , Avatar , Header} from 'react-native-elements';
+import { Button , Avatar } from 'react-native-elements';
 import { Style }  from './styleProfile'
-import { Container, Content, Form, Item, Input , Label , Drawer} from 'native-base';
+import { Container, Content, Form, Item, Input , Label } from 'native-base';
+import Menu from '../Menu/Menu'
 
 class Profile extends Component {
 
@@ -80,13 +81,10 @@ class Profile extends Component {
              } = this.state
 
     return (
+     
+          
         <View style={Style.container}>
-            <Header
-                containerStyle={Style.header}
-                leftComponent={{ icon: 'menu', color: '#fff' }}
-                centerComponent={{ text: 'PROFIL', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff' }}
-            />
+            <Menu navigation={this.props.navigation}/>
               <ScrollView
               bounces={true}
               style={Style.scrollview}
@@ -112,7 +110,7 @@ class Profile extends Component {
                         <Item last  regular style={Style.containerInput}>
                        
                             <Input 
-                             style={Style.input} 
+                       
                              name="login"
                              maxLength={255}
                              value={login}
@@ -127,7 +125,7 @@ class Profile extends Component {
                         <Item last regular style={Style.containerInput}>
                          
                             <Input 
-                            style={Style.input} 
+                      
                             name="email"
                             maxLength={255}
                             value={email}
@@ -140,7 +138,7 @@ class Profile extends Component {
                         <Item last regular style={Style.containerInput}>
                          
                          <Input 
-                         style={Style.input}
+                        
                          name="password"
                          secureTextEntry={true}
                          maxLength={255}
@@ -155,7 +153,7 @@ class Profile extends Component {
                      <Item last regular style={Style.containerInput}>
                          
                          <Input 
-                         style={Style.input} 
+                
                          name="changePassword"
                          secureTextEntry={true}
                          maxLength={255}
@@ -175,7 +173,7 @@ class Profile extends Component {
 
                     <Button rounded info 
                         containerStyle={Style.button}
-                        onPress= {this.sendInformation}
+                        onPress= {() => this.props.navigation.navigate("DrawerOpen")}
                         title= 'se connecter'
                     />
                        
@@ -196,6 +194,8 @@ class Profile extends Component {
                 </Content>
                 </ScrollView>  
             </View>
+          
+ 
     )}
 }
 

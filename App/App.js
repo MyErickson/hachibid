@@ -45,7 +45,7 @@ const StackNavigator = createStackNavigator(
     },
     {
       // By default the application will show the splash screen
-      initialRouteName: 'Profile',
+      initialRouteName: 'ChatHome',
       // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
       headerMode: 'none',
     }
