@@ -84,7 +84,7 @@ class Profile extends Component {
      
           
         <View style={Style.container}>
-            <Menu navigation={this.props.navigation}/>
+            <Menu nameMenu="Chat Général"/>
               <ScrollView
               bounces={true}
               style={Style.scrollview}

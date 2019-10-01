@@ -1,42 +1,77 @@
 import React, { Component } from 'react';
-import { View, TextInput } from 'react-native';
-import { Input, Form , Item ,Icon} from 'native-base';
+import { View, TouchableOpacity , ScrollView} from 'react-native';
+import {  Item , Container, Content , Textarea, Icon} from 'native-base';
 import { Style} from './styleChatHome'
-
+import Menu from '../Menu/Menu'
+import ShowMessage from './ShowMessage';
 
 
 class ChatHome extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
+ 
+    state = {
+      message:undefined,
+      dataMessageCasual:[],
+      show:false
+    }
+  
+
+  writeMessage=(message)=>{
+    this.setState({message , show:false}) 
   }
 
+  sendDataMessage=()=>{
+   
+    const { message,dataMessageCasual } =this.state
+    this.setState({dataMessageCasual:[...dataMessageCasual,{
+                                        login:'erickson',
+                                        message
+                                      }], 
+                    message: undefined,
+                    show:true
+                  })
+  }
+
+ 
   render() {
+ 
+   const { show , dataMessageCasual } =this.state
+
     return (
       <View style={Style.container}>
-        <View style={{flex:1, backgroundColor:'blue'}}></View>
-        <View  style={Style.containerInput}>
-
-        <Item>
-        <TextInput 
-        style={Style.input} 
-        name="login"
-     
-        multiline
-        maxLength={255}
+        <Menu nameMenu="Chat Général" />
       
-        />
-  </Item>
-      <View>
-      <Icon  name="paper-plane" />
-      </View>
-      
+        <View style={Style.messageContainer}>
+        <ScrollView style={Style.scrollView}>
          
-  
-        </View >      
+            <View style={Style.message}>
+              { dataMessageCasual && (<ShowMessage allMessage={dataMessageCasual} show={show}/>)}
+              
+            </View>
+            </ScrollView>
+        </View>
        
-     
+        <View  style={Style.containerInput}>
+          <Container>
+            <Content>
+              <Item regular style={{borderRadius:30, borderColor:'black'}}>
+                <Textarea
+                style={Style.input} 
+                value={this.state.message}
+                multiline
+                maxLength={255}
+                onChangeText={this.writeMessage}
+                />
+              </Item>
+            </Content>
+          </Container>
+        <TouchableOpacity
+          onPress={this.sendDataMessage}
+        >
+          <View style={Style.icon} >
+            <Icon  name="paper-plane" />
+          </View>
+        </TouchableOpacity>
+        </View >      
       </View>
     );
   }

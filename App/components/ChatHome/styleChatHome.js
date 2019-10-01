@@ -9,28 +9,48 @@ export const Style = StyleSheet.create({
     container:{
         flex:1,
         justifyContent:"center",
-        
-        
-        
-   
+
     },
     
     containerInput:{
-
+      
         flexDirection:'row',
         borderRadius:30,
-        marginBottom:10,
+        marginTop:10,
+        marginBottom:20,
         height:50,
-        width:wp('100%'),
- 
-     
-        
+        width:wp('98%'),
+
     },
     input:{
-        width:wp('50%'),
+        width:wp('90%'),
+        
     },
     icon:{
+        justifyContent:'center',
+        marginTop:15,
+        margin:10
 
+    },
+    messageContainer:{
+        flex:1,
+        justifyContent:'flex-end',
+    
+        borderColor:'black',
+        // backgroundColor:'red'
+
+    },
+    scrollView:{
+        flexDirection:'column-reverse',
+        overflow: "scroll",
+       
+    },
+    message:{
+  
+      backgroundColor:'white',
+      borderColor:'black',
+      borderRadius:30,
+       
     }
  
 

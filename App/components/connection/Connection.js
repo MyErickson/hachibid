@@ -1,9 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { View , Text , TouchableOpacity} from 'react-native';
 import { Button } from 'react-native-elements';
 import { Style }  from './styleConnection'
 import { Container, Content, Form, Item, Input } from 'native-base';
-import axios from "axios";
+
 
 class Connection extends Component {
     constructor(props) {
