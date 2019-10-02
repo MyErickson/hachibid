@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer , createSwitchNavigator} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
 import { Provider } from "react-redux";
 import store from './store/';
+import DrawerNavigator from './components/Navigation/DrawerNavigator'
 import ConnectionContainer from './containers/Connection/Connection';
 import RegisterContainer from './containers/Register/Register';
 import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
@@ -17,7 +18,8 @@ class App extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Routes/>
+                <Routes hideStatusBar/>
+               
             </Provider>
         );
     }
@@ -45,10 +47,22 @@ const StackNavigator = createStackNavigator(
     },
     {
       // By default the application will show the splash screen
-      initialRouteName: 'ChatHome',
+      initialRouteName: 'Connection',
       // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
       headerMode: 'none',
     }
   )
   
-  const Routes = createAppContainer(StackNavigator)
+  const AppNavigator = createSwitchNavigator({
+   
+ 
+    drawer: {
+        screen: DrawerNavigator,
+      }, 
+      App: {
+        screen: StackNavigator,
+      },
+  });
+
+
+  const Routes = createAppContainer(AppNavigator)

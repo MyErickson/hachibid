@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD,
+import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
          responseConnection ,responseRegister , responseForReset } from './reducer'
 
  const  ajaxMiddleware = store => next => async (action) => {
@@ -22,6 +22,7 @@ import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD,
             })
             break;
         case SEND_DATA_REGISTER :
+            next(action)
             await axios.post('url',{
 
             }).then((response)=>{
@@ -34,8 +35,22 @@ import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD,
             break;
         
         case SEND_DATA_RESET_PASSWORD:
+            next(action)
             await axios.post('url',{
+         
+            }).then((response)=>{
+                console.log(response)
+                responseForReset(true)
+            }).catch((err)=>{
+                console.log(err)
+                responseForReset(false)
+            })
+            break;
         
+        case SEND_MESSAGE_USER:
+            next(action)
+            await axios.post('url',{
+            
             }).then((response)=>{
                 console.log(response)
                 responseForReset(true)

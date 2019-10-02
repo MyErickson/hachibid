@@ -83,6 +83,7 @@ class Connection extends Component {
                                 <Input 
                              
                                 placeholder="Mot de passe *" 
+                                secureTextEntry={true}
                                 name="password"
                                 maxLength={255}
                                 value={password}

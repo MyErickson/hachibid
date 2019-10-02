@@ -7,7 +7,7 @@ export const Style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        paddingBottom:20
+        paddingBottom:20,
         
    
     },
@@ -20,7 +20,7 @@ export const Style = StyleSheet.create({
     form:{
         width:300,
         height:350 ,
-        marginTop:marginTop
+        marginTop:marginTop,
         
     },
     button:{
@@ -46,6 +46,7 @@ export const Style = StyleSheet.create({
     scrollview:{
         marginHorizontal: 0,
         backgroundColor:'white',
+    
         
     }
   

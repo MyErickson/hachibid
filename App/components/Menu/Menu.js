@@ -26,7 +26,7 @@ class Menu extends Component {
         <Header style={Style.container}>
             <Left style={{flex:1}} >
               <TouchableOpacity 
-              onPress={() => {}}>
+              onPress={this.props.toggle}>
                 <Icon style={Style.icon} name='menu' />
               </TouchableOpacity>
             </Left>
@@ -36,8 +36,8 @@ class Menu extends Component {
           </Body>
    
           <Right style={{flex:1}}>
-            <TouchableOpacity onPress={()=>{}}>
-              <Icon style={Style.icon} name='home' />
+            <TouchableOpacity onPress={this.props.toggle}>
+              <Icon style={Style.icon} name='notifications' />
             </TouchableOpacity>
           </Right>
         </Header>

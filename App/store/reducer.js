@@ -5,6 +5,8 @@ const initialState = {
   receiveResponseConnection: undefined,
   receiveResponseRegister:undefined,
   receiveResponseForReset:undefined,
+  dataMessages:undefined,
+  
 };
 
 /**
@@ -15,7 +17,9 @@ export const RESPONSE_CONNECTION = 'REPONSE_CONNECTION';
 export const SEND_DATA_REGISTER ='SEND_DATA_REGISTER';
 export const RESPONSE_REGISTER = 'REPONSE_REGISTER';
 export const SEND_DATA_RESET_PASSWORD = 'SEND_DATA_RESET_PASSWORD';
-export const  RESPONSE_FOR_RESET = ' RESPONSE_FOR_RESET';
+export const RESPONSE_FOR_RESET = ' RESPONSE_FOR_RESET';
+export const SEND_MESSAGE_USER= 'SEND_MESSAGE_USER';
+export const RECEIVE_DATA_MESSAGE='RECEIVE_DATA_MESSAGE';
 /**
  * Traitements
  */
@@ -28,18 +32,23 @@ const reducer = (state = initialState, action = {}) => {
     case RESPONSE_CONNECTION:
       return {
         ...state,
-        receiveResponseConnection:action.response
+        receiveResponseConnection:action.responseConnection
       };
     case RESPONSE_REGISTER:
       return {
         ...state,
-        receiveResponseRegister:action.response
+        receiveResponseRegister:action.esponseRegister
       };
     case RESPONSE_FOR_RESET:
       return {
         ...state,
-        receiveResponseForReset:action.response
+        receiveResponseForReset:action.responseReset
       };
+    case RECEIVE_DATA_MESSAGE:
+          return {
+            ...state,
+            dataMessages:action.allMessage
+          };
     default:
       return state;
   }
@@ -68,23 +77,34 @@ export const sendDataResetPassword= (email) =>({
  
 })
 
-export const responseConnection = (response) => ({
+export const sendMessageUser =( message ) =>({
+  type: SEND_MESSAGE_USER,
+  message
+})
+
+
+export const responseConnection = (responseConnection) => ({
   type: RESPONSE_CONNECTION,
-  response,
+  responseConnection,
 
 });
 
-export const responseRegister = (response) => ({
+export const responseRegister = (responseRegister) => ({
   type: RESPONSE_REGISTER,
-  response,
+  responseRegister,
 
 });
 
-export const responseForReset= (response) => ({
+export const responseForReset= (responseReset) => ({
   type: RESPONSE_FOR_RESET,
-  response,
+  responseReset,
 
 });
+
+export const receiveDataMessages=(allMessage)=>({
+  type:RECEIVE_DATA_MESSAGE,
+  allMessage
+})
 
 /**
  * Selectors

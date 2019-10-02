@@ -40,17 +40,9 @@ export const Style = StyleSheet.create({
         // backgroundColor:'red'
 
     },
-    scrollView:{
-        flexDirection:'column-reverse',
-        overflow: "scroll",
-       
-    },
-    message:{
-  
-      backgroundColor:'white',
-      borderColor:'black',
-      borderRadius:30,
-       
+    name:{
+        paddingLeft:15,
+        color:'gray'
     }
  
 

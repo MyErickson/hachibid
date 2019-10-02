@@ -1,77 +1,88 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity , ScrollView} from 'react-native';
-import {  Item , Container, Content , Textarea, Icon} from 'native-base';
-import { Style} from './styleChatHome'
+import { View,  Text} from 'react-native';
+import { Style} from './styleChatHome';
+import { Icon } from 'native-base'
 import Menu from '../Menu/Menu'
-import ShowMessage from './ShowMessage';
 
-
+import { GiftedChat , Bubble, Send } from 'react-native-gifted-chat'
 class ChatHome extends Component {
  
     state = {
-      message:undefined,
-      dataMessageCasual:[],
-      show:false
+      messages:undefined,
     }
   
+    async componentDidMount() {
+    //  const allMessages =  await this.props.dataMessages
+      this.setState({
+        messages: [
+          {
+            _id: 1,
+            text: 'Hello developer',
+            createdAt: new Date(),
+            user: {
+              _id: 2,
+              name: 'erickson',
+              avatar: 'https://placeimg.com/140/140/any',
+            },
+          },
+        ],
+      })
+    }
+ 
 
-  writeMessage=(message)=>{
-    this.setState({message , show:false}) 
+  async onSend(messages = []) {
+ 
+    // await this.props.sendMessageUser(messages)
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }))
   }
 
-  sendDataMessage=()=>{
-   
-    const { message,dataMessageCasual } =this.state
-    this.setState({dataMessageCasual:[...dataMessageCasual,{
-                                        login:'erickson',
-                                        message
-                                      }], 
-                    message: undefined,
-                    show:true
-                  })
+  renderBubble(props) {
+
+    return (
+      <View>
+        <Text style={Style.name}>{props.currentMessage.user.name}</Text>
+        <Bubble
+          {...props}
+        />
+      </View>
+    );
+    
   }
 
+  renderSend(props) {
+    return (
+      <Send {...props}  label={<Icon  name="paper-plane" />} />
+    );
+}
  
   render() {
- 
-   const { show , dataMessageCasual } =this.state
+     
 
     return (
       <View style={Style.container}>
-        <Menu nameMenu="Chat Général" />
+        <Menu nameMenu="Chat Général" toggle={this.props.navigation.toggleDrawer}/>
       
         <View style={Style.messageContainer}>
-        <ScrollView style={Style.scrollView}>
-         
-            <View style={Style.message}>
-              { dataMessageCasual && (<ShowMessage allMessage={dataMessageCasual} show={show}/>)}
-              
-            </View>
-            </ScrollView>
+      
+              <GiftedChat
+                messages={this.state.messages}
+                onSend={messages => this.onSend(messages)}
+                renderAvatar={null}
+                isAnimated
+                keyboardShouldPersistTaps={'never'}
+                renderBubble={this.renderBubble}
+                renderSend={this.renderSend}
+                user={{
+                  _id: 'Id user',
+                  
+                }}
+              />
+    
         </View>
        
-        <View  style={Style.containerInput}>
-          <Container>
-            <Content>
-              <Item regular style={{borderRadius:30, borderColor:'black'}}>
-                <Textarea
-                style={Style.input} 
-                value={this.state.message}
-                multiline
-                maxLength={255}
-                onChangeText={this.writeMessage}
-                />
-              </Item>
-            </Content>
-          </Container>
-        <TouchableOpacity
-          onPress={this.sendDataMessage}
-        >
-          <View style={Style.icon} >
-            <Icon  name="paper-plane" />
-          </View>
-        </TouchableOpacity>
-        </View >      
+
       </View>
     );
   }

@@ -49,7 +49,7 @@ class Profile extends Component {
                 break;
             case 'changePassword':
                     if(text.length  < 4){
-                        this.setState({errorPwdCharacter:true})
+                        this.setState({errorChangePwdCharacter:true})
                     }else{
                         this.setState({errorPwdCharacter:false})
                     }
@@ -84,7 +84,7 @@ class Profile extends Component {
      
           
         <View style={Style.container}>
-            <Menu nameMenu="Chat Général"/>
+            <Menu nameMenu="Profil" toggle={this.props.navigation.toggleDrawer}/>
               <ScrollView
               bounces={true}
               style={Style.scrollview}
@@ -102,6 +102,12 @@ class Profile extends Component {
                 />
               
           
+              <ScrollView
+              bounces={true}
+              style={Style.scrollview}
+              showsVerticalScrollIndicator = {false}
+             
+              >
             <View style={Style.form}>
                 <Container>
                     <Content>  
@@ -167,7 +173,7 @@ class Profile extends Component {
                 </Container>
 
                 </View>             
-           
+                </ScrollView>  
             
                 <Content>
 
