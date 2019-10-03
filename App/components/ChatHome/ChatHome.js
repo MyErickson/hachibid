@@ -1,16 +1,56 @@
 import React, { Component } from 'react';
-import { View,  Text} from 'react-native';
+import { View,  Text,  PanResponder } from 'react-native';
 import { Style} from './styleChatHome';
 import { Icon } from 'native-base'
 import Menu from '../Menu/Menu'
 
 import { GiftedChat , Bubble, Send } from 'react-native-gifted-chat'
 class ChatHome extends Component {
- 
-    state = {
+  constructor(props){
+    super(props);
+    this.state = {
       messages:undefined,
     }
+    // this._panResponder = PanResponder.create({
+    //   // Ask to be the responder:
+    //   onStartShouldSetPanResponder: (evt, gestureState) => true,
+    //   onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+    //   onMoveShouldSetPanResponder: (evt, gestureState) => true,
+    //   onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+    //   onPanResponderGrant: (evt, gestureState) => {
+    //     // The gesture has started. Show visual feedback so the user knows
+    //     // what is happening!
+    //     // gestureState.d{x,y} will be set to zero now
+       
+    //   },
+    //   onPanResponderMove: (evt, gestureState) => {
+    //     // The most recent move distance is gestureState.move{X,Y}
+    //     // The accumulated gesture distance since becoming responder is
+    //     // gestureState.d{x,y}
+    //     setInterval(()=>console.log( gestureState.moveX, gestureState.dy),3000)
+    //   },
+    //   onPanResponderTerminationRequest: (evt, gestureState) => true,
+    //   onPanResponderRelease: (evt, gestureState) => {
+    //     // The user has released all touches while this view is the
+    //     // responder. This typically means a gesture has succeeded
+        
+    //   },
+    //   onPanResponderTerminate: (evt, gestureState) => {
+    //     // Another component has become the responder, so this gesture
+    //     // should be cancelled
+        
+    //   },
+    //   onShouldBlockNativeResponder: (evt, gestureState) => {
+    //     // Returns whether this component should block native components from becoming the JS
+    //     // responder. Returns true by default. Is currently only supported on android.
+       
+    //     return true;
+    //   },
+    // });
   
+  }
+    
     async componentDidMount() {
     //  const allMessages =  await this.props.dataMessages
       this.setState({
@@ -61,7 +101,8 @@ class ChatHome extends Component {
      
 
     return (
-      <View style={Style.container}>
+      // {...this._panResponder.panHandlers}
+      <View   style={Style.container}>
         <Menu nameMenu="Chat Général" toggle={this.props.navigation.toggleDrawer}/>
       
         <View style={Style.messageContainer}>
