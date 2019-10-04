@@ -2,13 +2,9 @@ import React, { Fragment } from 'react';
 
 import { Platform , Dimensions , StyleSheet , View , Text,TouchableOpacity , Image , ScrollView} from 'react-native';
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
-import { Style } from '../Menu/styleMenu';
+import { Styles } from './styleMenuDrawer';
 import { Icon,Container, Header, Content, List, ListItem, } from 'native-base';
-
-import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp
-  } from "react-native-responsive-screen";
+import { casualList} from '../../data/dataCasual'
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -20,44 +16,34 @@ const HEIGHT = Dimensions.get('window').height;
     ],
  }
 
- const casualList=[
-    { name:'Simon Mignolet'},
-    { name:'Nathaniel Clyne'},
-     {name:'Dejan Lovren'},
-    { name:'Simon Mignolet'},
-     {name:'Nathaniel Clyne'},
-     {name:'Dejan Lovren'},
-     { name:'Simon Mignolet'},
-      {name:'Nathaniel Clyne'},
-     ]
+
 export default class MenuDrawer extends React.Component{
      state={
-         list:false
+         list:false,
+         dataCategory:undefined,
      }
+
+
+    async componentDidMount(){
+         
+        //  await this.props.receiveDataCategory()
+        //  const dataCategory = await this.props.dataCategory
+
+        //  this.setState({dataCategory})
+
+     }
+    
 
      toggleList=()=>{
          const { list } = this.state
             this.setState({list:!list})
      }
       
-     dataList =()=>{
 
-            const list = Object.values(casualList).map((value,key)=>{
-             
-                        return (
-                            <Fragment>
-                            <ListItem key={key} onPress={()=>console.log('show')}>
-                                <Text>{value.name}</Text>
-                            </ListItem>
-                    </Fragment> 
-                        )
-            })
-            console.log(list)
 
-         return list
-     }
+  navLink(nav,text,icon,show=false){
+      
 
-    navLink(nav,text,icon,show=false){
             return(
                 <Fragment>
                     <TouchableOpacity 
@@ -65,7 +51,7 @@ export default class MenuDrawer extends React.Component{
                     onPress={()=>this.props.navigation.navigate(nav)}>
 
                         <View style={{height:50,flexDirection:'row'}}>
-                            <Icon style={Styles.icon} name={icon} />
+                            <Icon style={Styles.icons} name={icon} />
                             <Text style={Styles.link}>{text}</Text>
                         </View>
                         { text ==='Catégories' && (
@@ -75,14 +61,23 @@ export default class MenuDrawer extends React.Component{
                         />)}
                         
 
-                        </TouchableOpacity>
+                    </TouchableOpacity>
                         { this.state.list && show === true && (
                              <Container style={{}}>
                              <Header style={{height:20,backgroundColor:'#3399ff'}}/>
                              <ScrollView style={{flex:1}}>
                              <Content>
                                <List>
-                               {this.dataList()}
+                               { casualList.map((value)=>{
+                                           
+                                    return (
+                                        
+                                        <ListItem key={Date.now()} onPress={()=>console.log('show')}>
+                                            <Text>{value.name}</Text>
+                                        </ListItem>
+
+                                    )
+                                 })}
                                </List>
                              </Content>
                              </ScrollView>
@@ -111,10 +106,9 @@ export default class MenuDrawer extends React.Component{
              
              <View style={Styles.bottomLinks}>
                  {this.navLink('Home','Chat Général','home')}
-                 {this.navLink('Home','Mes questions','chatbubbles')}
+                 {this.navLink('MyQuestions','Mes questions','chatbubbles')}
                  {this.navLink('Profile','Profil','person')}
-                 {this.navLink('Home','Catégories','keypad',true)}
-               
+                 {this.navLink('Home','Catégories','keypad',true)}  
              </View>
       
         </View>
@@ -124,64 +118,5 @@ export default class MenuDrawer extends React.Component{
  }
 }
 
-const Styles = StyleSheet.create({
-    container:{
-        flex:1,
-      
-    },
-    topLinks:{
-        height:160,
-       
-    },
-    bottomLinks:{
-       flex:1,
-        backgroundColor:'white',
-        paddingTop:10,
-        height:hp('100%'),
-    },
-    link:{
-        
-        fontSize:20,
-        padding:6,
-        paddingLeft:14,
-        margin:5,
-        textAlign:'left'
-    },
-    icon:{
-    
-        padding:6,
-        paddingLeft:25,
-        margin:5,
-    },
-    iconList:{
-        padding:6,
-        paddingLeft:60,
-        margin:5,
-    },
-    profile:{
-        flex:1,
-
-        alignItems: 'center',
-        borderBottomWidth:1,
-        borderBottomColor:'#777777',
-    },
-    imgView:{
-        flex:1,
-        justifyContent:'center'
-    },
-    img:{
-        height:95,
-        width:95,
-        borderRadius:50
-    },
-    profileText:{
-        paddingBottom:20
-    },
-    nameText:{
-        color:'white',
-        fontSize:20 ,
-         fontWeight:'bold'
-    }
-})
 
 

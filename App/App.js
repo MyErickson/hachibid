@@ -9,7 +9,7 @@ import ConnectionContainer from './containers/Connection/Connection';
 import RegisterContainer from './containers/Register/Register';
 import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
 import Profile from './components/Profile/Profile'
-import ChatHome from './components/ChatHome/ChatHome'
+import MyQuestionsContainer from './containers/MyQuestions/MyQuestions'
 class App extends Component {
     constructor(props) {
         super(props);
@@ -38,7 +38,7 @@ const StackNavigator = createStackNavigator(
       // See https://reactnavigation.org/docs/en/stack-navigator.html#routeconfigs
       Connection:ConnectionContainer,
       Register: RegisterContainer,
-      ChatHome:ChatHome,
+      MyQuestions:  MyQuestionsContainer,
       ResetPassword:ResetPasswordContainer,
       Profile:Profile
       // The main application screen is our "ExampleScreen". Feel free to replace it with your

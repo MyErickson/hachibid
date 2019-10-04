@@ -1,0 +1,16 @@
+export  const casualList=[
+    { name:'Simon Mignolet'},
+    { name:'Nathaniel Clyne'},
+     {name:'Dejan Lovren'},
+    { name:'Simon Mignolet'},
+     {name:'Nathaniel Clyne'},
+     {name:'Dejan Lovren'},
+     { name:'Simon Mignolet'},
+      {name:'Nathaniel Clyne'},
+      {name:'Dejan Lovren'},
+      { name:'Simon Mignolet'},
+       {name:'Nathaniel Clyne'},
+       {name:'Dejan Lovren'},
+       { name:'Simon Mignolet'},
+        {name:'Nathaniel Clyne'},
+     ]

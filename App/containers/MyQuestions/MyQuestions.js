@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import ChatHome from '../../components/ChatHome/ChatHome'
+import MyQuestions from '../../components/MyQuestions/MyQuestions'
 
 // Action Creators
 import { sendMessageUser } from '../../store/reducer';
@@ -38,14 +38,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
- const ChatHomeContainer = connect(
+ const MyQuestionsContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ChatHome);
+)(MyQuestions);
 
 
 
 /**
  * Export
  */
-export default ChatHomeContainer;
+export default MyQuestionsContainer;

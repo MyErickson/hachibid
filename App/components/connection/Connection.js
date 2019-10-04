@@ -3,7 +3,8 @@ import { View , Text , TouchableOpacity} from 'react-native';
 import { Button } from 'react-native-elements';
 import { Style }  from './styleConnection'
 import { Container, Content, Form, Item, Input } from 'native-base';
-
+import Modal from "react-native-modal";
+import ResetPassword from "../ResetPassword/ResetPassword"
 
 class Connection extends Component {
     constructor(props) {
@@ -13,10 +14,13 @@ class Connection extends Component {
             password:undefined,
             messageErrorConnection:undefined,
             showResetPassword:false,
+            isModalVisible:false
          };
     }
 
-
+    toggleModal = () => {
+        this.setState({ isModalVisible: !this.state.isModalVisible });
+      };
 
     collectLoginAndPwd=(evt)=>{
 
@@ -50,7 +54,7 @@ class Connection extends Component {
     }
 
     goToresetPassword=()=>{
-        this.props.navigation.navigate('ResetPassword')
+        this.setState({modal:true})
     }
 
 
@@ -92,7 +96,7 @@ class Connection extends Component {
                         </Form>
                         <View style={{alignItems:"flex-end"}}>
                             <TouchableOpacity
-                            onPress={this.goToresetPassword}
+                            onPress={this.toggleModal}
                             >
                             <Text>Mot de passe oublié ?</Text>
                             </TouchableOpacity>
@@ -126,7 +130,7 @@ class Connection extends Component {
                         
                     </View>
                 </Content>
-              
+            <ResetPassword toggleModal={this.toggleModal} isModalVisible={this.state.isModalVisible}/>
             </View>
         );
     }

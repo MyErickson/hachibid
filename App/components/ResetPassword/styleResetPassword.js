@@ -4,28 +4,31 @@ const marginTop = 20 ;
 
 export const Style = StyleSheet.create({
     container:{
-        flex:1,
-        alignItems:'center',
-        justifyContent:"space-between",
-        top:200
-   
+      
+        maxHeight:250,
+        flexDirection:'column',
+        padding:13,
+        backgroundColor:'white',
+        borderRadius:30
+
+
     },
     
     containerInput:{
         borderRadius:10,
-        marginBottom:10,
+        margin:10,
         
     },
     form:{
         width:300,
-        height:200 ,
         marginTop:marginTop
         
     },
     button:{
         width:300,
-        marginTop:60,
-        justifyContent:"center"
+        marginTop:20,
+        justifyContent:"center",
+        borderRadius:50
     },
     textRegister:{
         alignItems:"center",
@@ -33,6 +36,7 @@ export const Style = StyleSheet.create({
      
        
     },
+   
   
     
 

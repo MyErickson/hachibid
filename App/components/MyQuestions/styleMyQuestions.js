@@ -23,7 +23,7 @@ export const Style = StyleSheet.create({
 
     },
     input:{
-        width:wp('85%'),
+        width:wp('90%'),
         
     },
     icon:{
@@ -34,23 +34,16 @@ export const Style = StyleSheet.create({
     },
     messageContainer:{
         flex:1,
-        maxWidth:wp('85%'),
-        paddingHorizontal: 15,
-        paddingTop: 10,
-        paddingBottom: 15,
-        borderRadius: 20,
+        justifyContent:'flex-end',
+    
+        borderColor:'black',
+        // backgroundColor:'red'
 
     },
-    
-    message:{
-
-        paddingTop: 5,
-        
-
-     
-       
-    },
-    
+    name:{
+        paddingLeft:15,
+        color:'gray'
+    }
  
 
     

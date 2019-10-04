@@ -6,6 +6,7 @@ const initialState = {
   receiveResponseRegister:undefined,
   receiveResponseForReset:undefined,
   dataMessages:undefined,
+  dataCategory:undefined,
   
 };
 
@@ -20,6 +21,7 @@ export const SEND_DATA_RESET_PASSWORD = 'SEND_DATA_RESET_PASSWORD';
 export const RESPONSE_FOR_RESET = ' RESPONSE_FOR_RESET';
 export const SEND_MESSAGE_USER= 'SEND_MESSAGE_USER';
 export const RECEIVE_DATA_MESSAGE='RECEIVE_DATA_MESSAGE';
+export const RECEIVE_DATA_CATEGORY ='RECEIVE_DATA_CATEGORY';
 /**
  * Traitements
  */
@@ -49,6 +51,11 @@ const reducer = (state = initialState, action = {}) => {
             ...state,
             dataMessages:action.allMessage
           };
+    case RECEIVE_DATA_CATEGORY:
+        return {
+          ...state,
+          dataCategory:action.allCategory
+        };
     default:
       return state;
   }
@@ -106,6 +113,10 @@ export const receiveDataMessages=(allMessage)=>({
   allMessage
 })
 
+export const receiveDataCategory=(allCategory)=>({
+  type:RECEIVE_DATA_CATEGORY,
+  allCategory
+})
 /**
  * Selectors
  */

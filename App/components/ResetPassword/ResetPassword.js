@@ -1,14 +1,15 @@
 import React, { Component, Fragment } from 'react'
-import { Text, View ,TouchableOpacity} from 'react-native'
-import { Content, Item, Input } from 'native-base';
+import { Text, View ,TouchableOpacity } from 'react-native'
+import { Content, Item, Input, Container } from 'native-base';
 import { Button } from 'react-native-elements';
-
+import Modal from "react-native-modal";
 import { Style } from './styleResetPassword'
-
+import LinearGradient from 'react-native-linear-gradient';
 export class ResetPassword extends Component {
     state={
         email:undefined,
-        messageErrorForReset:undefined
+        messageErrorForReset:undefined,
+        modalVisible: this.props.isModalVisible,
     }
 
     
@@ -36,14 +37,18 @@ export class ResetPassword extends Component {
 
     render() {
         return (
-            <View style ={ Style.container}>
-           
-              
+            <Modal style={{height:10}} 
+             isVisible={this.props.isModalVisible}
+             onSwipeMove={() => this.setState({ modalVisible: false })}
+             swipeDirection={"left","right"}
+             >
+ 
+               <Container  style={ Style.container}>
+             <Content>
             { this.state.messageErrorForReset && 
                   (<Text style={{color:'red',marginBottom: 20}}>Mot de passe ou Idientifiant incorrect</Text>)
             }
-            <Fragment>
-                <Text style={{marginBottom: 20}}>Entrer votre email pour renitialiser votre mot de passe</Text>
+                <Text style={{margin: 10}}>Entrer votre email pour renitialiser votre mot de passe</Text>
                 <View style={{width:300}}>
                     <Item last regular style={Style.containerInput}>
                             
@@ -55,33 +60,32 @@ export class ResetPassword extends Component {
                         value={this.state.email}
                         onChange={this.collectLoginAndPwd}/>
         
-                    </Item>  
-                </View>
-            </Fragment> 
-                 <Content>
         
-                 <Button rounded info 
+                    </Item>  
+         
+
+                </View>
+                <Button 
                      containerStyle={Style.button}
                      onPress= {this.sendInformationForReset}
                      title= 'envoyer'
+                     ViewComponent={LinearGradient}
+                     linearGradientProps={{
+                        colors: [ 'rgb(14, 65, 144)','rgb(160, 190, 235)'],
+                        start: { x: 0, y: 0.5 },
+                        end: { x: 1, y: 0.5 },
+                      }}
                  />
-                    
-                 <View 
-                     style={ Style.textRegister}
-                 >
-                     <TouchableOpacity
-                     onPress={this.goToRegister}
-                     >
-                         <Text style={{ color:'blue'}}
-                         > 
-                             Vous n'avez pas de compte ? inscrivez-vous  
-                         </Text>
-                    
-                     </TouchableOpacity>
-                     
-                 </View>
-             </Content>
-             </View>
+                    <Button rounded info 
+                     containerStyle={Style.button}
+                     onPress= {()=>this.props.toggleModal()}
+                     title= 'envoyer'
+                 />
+               </Content>
+               </Container> 
+
+             </Modal>
+          
 )
     }
 }
