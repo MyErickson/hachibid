@@ -9,7 +9,7 @@ export const Style = StyleSheet.create({
         flexDirection:'column',
         padding:13,
         backgroundColor:'white',
-        borderRadius:30
+        borderRadius:20
 
 
     },
@@ -25,19 +25,28 @@ export const Style = StyleSheet.create({
         
     },
     button:{
-        width:300,
-        marginTop:20,
+        width:80,
+        marginTop:40,
+        margin:10,
         justifyContent:"center",
-        borderRadius:50
+      
+   
     },
+  
     textRegister:{
         alignItems:"center",
         marginTop:marginTop,
      
        
     },
+    containerButton:{
+        flexDirection:'row',
+        justifyContent:'flex-end'
    
-  
+    },
+    text:{
+        fontSize:20,
+    }
     
 
 

@@ -1,86 +1,45 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity , ScrollView } from 'react-native';
-import { Style} from './styleChatHome'
-import {  Item , Container, Content , Textarea, Icon} from 'native-base';
+import { View } from 'react-native';
+import { Style} from './styleChatHome';
+import { Button  } from 'react-native-elements'
 import Menu from '../Menu/Menu'
-
-import { GiftedChat , Bubble, Send , InputToolbar } from 'react-native-gifted-chat';
-
+import Filtrate from '../Filtrate/Filtrate'
+import { GiftedChat  } from 'react-native-gifted-chat';
+import {message} from '../../data/dataCasual'
 class ChatHome extends Component {
  
     state = {
-      message:undefined,
-     
+      _messages:undefined,
     }
   
     async componentDidMount() {
         //  const allMessages =  await this.props.dataMessages
-          this.setState({
-            messages: [
-                {
-                    _id: 'Id user',
-                    text: 'Fine ! and you ? ',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 'Id user',
-                      name: 'erickson',
-                      avatar: 'https://placeimg.com/140/140/any',
-                    },
-                  },
-                {
-                    _id: 1,
-                    text: 'How are you ? ',
-                    createdAt: new Date(),
-                    user: {
-                      _id: 1,
-                      name: 'erickson',
-                      avatar: 'https://placeimg.com/140/140/any',
-                    },
-                  },
-                {
-                    _id: 'Id user',
-                    text: 'Hey',
-                    createdAt: new Date(),
-                    user: {
-                        _id: 'Id user',
-                      name: 'erickson',
-                      avatar: 'https://placeimg.com/140/140/any',
-                    },
-                  },
-              {
-                _id: 1,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                  _id: 1,
-                  name: 'erickson',
-                  avatar: 'https://placeimg.com/140/140/any',
-                },
-              },
-
-            ],
-          })
-        }
-  writeMessage=(message)=>{
-    this.setState({message , show:false}) 
-  }
-
-  sendDataMessage=()=>{
    
-    const { message,dataMessageCasual } =this.state
-    this.setState({dataMessageCasual:[...dataMessageCasual,{
-                                        login:'erickson',
-                                        message
-                                      }], 
-                    message: undefined,
-                    show:true
-                  })
-  }
+          this.setState({
+            _messages: message,
+          })
 
+  
+        }
+
+   actualize= async ()=>{
+        console.log('data')
+        const allMessages =  await this.props.dataMessages
+        this.setState({
+          _messages:allMessages
+        })
+      }
+ searchBar= async (text)=>{
+    //   await this.props.sendDatafilterMessage(text)
+    //   const _messages = await this.props.receiveDataFilter
+    // this.setState({
+    //     _messages
+    // })
+ }
  
   render() {
  
-   const { messages } =this.state
+   const { _messages }=this.state
 
     return (
        
@@ -88,10 +47,9 @@ class ChatHome extends Component {
         <Menu nameMenu="Chat Géneral" toggle={this.props.navigation.toggleDrawer}/>
       
         <View style={Style.messageContainer}>
-      
+          <Filtrate searchBar={this.searchBar} />
               <GiftedChat
-                messages={messages}
-                onSend={messages => this.onSend(messages)}
+                messages={_messages}
                 renderAvatar={null}
                 isAnimated= {true}
                 minInputToolbarHeight={60}
@@ -99,14 +57,17 @@ class ChatHome extends Component {
                 renderInputToolbar={()=>undefined}
                 style={{background:'red'}}  
                 keyboardShouldPersistTaps={'never'}
-                renderBubble={this.renderBubble}
-                renderSend={this.renderSend}
                 user={{
                   _id: 'Id user',
                   
                 }}
               />
-    
+             <Button rounded info 
+                        containerStyle={Style.button}
+                        buttonStyle={{borderRadius:10,height:45,backgroundColor:'rgba(41,113,232,0.8)'}}
+                        onPress= {this.actualize}
+                        title= 'Actualiser'
+              />
         </View>
        
 

@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { View , Text , TouchableOpacity} from 'react-native';
+import React, { Component, Fragment } from 'react';
+import { View , Text , TouchableOpacity, Animated} from 'react-native';
 import { Button } from 'react-native-elements';
 import { Style }  from './styleConnection'
-import { Container, Content, Form, Item, Input } from 'native-base';
-import Modal from "react-native-modal";
+import {  Content, Form, Item, Input } from 'native-base';
 import ResetPassword from "../ResetPassword/ResetPassword"
-
+import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
+import { presetColors } from '../../data/dataCasual'
+import Wave from 'react-native-waveview'
 class Connection extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +17,13 @@ class Connection extends Component {
             showResetPassword:false,
             isModalVisible:false
          };
+         this.position = new Animated.Value(0)
+    }
+    componentDidMount(){
+        Animated.timing(this.position, {
+            toValue: 100,
+            duration: 2000,
+          }).start();
     }
 
     toggleModal = () => {
@@ -33,16 +41,16 @@ class Connection extends Component {
 
         const { login , password } = this.state;
 
-        await this.props.sendDataConnection( login , password );
-        const validateConnection = await this.props.receiveResponseConnection
+        // await this.props.sendDataConnection( login , password );
+        // const validateConnection = await this.props.receiveResponseConnection
       
-        if (validateConnection){
+        if (true){
             this.setState({
                 login:undefined,
                 password:undefined,
             })
             this.setState({messageErrorConnection:false})
-            this.props.navigation.navigate('ChatHome')
+            this.props.navigation.navigate('Home')
         }else{
             this.setState({messageErrorConnection:true})
         }
@@ -62,13 +70,17 @@ class Connection extends Component {
         const { login , password, messageErrorConnection} = this.state
         
         return (
+            <Fragment>
+                <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
             <View style={Style.container}>
+            <Text style={Style.textConnexion}>
+                Connexion</Text>
                 { messageErrorConnection && 
                   (<Text style={{color:'red'}}>Mot de passe ou Idientifiant incorrect</Text>)
                 }
+                <Content>
                 <View style={Style.form}>
-                <Container>
-                    <Content>  
+              
                         <Form >
                             <Item last  regular style={Style.containerInput}>
                          
@@ -93,45 +105,68 @@ class Connection extends Component {
                                 value={password}
                                 onChange={this.collectLoginAndPwd}/>
                             </Item>
+                            
+                            <Button rounded info 
+                        containerStyle={Style.button}
+                        buttonStyle={{borderRadius:20,height:45,backgroundColor:'rgba(41,113,232,0.8)'}}
+                        onPress= {this.sendInformation}
+                        title= 'se connecter'
+                     
+                    />
+                    
                         </Form>
-                        <View style={{alignItems:"flex-end"}}>
+
+                </View> 
+                <View style={{alignItems:"flex-end",marginTop:15}}>
                             <TouchableOpacity
                             onPress={this.toggleModal}
                             >
                             <Text>Mot de passe oublié ?</Text>
                             </TouchableOpacity>
-                        </View>
-                    </Content>
-                </Container>
+                        </View>            
+            </Content>
 
-                </View>             
+            <ResetPassword 
+            toggleModal={this.toggleModal} 
+            isModalVisible={this.state.isModalVisible}/>
            
-            
-                <Content>
-
-                    <Button rounded info 
-                        containerStyle={Style.button}
-                        onPress= {this.sendInformation}
-                        title= 'se connecter'
+            </View>
+            </AnimatedLinearGradient>
+            <View style={Style.waveContainer} >
+                    <Wave
+                        style={Style.wave}
+                        H={25}
+                        waveParams={[
+                            {A: 35, T:500, fill: '#ffffff'},
+                            
+                           
+                        ]}
+                        animated={true}
                     />
-                       
-                    <View 
-                        style={ Style.textRegister}
-                    >
+           
+                  
+            </View >
+                    <View  style={ Style.textRegister}>
+                         <Text> 
+                            Vous n'avez pas de compte ?
+                        </Text>
                         <TouchableOpacity
                         onPress={this.goToRegister}
                         >
-                            <Text style={{ color:'blue'}}
-                            > 
-                                Vous n'avez pas de compte ? inscrivez-vous  
+                           
+                            <Text style={{ 
+                            color:'blue',
+                             fontSize:15,
+                             marginLeft:5,
+                             fontWeight:'bold',
+                            zIndex:1}}> 
+                                 inscrivez-vous  
                             </Text>
                        
                         </TouchableOpacity>
                         
                     </View>
-                </Content>
-            <ResetPassword toggleModal={this.toggleModal} isModalVisible={this.state.isModalVisible}/>
-            </View>
+        </Fragment>
         );
     }
 }

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Text, View ,TouchableOpacity } from 'react-native'
+import { Text, View ,Dimensions , Platform} from 'react-native'
 import { Content, Item, Input, Container } from 'native-base';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import Modal from "react-native-modal";
 import { Style } from './styleResetPassword'
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,6 +10,7 @@ export class ResetPassword extends Component {
         email:undefined,
         messageErrorForReset:undefined,
         modalVisible: this.props.isModalVisible,
+        showValidate:undefined
     }
 
     
@@ -17,17 +18,17 @@ export class ResetPassword extends Component {
 
         const { email } = this.state;
 
-        await this.props.sendDataForReset( email );
-        const validateForReset = await this.props.receiveResponseForReset
+        // await this.props.sendDataForReset( email );
+        // const validateForReset = await this.props.receiveResponseForReset
      
-        if (validateForReset){
+        if (true){
             this.setState({
                 email:undefined,
             })
-            this.setState({messageErrorForReset:false})
+            this.setState({messageErrorForReset:false , showValidate:true})
             this.props.navigation.navigate('Connection')
         }else{
-            this.setState({messageErrorForReset:true})
+            this.setState({messageErrorForReset:true, showValidate:true})
         }
     }
 
@@ -35,40 +36,68 @@ export class ResetPassword extends Component {
         this.props.navigation.navigate('Register')
     }
 
+     closeModal =()=>{
+       
+        this.setState({showValidate:false})
+        this.props.toggleModal()
+    }
+
     render() {
+
+       
+        const { messageErrorForReset , showValidate } = this.state;
+          
         return (
             <Modal style={{height:10}} 
              isVisible={this.props.isModalVisible}
-             onSwipeMove={() => this.setState({ modalVisible: false })}
-             swipeDirection={"left","right"}
+             backdropTransitionOutTiming={0}
              >
  
                <Container  style={ Style.container}>
              <Content>
-            { this.state.messageErrorForReset && 
-                  (<Text style={{color:'red',marginBottom: 20}}>Mot de passe ou Idientifiant incorrect</Text>)
+            { messageErrorForReset ? 
+                  (<Text style={{color:'red',marginBottom: 20,margin: 10}}>Nous avons pas trouvé votre mail</Text>)
+                  :
+            
+                <Text style={{margin: 10,fontSize:16}}>Entrer votre email pour renitialiser votre mot de passe</Text>
             }
-                <Text style={{margin: 10}}>Entrer votre email pour renitialiser votre mot de passe</Text>
-                <View style={{width:300}}>
-                    <Item last regular style={Style.containerInput}>
-                            
-                        <Input 
-                        style={Style.input} 
-                        placeholder="email *" 
-                        name="email"
-                        maxLength={255}
-                        value={this.state.email}
-                        onChange={this.collectLoginAndPwd}/>
-        
-        
-                    </Item>  
-         
-
+            {showValidate ? 
+                <View style={{flexDirection:'row',justifyContent:'center'}}>
+                    <Icon name='done' color='green' size={60} />
+                    <Text style={{marginTop:15, fontSize:30,color:'green'}}>Modifié</Text>
                 </View>
-                <Button 
+            :
+          <View style={{width:300}}>
+          <Item last regular style={Style.containerInput}>
+                  
+              <Input 
+              style={Style.input} 
+              placeholder="email *" 
+              name="email"
+              maxLength={255}
+              value={this.state.email}
+              onChange={this.collectLoginAndPwd}/>
+
+
+          </Item>  
+
+
+      </View>
+        }
+             
+            <View style={Style.containerButton}>
+              
+                    <Button rounded 
                      containerStyle={Style.button}
+                     buttonStyle={{borderRadius:30,backgroundColor:'#e5e6e8'}}
+                     onPress= {()=>this.closeModal()}
+                     title= 'Annuler'
+                 />
+                   <Button rounded 
+                     containerStyle={Style.button}
+                     buttonStyle={{borderRadius:30}}
                      onPress= {this.sendInformationForReset}
-                     title= 'envoyer'
+                     title= 'Envoyer'
                      ViewComponent={LinearGradient}
                      linearGradientProps={{
                         colors: [ 'rgb(14, 65, 144)','rgb(160, 190, 235)'],
@@ -76,11 +105,7 @@ export class ResetPassword extends Component {
                         end: { x: 1, y: 0.5 },
                       }}
                  />
-                    <Button rounded info 
-                     containerStyle={Style.button}
-                     onPress= {()=>this.props.toggleModal()}
-                     title= 'envoyer'
-                 />
+                </View>
                </Content>
                </Container> 
 

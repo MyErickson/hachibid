@@ -62,8 +62,23 @@ class Profile extends Component {
     }
 
     
-    goToRegister=()=>{
-        this.props.navigation.navigate('Register')
+    goToRegister=async ()=>{
+        const { login , 
+            email , 
+            password,
+            changePassword,
+             } = this.state
+             
+    // await this.props.sendDataUpdateProfile(login ,email, password,changePassword)
+
+    // const {dataProfileUser} = await this.props
+
+    // this.setState({
+    //         login:dataProfileUser.login , 
+    //         email:dataProfileUser.email , 
+    //         password:dataProfileUser.password,
+    //         changePassword:dataProfileUser.confPwd,
+    // })
     }
 
 
@@ -179,24 +194,11 @@ class Profile extends Component {
 
                     <Button rounded info 
                         containerStyle={Style.button}
-                        onPress= {() => this.props.navigation.navigate("DrawerOpen")}
+                        onPress= {this.goToRegister}
                         title= 'se connecter'
                     />
                        
-                    <View 
-                        style={ Style.textRegister}
-                    >
-                        <TouchableOpacity
-                        onPress={this.goToRegister}
-                        >
-                            <Text style={{ color:'blue'}}
-                            > 
-                                Vous n'avez pas de compte ? inscrivez-vous  
-                            </Text>
-                       
-                        </TouchableOpacity>
-                        
-                    </View>
+                   
                 </Content>
                 </ScrollView>  
             </View>

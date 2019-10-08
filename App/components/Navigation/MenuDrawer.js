@@ -5,16 +5,10 @@ import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { Styles } from './styleMenuDrawer';
 import { Icon,Container, Header, Content, List, ListItem, } from 'native-base';
 import { casualList} from '../../data/dataCasual'
-
+import { presetColors } from '../../data/dataCasual'
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
- const presetColors = {
-    instagram: [
-      'rgb(160, 190, 235)',
-      'rgb(14, 65, 144)',
-   
-    ],
- }
+
 
 
 export default class MenuDrawer extends React.Component{
@@ -39,7 +33,12 @@ export default class MenuDrawer extends React.Component{
             this.setState({list:!list})
      }
       
-
+     goToCategoryPage=(value)=>{
+        this.props.navigation.navigate('MessageCategory',{
+            nameCategory:value,
+            navigation:this.props.navigation
+        })
+     }
 
   navLink(nav,text,icon,show=false){
       
@@ -68,11 +67,11 @@ export default class MenuDrawer extends React.Component{
                              <ScrollView style={{flex:1}}>
                              <Content>
                                <List>
-                               { casualList.map((value)=>{
+                               { casualList.map((value,key)=>{
                                            
                                     return (
                                         
-                                        <ListItem key={Date.now()} onPress={()=>console.log('show')}>
+                                        <ListItem key={Date.now()+key} onPress={()=> this.goToCategoryPage(value.name)}>
                                             <Text>{value.name}</Text>
                                         </ListItem>
 

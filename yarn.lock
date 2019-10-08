@@ -5550,6 +5550,11 @@ react-native-status-bar-height@^2.2.0:
   resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.4.0.tgz#de8cee4bb733a196167210d2d0bc1fa10acba3e3"
   integrity sha512-pWvZFlyIHiuxLugLioq97vXiaGSovFXEyxt76wQtbq0gxv4dGXMPqYow46UmpwOgeJpBhqL1E0EKxnfJRrFz5w==
 
+react-native-svg@^9.11.1:
+  version "9.11.1"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-9.11.1.tgz#b1ccf48de413ff8c4f476f202aaa3893f4c8b59a"
+  integrity sha512-BmNCM81SSzhj1+N5rYiy7sxrkmybgiT8Cu8yVRB7zVoWze/i1lbCWJah+Gk0OHHwR35ZA31oVKf5jtO4G1n94Q==
+
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.6.0.tgz#66cf004918eb05d90778d64bd42077c1800d481b"
@@ -5567,6 +5572,11 @@ react-native-video@5.0.2:
     keymirror "^0.1.1"
     prop-types "^15.5.10"
     shaka-player "^2.4.4"
+
+react-native-waveview@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-waveview/-/react-native-waveview-1.1.0.tgz#7a791545d08bd0baadd66f8d8c7d3b55dcc572fe"
+  integrity sha512-TkYkWlfjutYfsLSIbeRtJbLVAHMpkkvhIfyWF3K7O1jocoBa94qXSdcv1bb0owWvBtUyEE9ODaVBnX5CJZezdQ==
 
 react-native-webview@^7.4.0:
   version "7.4.0"

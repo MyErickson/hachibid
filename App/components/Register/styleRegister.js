@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native';
-
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+  } from "react-native-responsive-screen";
 const marginTop = 20 ; 
 
 export const Style = StyleSheet.create({
@@ -7,27 +10,27 @@ export const Style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        top:100
-        
+        paddingTop:hp('10%'),
+
         
     },
-    label:{
-        marginTop:10
-    },
-    
+
     containerInput:{
         borderRadius:10,
+        marginTop:15,
+        
         
     },
     form:{
-        width:300,
-        height:400 ,
+        width:wp('80%'),
+        height:hp('55%'),
         marginTop:marginTop
         
     },
     button:{
-        width:300,
-        justifyContent:"center"
+        width:wp('80%'),
+        justifyContent:"center",
+  
     },
     textRegister:{
         alignItems:"center",
@@ -35,6 +38,9 @@ export const Style = StyleSheet.create({
      
        
     },
+    input:{
+        color:'white'
+    }
   
     
 

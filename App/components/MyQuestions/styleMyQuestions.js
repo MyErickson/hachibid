@@ -24,6 +24,7 @@ export const Style = StyleSheet.create({
     },
     input:{
         width:wp('90%'),
+
         
     },
     icon:{
@@ -43,8 +44,8 @@ export const Style = StyleSheet.create({
     name:{
         paddingLeft:15,
         color:'gray'
-    }
- 
+    },
+
 
     
  

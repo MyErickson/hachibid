@@ -9,7 +9,9 @@ import ConnectionContainer from './containers/Connection/Connection';
 import RegisterContainer from './containers/Register/Register';
 import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
 import Profile from './components/Profile/Profile'
-import MyQuestionsContainer from './containers/MyQuestions/MyQuestions'
+import MyQuestionsContainer from './containers/MyQuestions/MyQuestions';
+
+
 class App extends Component {
     constructor(props) {
         super(props);

@@ -34,11 +34,16 @@ class MyQuestions extends Component {
  
 
   async onSend(messages = []) {
-       console.log(messages)
-    // await this.props.sendMessageUser(messages)
+     
+
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
+        // await this.props.sendMessageUser(messages)
+        // const allMessages =  await this.props.dataMessages
+    // this.setState(previousState => ({
+    //       messages: allMessages ,
+    //     }))
   }
 
   renderBubble(props) {

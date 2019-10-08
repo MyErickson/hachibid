@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
-        RECEIVE_DATA_CATEGORY,receiveDataMessages,
-         responseConnection ,responseRegister , responseForReset, receiveDataCategory } from './reducer'
+        RECEIVE_DATA_CATEGORY,RECEIVE_MESSAGES_HOME,SEND_DATA_UPDATE_PROFILE,receiveDataMessages,
+        SEND_DATA_FILTER_MESSAGE, receiveMessagesHome,receiveDataFilterMessage,
+        responseConnection ,responseRegister , responseForReset, receiveDataCategory,receiveDataUpdateProfile } from './reducer'
 
  const  ajaxMiddleware = store => next => async (action) => {
     console.log(next,'action')
     console.log(action)
     next(action);
     switch(action.type){
+
         case SEND_DATA_CONNECTION :
             next(action)
            await axios.post('url',{
@@ -35,6 +37,7 @@ import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SE
             })
             break;
         
+
         case SEND_DATA_RESET_PASSWORD:
             next(action)
             await axios.post('url',{
@@ -48,6 +51,7 @@ import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SE
             })
             break;
         
+
         case SEND_MESSAGE_USER:
             next(action)
             await axios.post('url',{
@@ -61,6 +65,7 @@ import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SE
             })
             break;
 
+
         case RECEIVE_DATA_CATEGORY:
             next(action)
             await axios.get('url',{
@@ -73,6 +78,44 @@ import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SE
                 
             })
             break;
+
+        case RECEIVE_MESSAGES_HOME:
+            next(action)
+            await axios.get('url',{
+            
+            }).then((response)=>{
+                
+                receiveMessagesHome(response)
+            }).catch((err)=>{
+                console.log(err)
+                
+            })
+            break;
+        
+        case SEND_DATA_UPDATE_PROFILE:
+            next(action)
+            await axios.get('url',{
+            
+            }).then((response)=>{
+                //ici un autre axios
+                receiveDataUpdateProfile(response)
+            }).catch((err)=>{
+                console.log(err)
+                
+            })
+            break;
+        case SEND_DATA_FILTER_MESSAGE:
+                next(action)
+                await axios.get('url',{
+                
+                }).then((response)=>{
+                    //ici un autre axios
+                    receiveDataFilterMessage(response)
+                }).catch((err)=>{
+                    console.log(err)
+                    
+                })
+                break;
         
     }
 

@@ -9,22 +9,25 @@ export const Style = StyleSheet.create({
     container:{
         flex:1,
         justifyContent:"center",
-        
 
     },
+
+  
     messageContainer:{
         flex:1,
         paddingHorizontal: 15,
         paddingTop: 10,
-        paddingBottom: 20,
+        paddingBottom: 15,
         borderRadius: 20,
-      
+
     },
     
     message:{
 
         paddingTop: 5,
-   
+        
+
+     
        
     },
     
