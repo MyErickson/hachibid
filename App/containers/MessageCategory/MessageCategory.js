@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import Connection from '../../components/Connection/Connection'
+import MessageCategory from '../../components/MessageCategory/MessageCategory'
 
 // Action Creators
-import { sendDataConnection } from '../../store/actionCreator/Connection';
+import { receiveDataMessagesCategory,sendDatafilterMessageCategory} from '../../store/actionCreator/MessageCategory';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,7 +20,8 @@ import { sendDataConnection } from '../../store/actionCreator/Connection';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    receiveResponseConnection: state.receiveResponseConnection,
+    dataMessagesCategory: state.dataMessagesCategory,
+    dataFilterCategory:state.dataFilterCategory
 });
 
 /* === Actions ===
@@ -31,21 +32,24 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  sendDataConnection: (login , password ) => {
-    dispatch(sendDataConnection(login , password));
+    receiveDataMessagesCategory: (category) => {
+    dispatch(receiveDataMessagesCategory(category));
   },
+  sendDatafilterMessageCategory:(text)=>{
+      dispatch(sendDatafilterMessageCategory(text));
+  }
 });
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
- const ConnectionContainer = connect(
+ const MessageCategoryContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Connection);
+)(MessageCategory);
 
 
 
 /**
  * Export
  */
-export default ConnectionContainer;
+export default MessageCategoryContainer;

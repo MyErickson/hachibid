@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import ResetPassword from '../../components/ResetPassword/ResetPassword'
 
 // Action Creators
-import { sendDataConnection } from '../../store/reducer';
+import { sendDataForReset } from '../../store/actionCreator/ResetPassword';
 
 
 

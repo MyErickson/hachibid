@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Register from '../../components/Register/Register'
 
 // Action Creators
-import { sendDataRegister } from '../../store/reducer';
+import { sendDataRegister } from '../../store/actionCreator/Register';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation

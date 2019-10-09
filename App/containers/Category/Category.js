@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import Connection from '../../components/Connection/Connection'
+import Category from '../../components/Category/Category'
 
 // Action Creators
-import { sendDataConnection } from '../../store/actionCreator/Connection';
+import { receiveDataCategory,sendDataFilterCategory } from '../../store/actionCreator/ChatHome';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,7 +20,8 @@ import { sendDataConnection } from '../../store/actionCreator/Connection';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    receiveResponseConnection: state.receiveResponseConnection,
+    dataMessagesHome: state.dataMessagesHome,
+    dataAllCategory:state.dataAllCategory
 });
 
 /* === Actions ===
@@ -31,21 +32,24 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  sendDataConnection: (login , password ) => {
-    dispatch(sendDataConnection(login , password));
+    receiveDataCategory: () => {
+    dispatch(receiveDataCategory());
   },
+  sendDataFilterCategory:(text)=>{
+      dispatch(sendDataFilterCategory(text));
+  }
 });
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
- const ConnectionContainer = connect(
+ const CategoryContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Connection);
+)(Category);
 
 
 
 /**
  * Export
  */
-export default ConnectionContainer;
+export default CategoryContainer;

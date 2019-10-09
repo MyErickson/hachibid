@@ -57,13 +57,13 @@ const StackNavigator = createStackNavigator(
   
   const AppNavigator = createSwitchNavigator({
    
- 
+    App: {
+      screen: StackNavigator,
+    },
     drawer: {
         screen: DrawerNavigator,
       }, 
-      App: {
-        screen: StackNavigator,
-      },
+   
   });
 
 

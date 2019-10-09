@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import ChatHome from '../../components/ChatHome/ChatHome'
 
 // Action Creators
-import { receiveMessagesHome } from '../../store/reducer';
+import { dataMessagesHome,sendDataFilterHomeMessage } from '../../store/actionCreator/ChatHome';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -21,7 +21,7 @@ import { receiveMessagesHome } from '../../store/reducer';
  */
 const mapStateToProps = (state, ownProps) => ({
     dataMessagesHome: state.dataMessagesHome,
-    receiveDataFilter:state.receiveDataFilter
+    dataFilterHome:state.dataFilterHome
 });
 
 /* === Actions ===
@@ -32,11 +32,11 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  receiveMessagesHome: (message ) => {
-    dispatch(receiveMessagesHome(message));
+  dataMessagesHome: () => {
+    dispatch(dataMessagesHome());
   },
-  sendDatafilterMessage:(text)=>{
-      dispatch(sendDatafilterMessage(text));
+  sendDataFilterHomeMessage:(text)=>{
+      dispatch(sendDataFilterHomeMessage(text));
   }
 });
 

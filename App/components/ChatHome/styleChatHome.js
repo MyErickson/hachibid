@@ -18,6 +18,7 @@ export const Style = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 20,
         borderRadius: 20,
+ 
       
     },
     
@@ -27,6 +28,7 @@ export const Style = StyleSheet.create({
    
        
     },
+    
     
  
 

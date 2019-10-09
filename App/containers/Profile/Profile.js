@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Profile from '../../components/Profile/Profile';
 
 // Action Creators
-import { sendDataUpdateProfile } from '../../store/reducer';
+import { sendDataUpdateProfile } from '../../store/actionCreator/Profile';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation

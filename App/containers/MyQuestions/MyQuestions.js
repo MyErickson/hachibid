@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
 
 // Action Creators
-import { sendMessageUser } from '../../store/reducer';
+import { sendMessageUser } from '../../store/actionCreator/MessageCategory'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,7 +20,7 @@ import { sendMessageUser } from '../../store/reducer';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    dataMessages: state.dataMessages,
+  dataMessagesMyQuestionss: state.dataMessagesMyQuestions,
 });
 
 /* === Actions ===

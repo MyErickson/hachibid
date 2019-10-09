@@ -2,20 +2,15 @@ import React, { Component } from 'react';
 import { View, Text } from 'native-base';
 import { Input } from 'react-native-elements';
 
-class Filtrate extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+ Filtrate =(props)=>{
+ const { searchBar } = props
 
-  render() {
     return (
       <View>
-        <Input placeholder='Recherche' />
+        <Input placeholder='Recherche'  onChangeText={(text)=> searchBar(text)}/>
       </View>
     );
   }
-}
+
 
 export default Filtrate;

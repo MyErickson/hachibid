@@ -2,12 +2,15 @@ import React from 'react';
 import { Platform , Dimensions } from 'react-native';
 import {  createAppContainer } from 'react-navigation';
 import {createDrawerNavigator } from 'react-navigation-drawer'
-import MyQuestions from '../MyQuestions/MyQuestions';
-import Profile from '../Profile/Profile';
-import Connection from '../../containers/Connection/Connection';
+import MyQuestionsContainer from '../../containers/MyQuestions/MyQuestions';
+import ProfileContainer  from '../../containers/Profile/Profile';
 import MenuDrawer from './MenuDrawer';
-import ChatHome from '../../containers/ChatHome/ChatHome';
-import MessageCategory from '../MessageCategory/MessageCategory'
+import ChatHomeContainer  from '../../containers/ChatHome/ChatHome';
+import MessageCategoryContainer  from '../../containers/MessageCategory/MessageCategory';
+import Category from '../Category/Category'
+
+
+
 const WIDTH = Dimensions.get('window').width;
 
 const DrawerConfig = {
@@ -19,21 +22,22 @@ const DrawerConfig = {
 
 const DrawerNavigator = createDrawerNavigator(
     {
-    Connection:{
-        screen:Connection
-      }, 
+   
     MyQuestions:{
-        screen: MyQuestions
+        screen: MyQuestionsContainer
     },
     Home:{
-        screen: ChatHome,
+        screen: ChatHomeContainer,
         
     },
     Profile:{
-        screen:Profile
+        screen:ProfileContainer 
     },
     MessageCategory:{
-        screen:MessageCategory
+        screen:MessageCategoryContainer
+    },
+    Category:{
+        screen:Category
     }
    
 },

@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 
-import { Platform , Dimensions , StyleSheet , View , Text,TouchableOpacity , Image , ScrollView} from 'react-native';
+import {  View , Text,TouchableOpacity , Image , ScrollView} from 'react-native';
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { Styles } from './styleMenuDrawer';
 import { Icon,Container, Header, Content, List, ListItem, } from 'native-base';
 import { casualList} from '../../data/dataCasual'
 import { presetColors } from '../../data/dataCasual'
-const WIDTH = Dimensions.get('window').width;
-const HEIGHT = Dimensions.get('window').height;
+
+
 
 
 
@@ -40,6 +40,18 @@ export default class MenuDrawer extends React.Component{
         })
      }
 
+
+    gotToNavLink=(nav)=>{
+        if(nav === 'Category'){
+            this.props.navigation.navigate(nav,{
+                nameCategory:nav
+            })
+        }else{
+            this.props.navigation.navigate(nav)
+        }
+    }
+
+
   navLink(nav,text,icon,show=false){
       
 
@@ -47,7 +59,7 @@ export default class MenuDrawer extends React.Component{
                 <Fragment>
                     <TouchableOpacity 
                     style={{height:50,flexDirection:'row'}} 
-                    onPress={()=>this.props.navigation.navigate(nav)}>
+                    onPress={()=>this.gotToNavLink(nav)}>
 
                         <View style={{height:50,flexDirection:'row'}}>
                             <Icon style={Styles.icons} name={icon} />
@@ -104,10 +116,11 @@ export default class MenuDrawer extends React.Component{
              </View>
              
              <View style={Styles.bottomLinks}>
+                
                  {this.navLink('Home','Chat Général','home')}
                  {this.navLink('MyQuestions','Mes questions','chatbubbles')}
                  {this.navLink('Profile','Profil','person')}
-                 {this.navLink('Home','Catégories','keypad',true)}  
+                 {this.navLink('Category','Catégories','keypad',true)}  
              </View>
       
         </View>

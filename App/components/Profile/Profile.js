@@ -195,7 +195,7 @@ class Profile extends Component {
                     <Button rounded info 
                         containerStyle={Style.button}
                         onPress= {this.goToRegister}
-                        title= 'se connecter'
+                        title= 'Modifier'
                     />
                        
                    

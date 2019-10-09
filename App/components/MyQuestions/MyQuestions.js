@@ -3,6 +3,8 @@ import { View,  Text,  PanResponder } from 'react-native';
 import { Style} from './styleMyQuestions';
 import { Icon ,Input } from 'native-base'
 import Menu from '../Menu/Menu'
+import Filtrate from '../Filtrate/Filtrate'
+
 
 import { GiftedChat , Bubble, Send , InputToolbar } from 'react-native-gifted-chat'
 class MyQuestions extends Component {
@@ -61,7 +63,9 @@ class MyQuestions extends Component {
 
   renderSend(props) {
     return (
+     
       <Send {...props} label={<Icon  name="paper-plane" />} />
+
     );
 }
  
@@ -69,10 +73,20 @@ renderInputToolbar(props) {
 
   return(
     <InputToolbar
+    containerStyle={{marginBottom:20}}
     {...props}
     />
   ); 
 
+}
+
+searchBar= async (text)=>{
+  //   await this.props.sendDatafilterMessage(text)
+  //   const _messages = await this.props.receiveDataFilter
+  // this.setState({
+  //     _messages
+  // })
+  console.log(text)
 }
 
   render() {
@@ -84,7 +98,7 @@ renderInputToolbar(props) {
         <Menu nameMenu="Mes questions" toggle={this.props.navigation.toggleDrawer}/>
       
         <View style={Style.messageContainer}>
-      
+            <Filtrate searchBar={this.searchBar} />
               <GiftedChat
                 messages={this.state.messages}
                 onSend={messages => this.onSend(messages)}
@@ -96,6 +110,7 @@ renderInputToolbar(props) {
                 keyboardShouldPersistTaps={'never'}
                 renderBubble={this.renderBubble}
                 renderSend={this.renderSend}
+                renderInputToolbar={this.renderInputToolbar}
                 user={{
                   _id: 'Id user',
                   

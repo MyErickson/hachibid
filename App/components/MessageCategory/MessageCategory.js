@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import Menu from '../Menu/Menu';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { Style } from './styleMessageCategory'
+import Filtrate from '../Filtrate/Filtrate'
+import Menu from '../Menu/Menu';
+
 
 class MessageCategory extends Component {
   constructor(props) {
@@ -17,8 +19,10 @@ class MessageCategory extends Component {
 
 
     static async getDerivedStateFromProps(props, state){
-    const {params } = props.navigation.state
-    //  const allMessages =  await this.props.dataMessages
+    const { params } = props.navigation.state
+    console.log(params)
+    // await this.props.receiveDataMessagesCategory(params.nameCategory)
+    // const allMessages =  await this.props.dataMessagesCategory
         props.navigation.closeDrawer()
         state.title = params.nameCategory
         state._messages=  [
@@ -65,10 +69,18 @@ class MessageCategory extends Component {
 
         ]
         
-      
   
     }
 
+    searchBar= async (text)=>{
+      //   await this.props.sendDatafilterMessageCategory(text)
+      //   const _messages = await this.props.dataFilterCategory
+      // this.setState({
+      //     _messages
+      // })
+      console.log(text)
+   }
+    
   render() {
      const { _messages,title }=this.state
      const {navigation} = this.props.navigation.state.params
@@ -79,12 +91,12 @@ class MessageCategory extends Component {
         <Menu nameMenu={title} toggle={navigation.toggleDrawer}/>
       
         <View style={Style.messageContainer}>
-      
+        <Filtrate searchBar={this.searchBar} />
               <GiftedChat
                 messages={_messages}
                 renderAvatar={null}
                 isAnimated= {true}
-                minInputToolbarHeight={60}
+                minInputToolbarHeight={20}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
                 style={{background:'red'}}  

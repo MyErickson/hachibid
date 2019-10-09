@@ -11,7 +11,7 @@ import MenuDrawer from '../../components/MenuDrawer/MenuDrawer'
 
 // Action Creators
 
-import { receiveDataCategory } from '../../store/reducer'
+import { receiveDataCategory } from '../../store/actionCreator/MenuDrawer'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
