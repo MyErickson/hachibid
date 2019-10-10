@@ -1,23 +1,30 @@
 import React, { Component } from 'react';
-import { View,  Text,  PanResponder } from 'react-native';
+import { View,  Text,  TouchableOpacity } from 'react-native';
 import { Style} from './styleMyQuestions';
 import { Icon ,Input } from 'native-base'
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
-
+ import {request, PERMISSIONS} from 'react-native-permissions';
 
 import { GiftedChat , Bubble, Send , InputToolbar } from 'react-native-gifted-chat'
+
+
 class MyQuestions extends Component {
   constructor(props){
     super(props);
     this.state = {
       messages:undefined,
+      
     }
-  
+
   }
     
     async componentDidMount() {
     //  const allMessages =  await this.props.dataMessages
+    console.log(PERMISSIONS.ANDROID.RECORD_AUDIO)
+
+  const test = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+  console.log(test)
       this.setState({
         messages: [
           {
@@ -48,11 +55,18 @@ class MyQuestions extends Component {
     //     }))
   }
 
+  soundRecording =async()=>{
+   
+ 
+    
+  }
+
+
   renderBubble(props) {
 
     return (
       <View>
-        <Text style={Style.name}>{props.currentMessage.user.name}</Text>
+        
         <Bubble
           {...props}
         />
@@ -64,37 +78,50 @@ class MyQuestions extends Component {
   renderSend(props) {
     return (
      
-      <Send {...props} label={<Icon  name="paper-plane" />} />
+      <Send {...props} label={<Icon name="paper-plane" />} />
 
     );
-}
+  }
  
-renderInputToolbar(props) {
+  renderInputToolbar(props) {
+  
+    return(
+      <InputToolbar
+      containerStyle={{paddingTop:10}}
+      
+      {...props}
+      />
+    ); 
 
-  return(
-    <InputToolbar
-    containerStyle={{marginBottom:20}}
-    {...props}
-    />
-  ); 
+  }
 
-}
+  renderActions=(props)=>{
+    
+      return (
+        <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+        <Icon name="mic"  {...props} onPress={()=>this.soundRecording()}/>
+        </TouchableOpacity>
+      )
 
-searchBar= async (text)=>{
-  //   await this.props.sendDatafilterMessage(text)
-  //   const _messages = await this.props.receiveDataFilter
-  // this.setState({
-  //     _messages
-  // })
-  console.log(text)
-}
+    
+ }
+  searchBar= async (text)=>{
+    //   await this.props.sendDatafilterMessage(text)
+    //   const _messages = await this.props.receiveDataFilter
+    // this.setState({
+    //     _messages
+    // })
+    console.log(text)
+  }
+
+
 
   render() {
-     
+   
 
     return (
     
-      <View   style={Style.container}>
+      <View  style={Style.container}>
         <Menu nameMenu="Mes questions" toggle={this.props.navigation.toggleDrawer}/>
       
         <View style={Style.messageContainer}>
@@ -102,6 +129,7 @@ searchBar= async (text)=>{
               <GiftedChat
                 messages={this.state.messages}
                 onSend={messages => this.onSend(messages)}
+                renderUsernameOnMessage={true}
                 renderAvatar={null}
                 isAnimated= {true}
                 minInputToolbarHeight={60}
@@ -111,6 +139,8 @@ searchBar= async (text)=>{
                 renderBubble={this.renderBubble}
                 renderSend={this.renderSend}
                 renderInputToolbar={this.renderInputToolbar}
+                renderActions={this.renderActions}
+              
                 user={{
                   _id: 'Id user',
                   
