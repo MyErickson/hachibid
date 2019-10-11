@@ -45,7 +45,14 @@ export const Style = StyleSheet.create({
         paddingLeft:15,
         color:'gray'
     },
-
+    recorder:{
+        padding:5,
+        backgroundColor:"gray",
+        borderRadius:10,
+        paddingBottom:10,
+        paddingTop:10 ,
+        flexDirection:'row'
+    }
 
     
  

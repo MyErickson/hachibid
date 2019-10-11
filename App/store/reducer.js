@@ -13,7 +13,8 @@ const initialState = {
   dataFilterCategory:undefined,
   dataMessagesMyQuestions:undefined,
   dataFilterMessagesCategory:undefined,
-  dataFilterCategory:undefined
+  dataFilterCategory:undefined,
+
   
 };
 
@@ -44,6 +45,7 @@ export const RECEIVE_DATA_FILTER_CATEGORY='RECEIVE_DATA_FILTER_CATEGORY';
 export const SEND_DATA_FILTER_CATEGORY='SEND_DATA_FILTER_CATEGORY';
 export const DATA_ALL_CATEGORY='DATA_ALL_CATEGORY';
 export const RECEIVE_DATA_ALL_CATEGORY ='RECEIVE_DATA_ALL_CATEGORY';
+export const DATA_MESSAGES_MYQUESTIONS='DATA_MESSAGES_MYQUESTIONS';
 
 /**
  * Traitements
@@ -101,12 +103,6 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         dataMessagesCategory:action.messagesCategory
       };
-    
-    case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
-    return {
-      ...state,
-      dataMessagesMyQuestions:action.dataMessagesMyQuestions
-    };
 
     case DATA_FILTER_MESSAGES_CATEGORY:
     return {
@@ -124,6 +120,12 @@ const reducer = (state = initialState, action = {}) => {
       return {
         ...state,
         dataAllCategory:action.dataAllCategory
+      };
+    
+    case DATA_MESSAGES_MYQUESTIONS:
+      return {
+        ...state,
+        dataMessagesMyQuestions:action.dataMessagesMyQuestions
       };
     default:
       return state;
