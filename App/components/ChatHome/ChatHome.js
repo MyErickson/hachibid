@@ -59,7 +59,7 @@ class ChatHome extends Component {
                 minInputToolbarHeight={20}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
-              
+                renderUsernameOnMessage={true}
                 keyboardShouldPersistTaps={'never'}
                 user={{
                   _id: 'Id user',

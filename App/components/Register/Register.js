@@ -73,7 +73,11 @@ class Register extends Component {
   
         return (
             <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
+                <View style={ Style.textRegister}   >
+                <Icon  underlayColor='none' onPress={()=>this.props.navigation.goBack()} size={30} name='reply'/> 
+                </View>
             <View style={Style.container}>
+            
                 <Text style={{color:'white',fontWeight:'bold',fontSize:20}}>Create My Account</Text>
             <View style={Style.form}>
      
@@ -130,7 +134,7 @@ class Register extends Component {
                    
                     
                      <Item last  style={Style.containerInput}>
-                         
+                     <Icon  active name='lock'/> 
                          <Input 
                          style={Style.input} 
                          name="confPWD"
@@ -157,15 +161,7 @@ class Register extends Component {
                  
                 />
               
-                <View 
-                    style={ Style.textRegister}
-                >
-                     <Text 
-                     style={{fontSize:18}} 
-                     onPress={()=>this.props.navigation.goBack()}
-                     >
-                           retour </Text>
-                </View>
+             
             </Content>
          
         </View>

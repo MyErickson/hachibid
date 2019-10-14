@@ -52,8 +52,35 @@ export const Style = StyleSheet.create({
         paddingBottom:10,
         paddingTop:10 ,
         flexDirection:'row'
-    }
+    },
 
-    
+    Modal:{
+        maxHeight:hp('20%'),
+        backgroundColor:'white',
+        top:hp('35%'),
+        borderRadius:30,
+        justifyContent:'center',
+        alignItems:'flex-end'
+    },
+    recorderPlaySound:{
+        padding:5,
+        marginRight:10,
+        paddingBottom:10,
+        paddingTop:10 ,
+        flexDirection:'row',
+        width:wp("85%"),
+        borderRadius:10,
+        backgroundColor:'rgba(41,113,232,0.8)'
+    },
+    button:{
+       margin:10,
+        width:wp("20%"),
+        color:'rgba(41,113,232,0.8)'
+
+    },
+    iconRecorder:{
+     
+        margin:5
+    }
  
 })

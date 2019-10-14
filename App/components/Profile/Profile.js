@@ -1,8 +1,11 @@
-import React, { Component, Fragment } from 'react';
-import { View, Text, TouchableOpacity , ScrollView } from 'react-native';
-import { Button , Avatar } from 'react-native-elements';
+import React, { Component} from 'react';
+import { View, Text,  ScrollView } from 'react-native';
+import { Button , Avatar , Icon} from 'react-native-elements';
 import { Style }  from './styleProfile'
-import { Container, Content, Form, Item, Input , Label } from 'native-base';
+import { Form, Item, Input  } from 'native-base';
+
+import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
+import { presetColors } from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
 
 class Profile extends Component {
@@ -27,34 +30,28 @@ class Profile extends Component {
 
         switch(name){
             case 'login':
-                    if(text.length < 3){
+                    if(text.length < 3  && text.trim() !== ''){
                         this.setState({errorLoginCharacter:true})
                     }else{
                         this.setState({errorLoginCharacter:false})
                     }
                 break;
             case 'email':
-                    if(text.length < 3){
+                    if(text.length < 3  && text.trim() !== ''){
                         this.setState({errorEmailCharacter:true})
                     }else{
                         this.setState({errorEmailCharacter:false})
                     }
                 break;
             case 'password':
-                    if(text.length  < 4){
+                    if(text.length  < 4  && text.trim() !== ''){
                         this.setState({errorPwdCharacter:true})
                     }else{
                         this.setState({errorPwdCharacter:false})
                     }
                 break;
-            case 'changePassword':
-                    if(text.length  < 4){
-                        this.setState({errorChangePwdCharacter:true})
-                    }else{
-                        this.setState({errorPwdCharacter:false})
-                    }
-                break;
-                
+   
+            
         }
         
         this.setState({[name]:text})
@@ -97,7 +94,8 @@ class Profile extends Component {
 
     return (
      
-          
+        
+        <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}> 
         <View style={Style.container}>
             <Menu nameMenu="Profil" toggle={this.props.navigation.toggleDrawer}/>
               <ScrollView
@@ -116,24 +114,17 @@ class Profile extends Component {
                     }}
                 />
               
-          
-              <ScrollView
-              bounces={true}
-              style={Style.scrollview}
-              showsVerticalScrollIndicator = {false}
-             
-              >
             <View style={Style.form}>
-                <Container>
-                    <Content>  
+              
                         <Form >
-                             <Label style={Style.label}>Identifiant *</Label>
-                        <Item last  regular style={Style.containerInput}>
-                       
+                           
+                        <Item last style={Style.containerInput}>
+                        <Icon  active name='person'/> 
                             <Input 
                        
                              name="login"
                              maxLength={255}
+                             placeholder='Identifiant *'
                              value={login}
                              onChange={this.collectDataForUpdate}
                              />
@@ -142,11 +133,11 @@ class Profile extends Component {
                         { errorLoginCharacter && (<Text style={{color:'red'}}>Il faut au moins 3 caractères</Text>)}
                         
 
-                        <Label style={Style.label}>E-mail *</Label>
-                        <Item last regular style={Style.containerInput}>
-                         
+                     
+                        <Item last style={Style.containerInput}>
+                        <Icon  active name='mail'/> 
                             <Input 
-                      
+                            placeholder='E-mail *'
                             name="email"
                             maxLength={255}
                             value={email}
@@ -155,11 +146,11 @@ class Profile extends Component {
 
                         { errorEmailCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
 
-                        <Label style={Style.label}>Mot de passe *</Label>
-                        <Item last regular style={Style.containerInput}>
-                         
-                         <Input 
                         
+                        <Item last style={Style.containerInput}>
+                        <Icon  active name='lock'/> 
+                         <Input 
+                         placeholder='Mot de passe *'
                          name="password"
                          secureTextEntry={true}
                          maxLength={255}
@@ -169,12 +160,12 @@ class Profile extends Component {
                      {errorPwdCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
                     
 
-                     <Label style={Style.label}>Changer mon mot de passe *</Label>
                     
-                     <Item last regular style={Style.containerInput}>
-                         
+                    
+                     <Item last style={Style.containerInput}>
+                     <Icon  active name='lock'/> 
                          <Input 
-                
+                         placeholder='Changer mon mot de passe *'
                          name="changePassword"
                          secureTextEntry={true}
                          maxLength={255}
@@ -184,25 +175,20 @@ class Profile extends Component {
                      {errorChangePwdCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
                         </Form>
                  
-                    </Content>
-                </Container>
-
-                </View>             
-                </ScrollView>  
-            
-                <Content>
-
-                    <Button rounded info 
+               
+                        <Button 
                         containerStyle={Style.button}
+                        buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
                         onPress= {this.goToRegister}
                         title= 'Modifier'
-                    />
+                       />
                        
-                   
-                </Content>
+                </View>             
                 </ScrollView>  
-            </View>
+
           
+            </View>
+            </AnimatedLinearGradient>
  
     )}
 }

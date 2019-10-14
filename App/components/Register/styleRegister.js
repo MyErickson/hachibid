@@ -11,21 +11,21 @@ export const Style = StyleSheet.create({
         alignItems:'center',
         justifyContent:"space-between",
         paddingTop:hp('10%'),
-
+      
         
     },
 
     containerInput:{
         borderRadius:10,
         marginTop:15,
-        
+       
         
     },
     form:{
         width:wp('80%'),
         height:hp('55%'),
-        marginTop:marginTop
-        
+        marginTop:marginTop,
+       
     },
     button:{
         width:wp('80%'),
@@ -33,9 +33,12 @@ export const Style = StyleSheet.create({
   
     },
     textRegister:{
-        alignItems:"center",
-        marginTop:marginTop,
-     
+        textAlign:'left', 
+        width:wp('20%'),
+        marginTop:10,
+        
+      
+
        
     },
     input:{

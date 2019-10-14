@@ -101,6 +101,7 @@ class MessageCategory extends Component {
                 renderInputToolbar={()=>undefined}
                 style={{background:'red'}}  
                 keyboardShouldPersistTaps={'never'}
+                renderUsernameOnMessage={true}
                 user={{
                   _id: 'Id user',
                   

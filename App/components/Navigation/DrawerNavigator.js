@@ -23,12 +23,13 @@ const DrawerConfig = {
 const DrawerNavigator = createDrawerNavigator(
     {
    
-    MyQuestions:{
-        screen: MyQuestionsContainer
-    },
+    
     Home:{
         screen: ChatHomeContainer,
         
+    },
+    MyQuestions:{
+        screen: MyQuestionsContainer
     },
     Profile:{
         screen:ProfileContainer 
