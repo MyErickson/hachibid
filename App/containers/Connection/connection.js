@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Connection from '../../components/Connection/Connection'
 
 // Action Creators
-import { sendDataConnection } from '../../store/actionCreator/Connection';
+import { sendDataConnection,responseConnection} from '../../store/actionCreator/Connection';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,7 +20,8 @@ import { sendDataConnection } from '../../store/actionCreator/Connection';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    receiveResponseConnection: state.receiveResponseConnection,
+    receiveResponseConnection:state.receiveResponseConnection,
+   
 });
 
 /* === Actions ===
@@ -34,6 +35,12 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sendDataConnection: (login , password ) => {
     dispatch(sendDataConnection(login , password));
   },
+  responseConnection:(token)=>{
+    dispatch(responseConnection(token))
+  }
+ 
+
+
 });
 
 // Container

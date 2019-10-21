@@ -1,55 +1,32 @@
 import axios from 'axios';
-import { SEND_DATA_REGISTER , SEND_DATA_CONNECTION ,SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
+
+import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
         RECEIVE_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_DATA_ALL_CATEGORY,
-        RECEIVE_DATA_MESSAGES_MYQUESTIONS,
+        RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,  } from './reducer'
 
 
 import { receiveMessagesHome,receiveDataMessagesHome } from './actionCreator/ChatHome';
-import { responseConnection  } from './actionCreator/Connection';
-import { responseRegister } from './actionCreator/Register';
 import { responseForReset } from './actionCreator/ResetPassword';
 import { receiveDataUpdateProfile } from './actionCreator/Profile';
-import { dataMessagesCategory } from './actionCreator/MessageCategory';
-import { receiveDataCategory } from './actionCreator/MenuDrawer';
+import { receiveDataCategory } from './actionCreator/MessageCategory';
+//  import { receiveDataAllCategory } from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from './actionCreator/MyQuestions';
-import { receiveDataFilterCategory } from './actionCreator/Category'
+import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
+import AsyncStorage from '@react-native-community/async-storage';
 
+var sessionId =  AsyncStorage.getItem('sessionJWT')
 
+ const  ajaxMiddleware = store => next => async action => {
+    //  console.log(next,'action')
 
- const  ajaxMiddleware = store => next => async (action) => {
-    console.log(next,'action')
-    console.log(action)
+    //match(/"(.*?)"/)[1] recuperer le token sans les ""
+   
+     axios.defaults.headers.common['Authorization']= "Bearer "+sessionId._55;
+    axios.defaults.baseURL = 'https://rabbin-dev.digitalcube.fr/api/'
     next(action);
     switch(action.type){
 
-        case SEND_DATA_CONNECTION :
-            next(action)
-           await axios.post('url',{
-                identifiant:action.login,
-                pdw:action.password
-            }).then((response)=>{
-                console.log(response)
-                responseConnection(true)
-            }).catch((err)=>{
-                responseConnection(false)
-      
-            })
-            break;
-
-        case SEND_DATA_REGISTER :
-            next(action)
-            await axios.post('url',{
-
-            }).then((response)=>{
-                console.log(response)
-                responseRegister(true)
-            }).catch((err)=>{
-                console.log(err)
-                responseRegister(false)
-            })
-            break;
-        
 
         case SEND_DATA_RESET_PASSWORD:
             next(action)
@@ -79,18 +56,18 @@ import { receiveDataFilterCategory } from './actionCreator/Category'
             break;
 
 
-        case RECEIVE_DATA_CATEGORY:
-            next(action)
-            await axios.get('url',{
-            
-            }).then((response)=>{
-               
-                receiveDataCategory(response)
-            }).catch((err)=>{
-                console.log(err)
+        // case RECEIVE_DATA_CATEGORY:
+        //     next(action)
+        //     await axios.get('https://rabbin-dev.digitalcube.fr/api/categories',{
+           
+        //     }).then((response)=>{
+        //        console.log('data category ', response)
+        //         store.dispatch(receiveDataCategory(response))
+        //     }).catch((err)=>{
+        //         console.log(err)
                 
-            })
-            break;
+        //     })
+        //     break;
 
         case DATA_MESSAGES_HOME:
             next(action)
@@ -104,14 +81,29 @@ import { receiveDataFilterCategory } from './actionCreator/Category'
                 
             })
             break;
-        
+
+
+        // case DATA_PROFILE_USERS:
+        //     next(action)
+        //     await axios.get('users/{}',{
+            
+        //     }).then((response)=>{
+        //         //ici un autre axios
+              
+        //     }).catch((err)=>{
+        //         console.log(err)
+                
+        //     })
+        //     break;
+
+            
         case SEND_DATA_UPDATE_PROFILE:
             next(action)
             await axios.get('url',{
             
             }).then((response)=>{
                 //ici un autre axios
-                receiveDataUpdateProfile(response)
+              
             }).catch((err)=>{
                 console.log(err)
                 
@@ -167,16 +159,19 @@ import { receiveDataFilterCategory } from './actionCreator/Category'
                 
             })
             break;
-
+// requete pour recuperer tout le data pour la liste de category
         case DATA_ALL_CATEGORY:
             next(action)
-            await axios.get('url',{
-            
-            }).then((response)=>{
-           
-                receiveDataAllCategory(response)
+            await axios.get('categories')
+            .then((response)=>{
+                console.log("eeeeeeeee",response)
+                 const allCategory = response.data["hydra:member"].map(value=>{
+                      return value.title
+                 })
+              
+                store.dispatch(receiveDataAllCategory(allCategory))
             }).catch((err)=>{
-                console.log(err)
+                console.log('category',err)
                 
             })
             break;

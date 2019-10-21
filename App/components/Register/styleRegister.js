@@ -43,8 +43,17 @@ export const Style = StyleSheet.create({
     },
     input:{
         color:'white'
+    },
+    succesRegister:{
+        color:"green",
+        textAlign:'center',
+        fontSize:20
+    },
+    errorRegister:{
+        color:"red",textAlign:'center'
+
     }
-  
+   
     
 
 

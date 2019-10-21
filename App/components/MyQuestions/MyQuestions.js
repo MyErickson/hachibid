@@ -9,15 +9,18 @@ import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar, Message,} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound';
-
-
+var time = 0
+const myTimer = ()=>{
+   time = time + 1 
+  return time
+}
 
 class MyQuestions extends Component {
   constructor(props){
     super(props);
     this.state = {
       messages:undefined,
-      recordSecs:undefined,
+      recordDuration:undefined,
       recordTime:undefined,
       currentPositionSec:undefined,
       currentDurationSec:undefined,
@@ -34,10 +37,7 @@ class MyQuestions extends Component {
     this.permission = undefined;
     this.writeExternalStorage = undefined ;
     this.audioRecorderPlayer = new AudioRecorderPlayer();
-    this.path = Platform.select({
-      ios: 'hello.m4a',
-      android: `sdcard/Music/${Date.now()}.mp4`
-    })
+    this.path = undefined
   }
     
     async componentDidMount() {
@@ -86,13 +86,16 @@ class MyQuestions extends Component {
  
 // ******************************* Mehtode GiftedChat *******************************
   async onSend(messages = []) {
-     const {_id , createdAt , text , user } = messages[0]
+     const {_id , createdAt , text , user  , recordDuration,
+      recordPosition} = messages[0]
      const newMessages = [{
        _id,
        createdAt,
        text,
        type:'message',
-       user
+       user,
+       recordDuration,
+       recordPosition
      }]
 
     this.setState(previousState =>({
@@ -112,10 +115,7 @@ class MyQuestions extends Component {
      if(type === "record"){
    
        return (
-        <View  style={Style.recorder}>
-          {/* {this.play?<IconElement name="stop" onPress={()=>this.onStopPlay()}/>  
-          :<Icon name="play" onPress={()=>this.toggleModal()}/> } */}
-         
+        <View  style={Style.recorder}>    
         <Text onPress={()=>this.toggleModal(props)} style={{marginLeft:15}}>Message vocal</Text>
         
       </View>
@@ -188,12 +188,17 @@ class MyQuestions extends Component {
     this.setState({
       stop:!stop
     })
-    this.patch
-    const result = await this.audioRecorderPlayer.startRecorder(this.path);
-  
+    this.path = Platform.select({
+      ios: 'hello.m4a',
+      android: `sdcard/Music/${Date.now()}.mp4`
+    })
+     await this.audioRecorderPlayer.startRecorder(this.path);
+   
     this.audioRecorderPlayer.addRecordBackListener((e) => {
+      
+
       this.setState({
-        recordSecs: e.current_position,
+        recordDuration: e.current_position,
         recordTime: this.audioRecorderPlayer.mmssss(
           Math.floor(e.current_position),
         ),
@@ -213,14 +218,17 @@ class MyQuestions extends Component {
    const result = await this.audioRecorderPlayer.stopRecorder(this.path);
 
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
-   
+     console.log("reeee",this.audioRecorderPlayer.mmss(
+      this.state.recordSecs,
+    ),)
     this.setState(previousState=>({
       recordSecs: 0,
       messages: GiftedChat.append(previousState.messages,  {
         _id:Date.now(),
         text: result,
         createdAt: new Date(),
-        recordSecs:this.state.recordTime,
+        recordDuration:this.state.recordDuration,
+        recordPosition:0,
         type:'record',
         user: {
           _id:'Id user',
@@ -233,39 +241,39 @@ class MyQuestions extends Component {
 
   };
 
-  onStartPlay = async () => {
+  onStartPlay = async (propsSounder) => {
+    const currentPath = propsSounder.currentMessage.text.split('//')
     console.log('onStartPlay');
-    const { play } = this.state
-    this.setState({
-      play:true
-    })
-  
     
-    const msg = await this.audioRecorderPlayer.startPlayer(this.path);
-    console.log("msg ==>",msg);
+   
+    
+    const msg = await this.audioRecorderPlayer.startPlayer(currentPath[1]);
+    console.log("msg ==>",msg,this.path);
     this.audioRecorderPlayer.addPlayBackListener((e) => {
-      console.log(e)
+      console.log("eeeeeeeeeeeeeeeeeeeeeee",e)
       if (e.current_position === e.duration) {
         console.log('finished');
-        // this.audioRecorderPlayer.stopPlayer(this.path);
+        
+        this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
+        
       }
       this.setState({
         currentPositionSec: e.current_position,
         currentDurationSec: e.duration,
         playTime: this.audioRecorderPlayer.mmssss(Math.floor(e.current_position)),
         duration: this.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
-        
+        play:true
       });
 
-      console.log('duuuuration',this.state.playTime)
     });
-   
+    this.setState({play:false})
   };
 
-  onPausePlay = async () => {
-    console.log('onPausePlay');
-    this.setState({play:false})
-    await this.audioRecorderPlayer.pausePlayer();
+  onPausePlay =  async (propsSounder) => {
+  const currentPath = propsSounder.currentMessage.text.split('//')
+  console.log('onPausePlay');
+   this.setState({play:false})
+   await  this.audioRecorderPlayer.pausePlayer(currentPath[1]);
   
   };
 
@@ -285,19 +293,22 @@ class MyQuestions extends Component {
 
 
   render() {
-   
+   console.log("posiiyon",this.state.currentDurationSec)
 
     return (
     
       <View  style={Style.container}>
         <Menu nameMenu="Mes questions" toggle={this.props.navigation.toggleDrawer}/>
        <PlaySound 
-       isModalVisible={this.state.isModalVisible}
-       toggleModal={this.toggleModal}
-       onStartPlay={this.onStartPlay}
-       onPausePlay ={this.onPausePlay}
-       play={this.state.play}
-       propsSounder={this.state.propsSounder}
+        isModalVisible={this.state.isModalVisible}
+        toggleModal={this.toggleModal}
+        onStartPlay={this.onStartPlay}
+        onPausePlay ={this.onPausePlay}
+        play={this.state.play}
+        propsSounder={this.state.propsSounder}
+        duration={this.state.duration}
+        currentDurationSec={this.state.currentDurationSec}
+        currentPositionSec={this.state.currentPositionSec}
        />
         <View style={Style.messageContainer}>
             <Filtrate searchBar={this.searchBar} />

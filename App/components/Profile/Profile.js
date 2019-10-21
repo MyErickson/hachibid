@@ -21,7 +21,11 @@ class Profile extends Component {
         errorPwdCharacter:undefined
 
     };
-  
+
+    
+   componentDidMount(){
+
+   }
     collectDataForUpdate=(evt)=>{
         
         const { name }  = evt._targetInst.pendingProps;

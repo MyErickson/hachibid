@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-community/async-storage';
+
 /**
  * Initial State
  */
@@ -15,6 +17,7 @@ const initialState = {
   dataFilterMessagesCategory:undefined,
   dataFilterCategory:undefined,
 
+
   
 };
 
@@ -23,7 +26,6 @@ const initialState = {
  */
 
 export const RESPONSE_CONNECTION = 'REPONSE_CONNECTION';
-export const RESPONSE_REGISTER = 'REPONSE_REGISTER';
 export const RESPONSE_FOR_RESET = ' RESPONSE_FOR_RESET';
 export const RECEIVE_DATA_CATEGORY ='RECEIVE_DATA_CATEGORY';
 export const RECEIVE_MESSAGES_HOME ='RECEIVE_MESSAGES_HOME';
@@ -33,8 +35,6 @@ export const SEND_DATA_UPDATE_PROFILE ='SEND_DATA_UPDATE_PROFILE';
 export const SEND_DATA_FILTER_HOME_MESSAGE='SEND_DATA_FILTER_HOME_MESSAGE';
 export const SEND_MESSAGE_USER= 'SEND_MESSAGE_USER';
 export const SEND_DATA_RESET_PASSWORD = 'SEND_DATA_RESET_PASSWORD';
-export const SEND_DATA_REGISTER ='SEND_DATA_REGISTER';
-export const SEND_DATA_CONNECTION = 'SEND_DATA_CONNECTION';
 export const DATA_MESSAGES_HOME ='DATA_MESSAGES_HOME';
 export const RECEIVE_DATA_MESSAGES_CATEGORY ='RECEIVE_DATA_MESSAGES_CATEGORY,';
 export const SEND_DATA_FILTER_MESSAGES_CATEGORY= ' SEND_DATA_FILTER_MESSAGES_CATEGORY';
@@ -46,6 +46,7 @@ export const SEND_DATA_FILTER_CATEGORY='SEND_DATA_FILTER_CATEGORY';
 export const DATA_ALL_CATEGORY='DATA_ALL_CATEGORY';
 export const RECEIVE_DATA_ALL_CATEGORY ='RECEIVE_DATA_ALL_CATEGORY';
 export const DATA_MESSAGES_MYQUESTIONS='DATA_MESSAGES_MYQUESTIONS';
+export const DATA_PROFILE_USERS ='DATA_PROFILE_USERS'
 
 /**
  * Traitements
@@ -57,17 +58,16 @@ export const DATA_MESSAGES_MYQUESTIONS='DATA_MESSAGES_MYQUESTIONS';
 const reducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case RESPONSE_CONNECTION:
+       if(action.responseConnection){
+        AsyncStorage.setItem('sessionJWT', action.responseConnection)
+       }
       return {
         ...state,
-        receiveResponseConnection:action.responseConnection
+        receiveResponseConnection:action.responseConnection,
+      
       };
 
-    case RESPONSE_REGISTER:
-      return {
-        ...state,
-        receiveResponseRegister:action.esponseRegister
-      };
-      
+ 
     case RESPONSE_FOR_RESET:
       return {
         ...state,
@@ -87,7 +87,7 @@ const reducer = (state = initialState, action = {}) => {
           dataMessagesHome:action.allMessageHome
         };
 
-    case RECEIVE_DATA_UPDATE_PROFILE:
+    case DATA_PROFILE_USERS:
         return {
           ...state,
           dataProfileUser:action.ProfileUser
@@ -142,7 +142,7 @@ const reducer = (state = initialState, action = {}) => {
  * Selectors
  */
 
-/**
+/*
  * Export
  */
 export default reducer;

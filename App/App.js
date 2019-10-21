@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import store from './store/';
 import DrawerNavigator from './components/Navigation/DrawerNavigator'
 import ConnectionContainer from './containers/Connection/Connection';
-import RegisterContainer from './containers/Register/Register';
+import Register from './components/Register/Register';
 import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
 
 class App extends Component {
@@ -36,7 +36,7 @@ const StackNavigator = createStackNavigator(
       // Create the application routes here (the key is the route name, the value is the target screen)
       // See https://reactnavigation.org/docs/en/stack-navigator.html#routeconfigs
       Connection:ConnectionContainer,
-      Register: RegisterContainer,
+      Register: Register,
       ResetPassword:ResetPasswordContainer,
 
       // The main application screen is our "ExampleScreen". Feel free to replace it with your

@@ -7,15 +7,26 @@ import ResetPassword from "../ResetPassword/ResetPassword"
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors } from '../../data/dataCasual'
 import Wave from 'react-native-waveview'
+import AsyncStorage from '@react-native-community/async-storage';
+
+import axios from 'axios';
+import AlertDialog from '../AlertDialog/AlertDialog';
+
+
+
+
+
 class Connection extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             login:undefined,
             password:undefined,
-            messageErrorConnection:undefined,
+            connection:undefined,
             showResetPassword:false,
-            isModalVisible:false
+            isModalVisible:false,
+            alertVisible:false,
+            style:false
          };
          this.position = new Animated.Value(0)
     }
@@ -24,6 +35,7 @@ class Connection extends Component {
             toValue: 100,
             duration: 2000,
           }).start();
+        
     }
 
     toggleModal = () => {
@@ -37,26 +49,37 @@ class Connection extends Component {
         this.setState({[name]:text})
     }
 
-    sendInformation= async()=>{
+    sendInformation= async ()=>{
 
         const { login , password } = this.state;
-
-        // await this.props.sendDataConnection( login , password );
-        // const validateConnection = await this.props.receiveResponseConnection
-      
-        if (true){
-            this.setState({
-                login:undefined,
-                password:undefined,
+           console.log(login,password)
+           await  axios.post('https://rabbin-dev.digitalcube.fr/api/login_check',{
+                username:"admin@admin.fr",
+                password:"admin"
             })
-            this.setState({messageErrorConnection:false})
-            this.props.navigation.navigate('Home')
-        }else{
-            this.setState({messageErrorConnection:true})
-        }
+            .then(async(response)=>{
+            
+                this.setState({
+                    login:undefined,
+                    password:undefined,
+                    alertVisible:false,
+                    connection:response.data.token
+                })
+                this.props.responseConnection(response.data.token) 
+                 this.props.navigation.navigate("Home")
+            }).catch((err)=>{
+             console.log("rrrrrrr",err.response
+             )
+                this.setState({
+                    alertVisible:true,
+                    style:false,
+                    messageAlert:'Mot de passe ou Idientifiant incorrect'
+                })
+      
+            })
+           
     }
-
-
+  
     goToRegister=()=>{
         this.props.navigation.navigate('Register')
     }
@@ -65,19 +88,29 @@ class Connection extends Component {
         this.setState({modal:true})
     }
 
+   closeAlert=()=>{
+       this.setState({alertVisible:!this.state.alertVisible})
+   }
+
 
     render() {
-        const { login , password, messageErrorConnection} = this.state
-        
+        const { login , password,messageAlert,style } = this.state;
+       this.state.connection && this.props.receiveResponseConnection && this.props.navigation.navigate("Home")
+      
         return (
             <Fragment>
                 <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
             <View style={Style.container}>
             <Text style={Style.textConnexion}>
                 Connexion</Text>
-                { messageErrorConnection && 
-                  (<Text style={{color:'red'}}>Mot de passe ou Idientifiant incorrect</Text>)
-                }
+              
+                <AlertDialog
+                alertVisible={this.state.alertVisible}
+                closeAlert={this.closeAlert}
+                messageAlert={messageAlert}
+                style={style}
+                />
+
                 <Content>
                 <View style={Style.form}>
               

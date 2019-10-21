@@ -33,20 +33,25 @@ class Category extends Component {
         allCategory:undefined
     }
   
-  searchBar= async (text)=>{
-         console.log(text)
-    //   await this.props.sendDataFilterCategory(text)
-    //   const category = await this.props.dataFilterCategory
-    // this.setState({
-    //     category
-    // })
+    async componentDidMount(){
+      await this.props.dataAllCategory()
+    }
 
-  }
+    searchBar= async (text)=>{
+          console.log(text)
+      //   await this.props.sendDataFilterCategory(text)
+      //   const category = await this.props.dataFilterCategory
+      // this.setState({
+      //     category
+      // })
+
+    }
   static async getDerivedStateFromProps(props, state){
     const { params } = props.navigation.state
     // await this.props.receiveDataCategory(params.nameCategory)
-    // const allCategory =  await this.props.dataCategory
-    //    state.allCategory= allCategory
+
+     const allCategory =  props.dataStateAllCategory
+       state.allCategory= allCategory
   }
 
   goToCategoryPage=(value)=>{
@@ -57,28 +62,29 @@ class Category extends Component {
  }
 
   render() {
-     
+     const { allCategory } =this.state
+   
     return (
       <View>
         <Menu nameMenu="Catégories" toggle={this.props.navigation.toggleDrawer}/>
         <Filtrate searchBar={this.searchBar}/>
         <Card containerStyle={{padding: 0}} >
         {
-            users.map((item, i) => {
+            allCategory && allCategory.map((item, i) => {
             return (
                 <ListItem
                 key={i}
                 roundAvatar
-                title={item.title}
-                leftIcon={{ name: item.icon }}
+                title={item}
+                leftIcon={{ name: 'star' }}
                 bottomDivider
                 chevron
-                onPress={()=>this.goToCategoryPage(item.title)}
+                onPress={()=>this.goToCategoryPage(item)}
                 />
             );
             })
         }
-</Card>
+    </Card>
       </View>
     );
   }

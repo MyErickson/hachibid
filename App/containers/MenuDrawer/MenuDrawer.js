@@ -7,11 +7,12 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import MenuDrawer from '../../components/MenuDrawer/MenuDrawer'
+import MenuDrawer from '../../components/Navigation/MenuDrawer'
 
 // Action Creators
 
 import { receiveDataCategory } from '../../store/actionCreator/MenuDrawer'
+import { dataAllCategory } from '../../store/actionCreator/Category';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -22,6 +23,7 @@ import { receiveDataCategory } from '../../store/actionCreator/MenuDrawer'
  */
 const mapStateToProps = (state, ownProps) => ({
     dataCategory: state.dataCategory,
+    
 });
 
 /* === Actions ===
@@ -34,7 +36,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
     receiveDataCategory:()=>{
         dispatch(receiveDataCategory())
-    }
+    },
+    dataAllCategory: () => {
+        dispatch(dataAllCategory());
+      },
   
 });
 

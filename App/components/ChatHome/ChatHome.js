@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import { View} from 'react-native';
 import { Style} from './styleChatHome';
 import { Button  } from 'react-native-elements'
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
 import { GiftedChat  } from 'react-native-gifted-chat';
 import {message} from '../../data/dataCasual'
-
+var jwtDecode = require('jwt-decode');
 
 class ChatHome extends Component {
  
@@ -15,9 +16,14 @@ class ChatHome extends Component {
     }
   
     async componentDidMount() {
+      const { dataMessages , dataMessagesHome,receiveResponseConnection} = this.props
         // await this.props.dataMessagesHome()
         //  const allMessages =  await this.props.dataMessages
-   
+        const t  = receiveResponseConnection
+         const sessionId = await AsyncStorage.getItem('sessionJWT')
+         var decode = jwtDecode(sessionId)
+          console.log(decode)
+       
           this.setState({
             _messages: message,
           })
@@ -26,7 +32,7 @@ class ChatHome extends Component {
         }
 
    actualize= async ()=>{
-        console.log('data')
+   
         const allMessages =  await this.props.dataMessages
         this.setState({
           _messages:allMessages

@@ -41,7 +41,8 @@ export default class MenuDrawer extends React.Component{
      }
 
 
-    gotToNavLink=(nav)=>{
+    gotToNavLink=async (nav)=>{
+        await this.props.dataAllCategory()
         if(nav === 'Category'){
             this.props.navigation.navigate(nav,{
                 nameCategory:nav
@@ -54,7 +55,7 @@ export default class MenuDrawer extends React.Component{
 
   navLink(nav,text,icon,show=false){
       
-
+          
             return(
                 <Fragment>
                     <TouchableOpacity 

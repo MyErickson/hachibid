@@ -21,7 +21,8 @@ import { dataMessagesHome,sendDataFilterHomeMessage } from '../../store/actionCr
  */
 const mapStateToProps = (state, ownProps) => ({
     dataMessagesHome: state.dataMessagesHome,
-    dataFilterHome:state.dataFilterHome
+    dataFilterHome:state.dataFilterHome,
+    receiveResponseConnection: state.receiveResponseConnection,
 });
 
 /* === Actions ===

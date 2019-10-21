@@ -3,20 +3,34 @@ import { View , Text , TouchableOpacity,TouchableHighlight } from 'react-native'
 import { Button,Icon } from 'react-native-elements';
 import { Style }  from './styleRegister'
 import {  Content, Form, Item, Input, } from 'native-base';
+import axios from 'axios';
 
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors } from '../../data/dataCasual'
+import AlertDialog from '../AlertDialog/AlertDialog';
+
+
+
 class Register extends Component {
   
     state = { 
-        login:undefined,
-        email:undefined,
-        password:undefined,
-        confPWD:undefined,
+        login:"",
+        email:"",
+        password:"",
+        confPWD:"",
         errorLoginCharacter:undefined,
         errorEmailCharacter:undefined,
-        errorPwdCharacter:undefined
+        errorPwdCharacter:undefined,
+        receiveResponseRegister:this.props.receiveResponseRegister,
+        alertVisible:false,
+        messageAlert:undefined,
+        style:false
      };
+
+   componentDidMount(){
+  
+ 
+   }
     
      collectDataForRegister =(evt)=>{
         const { name }  = evt._targetInst.pendingProps;
@@ -52,29 +66,66 @@ class Register extends Component {
      }
 
      sendInformation= async ()=>{
-        const { login , password } = this.state;
-      
-        await this.props.sendDataRegister( login , email , password ,confPWD )
-        const validateRegister = await this.props.receiveResponseRegister
-        if (validateRegister){
+        const { login , password,email,confPWD } = this.state;
+        
+      if(confPWD === password ){
+        if(login.trim()=== "" || email.trim() ===""  || password.trim() ==="" || confPWD.trim() ===""){
             this.setState({
-                login:undefined,
-                email:undefined,
-                password:undefined,
-                confPWD:undefined,
+                alertVisible:true,
+                messageAlert:"Veillez rempli tout les champs ",
+                style:false
             })
-            // this.props.navigation.goBack()
+        }else{
+            await axios.post('https://rabbin-dev.digitalcube.fr/api/users',{
+                email:email,
+                username:login,
+                roles:["ROLE_USER"],
+                password:password
+            })
+            .then((response)=>{
+                 this.setState({
+                     alertVisible:true,
+                     messageAlert:"Vous etes maintenant enregistré",
+                     style:true
+                    })
+              
+            }).catch((err)=>{
+                console.log(err)
+                   
+                   
+                this.setState({
+                    alertVisible:true,
+                    messageAlert:"Erreur, Votre email à déja été enrigistré",
+                    style:false
+                })
+                
+            })
+            
         }
-          
-    
+        
+        this.setState({errorRegister:false})
+    }else{
+        this.setState({errorRegister:true})
+    }
+     }
+ 
+
+    goBack(){
+        this.setState({receiveResponseRegister:false})
+        this.props.navigation.goBack()
+    }
+
+    closeAlert=()=>{
+        this.setState({alertVisible:false})
     }
 
     render() {
-  
+         
+
         return (
             <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
                 <View style={ Style.textRegister}   >
-                <Icon  underlayColor='none' onPress={()=>this.props.navigation.goBack()} size={30} name='reply'/> 
+                <Icon  underlayColor='none' onPress={()=>this.goBack()} size={30} name='keyboard-backspace'/> 
                 </View>
             <View style={Style.container}>
             
@@ -139,7 +190,7 @@ class Register extends Component {
                          style={Style.input} 
                          name="confPWD"
                          placeholderTextColor='white'
-                         placeholder='Confirmation du mot de passe *'
+                         placeholder='Confirmation mot de passe *'
                          secureTextEntry={true}
                          maxLength={255}
                          value={this.state.confPWD}
@@ -148,7 +199,14 @@ class Register extends Component {
 
                     
                     </Form>
-
+                    <AlertDialog 
+                        alertVisible={this.state.alertVisible}
+                        messageAlert={this.state.messageAlert}
+                        closeAlert={this.closeAlert}
+                        style={this.state.style}
+                        />
+                    {this.state.errorRegister && <Text style={{color:"red",marginTop:40,textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
+                   
             </View>
         
             <Content>

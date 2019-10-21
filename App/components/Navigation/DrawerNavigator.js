@@ -4,10 +4,10 @@ import {  createAppContainer } from 'react-navigation';
 import {createDrawerNavigator } from 'react-navigation-drawer'
 import MyQuestionsContainer from '../../containers/MyQuestions/MyQuestions';
 import ProfileContainer  from '../../containers/Profile/Profile';
-import MenuDrawer from './MenuDrawer';
+import MenuDrawerContainer from '../../containers/MenuDrawer/MenuDrawer';
 import ChatHomeContainer  from '../../containers/ChatHome/ChatHome';
 import MessageCategoryContainer  from '../../containers/MessageCategory/MessageCategory';
-import Category from '../Category/Category'
+import CategoryContainer from '../../containers/Category/Category'
 
 
 
@@ -16,7 +16,7 @@ const WIDTH = Dimensions.get('window').width;
 const DrawerConfig = {
     drawerWidth: WIDTH*0.83,
     contentComponent:({navigation})=>{
-        return(<MenuDrawer navigation={navigation}/>)
+        return(<MenuDrawerContainer navigation={navigation}/>)
     }
 }
 
@@ -38,7 +38,7 @@ const DrawerNavigator = createDrawerNavigator(
         screen:MessageCategoryContainer
     },
     Category:{
-        screen:Category
+        screen:CategoryContainer
     }
    
 },
@@ -46,4 +46,4 @@ DrawerConfig
 )
 
 
-export default createAppContainer(DrawerNavigator);
+export default DrawerNavigator;

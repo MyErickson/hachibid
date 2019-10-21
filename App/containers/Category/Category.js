@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Category from '../../components/Category/Category'
 
 // Action Creators
-import { receiveDataCategory,sendDataFilterCategory } from '../../store/actionCreator/ChatHome';
+import { dataAllCategory,sendDataFilterCategory } from '../../store/actionCreator/Category';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -21,7 +21,7 @@ import { receiveDataCategory,sendDataFilterCategory } from '../../store/actionCr
  */
 const mapStateToProps = (state, ownProps) => ({
     dataMessagesHome: state.dataMessagesHome,
-    dataAllCategory:state.dataAllCategory
+    dataStateAllCategory:state.dataAllCategory
 });
 
 /* === Actions ===
@@ -32,8 +32,8 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    receiveDataCategory: () => {
-    dispatch(receiveDataCategory());
+  dataAllCategory: () => {
+    dispatch(dataAllCategory());
   },
   sendDataFilterCategory:(text)=>{
       dispatch(sendDataFilterCategory(text));
