@@ -56,7 +56,7 @@ const PlaySound = ({
           orientation={true}
           onValueChange={value => value}
         /> */}
-        {play&& <ProgressBar progress={progress } style={{width:wp("70%")}} color={	"#404040"} /> }
+        {play&& <ProgressBar progress={progress } style={{width:wp("70%"),top:hp("2,2%")}} color={	"#404040"} /> }
       </View>
     </Modal>
 );

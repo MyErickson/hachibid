@@ -1,31 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import Menu from '../Menu/Menu';
-import filtrate from '../Filtrate/Filtrate';
-const users = [
-    {
-        title: 'Categorie 1',
-        icon: 'av-timer'
-      },
-      {
-        title: 'Categorie 2',
-        icon: 'flight-takeoff'
-      },
-      {
-        title: 'Categorie 3',
-        icon: 'av-timer'
-      },
-      {
-        title: 'Categorie 4',
-        icon: 'flight-takeoff'
-      },
-      {
-        title: 'Categorie 5',
-        icon: 'av-timer'
-      },
+import Filtrate from '../Filtrate/Filtrate';
+import { Style } from './styleCategory';
 
-];
 
 class Category extends Component {
 
@@ -65,9 +44,15 @@ class Category extends Component {
      const { allCategory } =this.state
    
     return (
-      <View>
+      <View style={{flex:1}}>
         <Menu nameMenu="Catégories" toggle={this.props.navigation.toggleDrawer}/>
         <Filtrate searchBar={this.searchBar}/>
+        <ScrollView
+              bounces={true}
+              style={Style.scrollview}
+              showsVerticalScrollIndicator={false}
+             
+              >
         <Card containerStyle={{padding: 0}} >
         {
             allCategory && allCategory.map((item, i) => {
@@ -85,6 +70,7 @@ class Category extends Component {
             })
         }
     </Card>
+    </ScrollView>  
       </View>
     );
   }

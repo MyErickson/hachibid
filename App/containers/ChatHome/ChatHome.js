@@ -20,7 +20,7 @@ import { dataMessagesHome,sendDataFilterHomeMessage } from '../../store/actionCr
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    dataMessagesHome: state.dataMessagesHome,
+  allDataMessagesHome: state.allDataMessagesHome,
     dataFilterHome:state.dataFilterHome,
     receiveResponseConnection: state.receiveResponseConnection,
 });

@@ -8,7 +8,7 @@ const initialState = {
   receiveResponseRegister:undefined,
   receiveResponseForReset:undefined,
   dataCategory:undefined,
-  dataMessagesHome:undefined,
+  allDataMessagesHome:undefined,
   dataProfileUser:undefined,
   dataFilterHome:undefined,
   dataMessagesCategory:undefined,
@@ -16,7 +16,7 @@ const initialState = {
   dataMessagesMyQuestions:undefined,
   dataFilterMessagesCategory:undefined,
   dataFilterCategory:undefined,
-
+  topDataCategory:undefined
 
   
 };
@@ -27,7 +27,7 @@ const initialState = {
 
 export const RESPONSE_CONNECTION = 'REPONSE_CONNECTION';
 export const RESPONSE_FOR_RESET = ' RESPONSE_FOR_RESET';
-export const RECEIVE_DATA_CATEGORY ='RECEIVE_DATA_CATEGORY';
+export const RECEIVE_TOP_DATA_CATEGORY ='RECEIVE_TOP_DATA_CATEGORY';
 export const RECEIVE_MESSAGES_HOME ='RECEIVE_MESSAGES_HOME';
 export const RECEIVE_DATA_FILTER_MESSAGE ='RECEIVE_DATA_FILTER_MESSAGE';
 export const RECEIVE_DATA_UPDATE_PROFILE ='RECEIVE_DATA_UPDATE_PROFILE';
@@ -47,7 +47,7 @@ export const DATA_ALL_CATEGORY='DATA_ALL_CATEGORY';
 export const RECEIVE_DATA_ALL_CATEGORY ='RECEIVE_DATA_ALL_CATEGORY';
 export const DATA_MESSAGES_MYQUESTIONS='DATA_MESSAGES_MYQUESTIONS';
 export const DATA_PROFILE_USERS ='DATA_PROFILE_USERS'
-
+export const TOP_DATA_CATEGORY='TOP_DATA_CATEGORY'
 /**
  * Traitements
  */
@@ -75,16 +75,16 @@ const reducer = (state = initialState, action = {}) => {
       };
 
 
-    case RECEIVE_DATA_CATEGORY:
+    case TOP_DATA_CATEGORY:
         return {
           ...state,
-          dataCategory:action.allCategory
+          topDataCategory:action.topDataCategory
         };
 
     case RECEIVE_MESSAGES_HOME:
         return {
           ...state,
-          dataMessagesHome:action.allMessageHome
+          allDataMessagesHome:action.allMessageHome
         };
 
     case DATA_PROFILE_USERS:

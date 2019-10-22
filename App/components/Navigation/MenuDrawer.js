@@ -14,20 +14,22 @@ import { presetColors } from '../../data/dataCasual'
 export default class MenuDrawer extends React.Component{
      state={
          list:false,
-         dataCategory:undefined,
+         topDataCategory:undefined,
      }
 
 
     async componentDidMount(){
          
-        //  await this.props.receiveDataCategory()
-        //  const dataCategory = await this.props.dataCategory
-
-        //  this.setState({dataCategory})
+          await this.props.receiveTopDataCategory()
+       
 
      }
-    
 
+    static async getDerivedStateFromProps(props, state){ 
+        state.topDataCategory =  props.topDataCategory 
+
+    }
+   
      toggleList=()=>{
          const { list } = this.state
             this.setState({list:!list})
@@ -51,11 +53,11 @@ export default class MenuDrawer extends React.Component{
             this.props.navigation.navigate(nav)
         }
     }
-
+  
 
   navLink(nav,text,icon,show=false){
       
-          
+          const {topDataCategory } = this.state
             return(
                 <Fragment>
                     <TouchableOpacity 
@@ -80,12 +82,12 @@ export default class MenuDrawer extends React.Component{
                              <ScrollView style={{flex:1}}>
                              <Content>
                                <List>
-                               { casualList.map((value,key)=>{
+                               { topDataCategory && topDataCategory.map((value,key)=>{
                                            
                                     return (
                                         
-                                        <ListItem key={Date.now()+key} onPress={()=> this.goToCategoryPage(value.name)}>
-                                            <Text>{value.name}</Text>
+                                        <ListItem key={Date.now()+key} onPress={()=> this.goToCategoryPage(value)}>
+                                            <Text>{value}</Text>
                                         </ListItem>
 
                                     )
@@ -102,7 +104,7 @@ export default class MenuDrawer extends React.Component{
 
  render(){
      return(
-        <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
+        <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
          <View style={Styles.container}>
         
              <View style={Styles.topLinks} >

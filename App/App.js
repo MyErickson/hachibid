@@ -5,10 +5,10 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { Provider } from "react-redux";
 import store from './store/';
 import DrawerNavigator from './components/Navigation/DrawerNavigator'
-import ConnectionContainer from './containers/Connection/Connection';
+
 import Register from './components/Register/Register';
 import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
-
+import ConnectionContainer from './containers/Connection/Connection'
 class App extends Component {
     constructor(props) {
         super(props);

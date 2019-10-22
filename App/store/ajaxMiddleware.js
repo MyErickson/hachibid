@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
-        RECEIVE_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_DATA_ALL_CATEGORY,
+     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_DATA_ALL_CATEGORY,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,  } from './reducer'
 
@@ -9,8 +9,8 @@ import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
 import { receiveMessagesHome,receiveDataMessagesHome } from './actionCreator/ChatHome';
 import { responseForReset } from './actionCreator/ResetPassword';
 import { receiveDataUpdateProfile } from './actionCreator/Profile';
-import { receiveDataCategory } from './actionCreator/MessageCategory';
-//  import { receiveDataAllCategory } from './actionCreator/MenuDrawer';
+import { receiveDataMessagesCategory} from './actionCreator/MessageCategory';
+ import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
 import AsyncStorage from '@react-native-community/async-storage';
@@ -56,26 +56,30 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             break;
 
 
-        // case RECEIVE_DATA_CATEGORY:
-        //     next(action)
-        //     await axios.get('https://rabbin-dev.digitalcube.fr/api/categories',{
+        case RECEIVE_TOP_DATA_CATEGORY:
+            next(action)
+            await axios.get('categories/top-teen',{
            
-        //     }).then((response)=>{
-        //        console.log('data category ', response)
-        //         store.dispatch(receiveDataCategory(response))
-        //     }).catch((err)=>{
-        //         console.log(err)
+            }).then((response)=>{
+            
+               const allCategory = response.data["hydra:member"].map(value=>{
+                return value.title
+           })
+           console.log('data category ',allCategory)
+           store.dispatch(topDataCategory(allCategory))
+            }).catch((err)=>{
+                console.log(err)
                 
-        //     })
-        //     break;
+            })
+            break;
 
         case DATA_MESSAGES_HOME:
             next(action)
-            await axios.get('url',{
+            await axios.get('messages',{
             
             }).then((response)=>{
-                
-                receiveMessagesHome(response)
+                // console.log('rrrrr',response)
+                store.dispatch(receiveMessagesHome(response))
             }).catch((err)=>{
                 console.log(err)
                 
@@ -178,11 +182,11 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
-            await axios.get('url',{
+            await axios.get('messages',{
             
             }).then((response)=>{
-           
-                DataMessagesMyQuestions(response)
+                console.log(response)
+                store.dispatch(DataMessagesMyQuestions(response))
             }).catch((err)=>{
                 console.log(err)
                 

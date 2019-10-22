@@ -11,7 +11,7 @@ import MenuDrawer from '../../components/Navigation/MenuDrawer'
 
 // Action Creators
 
-import { receiveDataCategory } from '../../store/actionCreator/MenuDrawer'
+import { receiveTopDataCategory } from '../../store/actionCreator/MenuDrawer'
 import { dataAllCategory } from '../../store/actionCreator/Category';
 
 /* === State (données) ===
@@ -22,7 +22,7 @@ import { dataAllCategory } from '../../store/actionCreator/Category';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    dataCategory: state.dataCategory,
+    topDataCategory: state.topDataCategory,
     
 });
 
@@ -34,8 +34,8 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    receiveDataCategory:()=>{
-        dispatch(receiveDataCategory())
+    receiveTopDataCategory:()=>{
+        dispatch(receiveTopDataCategory())
     },
     dataAllCategory: () => {
         dispatch(dataAllCategory());

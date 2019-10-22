@@ -57,7 +57,7 @@ class Connection extends Component {
                 username:"admin@admin.fr",
                 password:"admin"
             })
-            .then(async(response)=>{
+            .then((response)=>{
             
                 this.setState({
                     login:undefined,
@@ -68,8 +68,7 @@ class Connection extends Component {
                 this.props.responseConnection(response.data.token) 
                  this.props.navigation.navigate("Home")
             }).catch((err)=>{
-             console.log("rrrrrrr",err.response
-             )
+             console.log("rrrrrrr",err)
                 this.setState({
                     alertVisible:true,
                     style:false,
@@ -99,7 +98,7 @@ class Connection extends Component {
       
         return (
             <Fragment>
-                <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
+                <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
             <View style={Style.container}>
             <Text style={Style.textConnexion}>
                 Connexion</Text>

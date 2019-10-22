@@ -42,8 +42,8 @@ export const Style = StyleSheet.create({
       
     },
     avatar:{
-        marginTop:30,
-        marginLeft:80
+      
+        marginLeft:10
     },
     scrollview:{
         marginHorizontal: 0,

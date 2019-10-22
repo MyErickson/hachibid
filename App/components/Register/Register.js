@@ -123,7 +123,7 @@ class Register extends Component {
          
 
         return (
-            <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}>
+            <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
                 <View style={ Style.textRegister}   >
                 <Icon  underlayColor='none' onPress={()=>this.goBack()} size={30} name='keyboard-backspace'/> 
                 </View>

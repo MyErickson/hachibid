@@ -16,9 +16,15 @@ export  const casualList=[
      ]
 
 export const presetColors = {
-        instagram: [
+        backgroundColor: [
           'rgb(160, 190, 235)',
           'rgb(14, 65, 144)',
+       
+        ],
+        colorsProfile: [
+          '#7F7FD5',
+          '#86A8E7',
+          '#91EAE4',
        
         ],
      }

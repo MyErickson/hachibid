@@ -1,7 +1,12 @@
-import {RECEIVE_DATA_CATEGORY} from '../reducer'
+import {RECEIVE_TOP_DATA_CATEGORY,TOP_DATA_CATEGORY} from '../reducer'
 
-export const receiveDataCategory=(allCategory)=>({
-    type:RECEIVE_DATA_CATEGORY,
-    allCategory
+export const receiveTopDataCategory=()=>({
+    type:RECEIVE_TOP_DATA_CATEGORY,
+ 
+  })
+
+export const topDataCategory=(topDataCategory )=>({
+    type:TOP_DATA_CATEGORY,
+    topDataCategory
   })
   

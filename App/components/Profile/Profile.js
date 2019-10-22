@@ -5,7 +5,7 @@ import { Style }  from './styleProfile'
 import { Form, Item, Input  } from 'native-base';
 
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
-import { presetColors } from '../../data/dataCasual'
+import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
 
 class Profile extends Component {
@@ -99,7 +99,7 @@ class Profile extends Component {
     return (
      
         
-        <AnimatedLinearGradient  customColors={presetColors.instagram} speed={4000}> 
+        <AnimatedLinearGradient  customColors={presetColors.colorsProfile} speed={4000}> 
         <View style={Style.container}>
             <Menu nameMenu="Profil" toggle={this.props.navigation.toggleDrawer}/>
               <ScrollView
@@ -108,16 +108,21 @@ class Profile extends Component {
               showsVerticalScrollIndicator = {false}
              
               >
+                <View style={{flexDirection:"row",  marginTop:30,}}>
                 <Avatar
                     containerStyle={Style.avatar}
                     rounded
-                    size="xlarge"
+                    size={120}
                     source={{
                         uri:
                         'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
                     }}
                 />
-              
+                <View style={{margin:35}}>
+                    <Text style={{marginBottom:15}}>pseudo</Text>
+                    <Text>email</Text>
+                </View>
+              </View>s
             <View style={Style.form}>
               
                         <Form >

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
-import {Icon as IconElement} from 'react-native-elements';
 import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
 import Menu from '../Menu/Menu'
@@ -41,9 +40,9 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-    //  await this.props.receiveDataMessageMyQuestions()
-    //  const allMessages =  await this.props.dataMessagesMyQuestions
-    // console.log(PERMISSIONS.ANDROID.RECORD_AUDIO)
+      // await this.props.receiveDataMessageMyQuestions()
+    //  const allMessages =   this.props.dataMessagesMyQuestions
+ 
       try{
         const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
         const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
@@ -61,11 +60,8 @@ class MyQuestions extends Component {
             text: 'Hello developer',
             createdAt: new Date(),
             type:'message',
-            user: {
-              _id: 2,
-              name: 'erickson',
-              avatar: 'https://placeimg.com/140/140/any',
-            },
+            user: {name:'erickson'}
+
           },
         ],
       })
@@ -82,8 +78,6 @@ class MyQuestions extends Component {
     }
 
 
-
- 
 // ******************************* Mehtode GiftedChat *******************************
   async onSend(messages = []) {
      const {_id , createdAt , text , user  , recordDuration,
@@ -224,8 +218,8 @@ class MyQuestions extends Component {
     this.setState(previousState=>({
       recordSecs: 0,
       messages: GiftedChat.append(previousState.messages,  {
-        _id:Date.now(),
-        text: result,
+        id:Date.now(),
+        content: result,
         createdAt: new Date(),
         recordDuration:this.state.recordDuration,
         recordPosition:0,
@@ -235,6 +229,7 @@ class MyQuestions extends Component {
           name: 'Id user',
       
         },
+        valid: true
       },),
     }));
      
@@ -242,19 +237,19 @@ class MyQuestions extends Component {
   };
 
   onStartPlay = async (propsSounder) => {
-    const currentPath = propsSounder.currentMessage.text.split('//')
-    console.log('onStartPlay');
+     const currentPath = propsSounder.currentMessage.content.split('//')
+    console.log('onStartPlay',propsSounder);
     
    
     
     const msg = await this.audioRecorderPlayer.startPlayer(currentPath[1]);
     console.log("msg ==>",msg,this.path);
-    this.audioRecorderPlayer.addPlayBackListener((e) => {
+    this.audioRecorderPlayer.addPlayBackListener(async(e) => {
       console.log("eeeeeeeeeeeeeeeeeeeeeee",e)
       if (e.current_position === e.duration) {
         console.log('finished');
-        
-        this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
+    
+      
         
       }
       this.setState({
@@ -264,17 +259,17 @@ class MyQuestions extends Component {
         duration: this.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
         play:true
       });
-
+      
     });
     this.setState({play:false})
   };
 
   onPausePlay =  async (propsSounder) => {
-  const currentPath = propsSounder.currentMessage.text.split('//')
+  const currentPath = propsSounder.currentMessage.content.split('//')
   console.log('onPausePlay');
    this.setState({play:false})
-   await  this.audioRecorderPlayer.pausePlayer(currentPath[1]);
-  
+   await  this.audioRecorderPlayer.stopPlayer(currentPath[1]);
+   this.audioRecorderPlayer.removeRecordBackListener(currentPath[1]);
   };
 
 

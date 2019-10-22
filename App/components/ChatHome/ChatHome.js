@@ -17,8 +17,9 @@ class ChatHome extends Component {
   
     async componentDidMount() {
       const { dataMessages , dataMessagesHome,receiveResponseConnection} = this.props
-        // await this.props.dataMessagesHome()
-        //  const allMessages =  await this.props.dataMessages
+         await this.props.dataMessagesHome()
+        const allMessages = this.props.allDataMessagesHome
+        console.log('tejjjjjjjjjst',allMessages)
         const t  = receiveResponseConnection
          const sessionId = await AsyncStorage.getItem('sessionJWT')
          var decode = jwtDecode(sessionId)
@@ -45,6 +46,10 @@ class ChatHome extends Component {
     //     _messages
     // })
     console.log(text)
+ }
+ 
+ static  getDerivedStateFromProps(props,state){
+  // console.log('test',props.allDataMessagesHome)
  }
  
   render() {
