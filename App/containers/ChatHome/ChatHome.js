@@ -11,7 +11,7 @@ import ChatHome from '../../components/ChatHome/ChatHome'
 
 // Action Creators
 import { dataMessagesHome,sendDataFilterHomeMessage } from '../../store/actionCreator/ChatHome';
-
+import { dataProfileUsers } from '../../store/actionCreator/Profile';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -38,6 +38,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   sendDataFilterHomeMessage:(text)=>{
       dispatch(sendDataFilterHomeMessage(text));
+  },
+  dataProfileUsers:(idUser)=>{
+    dispatch(dataProfileUsers(idUser))
   }
 });
 

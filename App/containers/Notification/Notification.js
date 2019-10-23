@@ -7,13 +7,11 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import MenuDrawer from '../../components/Navigation/MenuDrawer'
+import Notification from '../../components/Notification/Notification'
 
 // Action Creators
+import { dataAllCategory,sendDataFilterCategory } from '../../store/actionCreator/Category';
 
-import { receiveTopDataCategory } from '../../store/actionCreator/MenuDrawer'
-import { dataAllCategory } from '../../store/actionCreator/Category';
-import {dataProfileUsers } from '../../store/actionCreator/Profile';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -22,9 +20,8 @@ import {dataProfileUsers } from '../../store/actionCreator/Profile';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    topDataCategory: state.topDataCategory,
-    dataProfileUser: state.dataProfileUser,
-    
+    dataMessagesHome: state.dataMessagesHome,
+    dataStateAllCategory:state.dataAllCategory
 });
 
 /* === Actions ===
@@ -35,28 +32,24 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    receiveTopDataCategory:()=>{
-        dispatch(receiveTopDataCategory())
-    },
-    dataAllCategory: () => {
-        dispatch(dataAllCategory());
-      },
-    dataProfileUsers:(idUser)=>{
-        dispatch(dataProfileUsers(idUser))
-    }
-  
+  dataAllCategory: () => {
+    dispatch(dataAllCategory());
+  },
+  sendDataFilterCategory:(text)=>{
+      dispatch(sendDataFilterCategory(text));
+  }
 });
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
- const  MenuDrawerContainer = connect(
+ const NotificationContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)( MenuDrawer);
+)(Notification);
 
 
 
 /**
  * Export
  */
-export default  MenuDrawerContainer;
+export default NotificationContainer;

@@ -16,8 +16,8 @@ const initialState = {
   dataMessagesMyQuestions:undefined,
   dataFilterMessagesCategory:undefined,
   dataFilterCategory:undefined,
-  topDataCategory:undefined
-
+  topDataCategory:undefined,
+  dataNotification:undefined
   
 };
 
@@ -48,6 +48,9 @@ export const RECEIVE_DATA_ALL_CATEGORY ='RECEIVE_DATA_ALL_CATEGORY';
 export const DATA_MESSAGES_MYQUESTIONS='DATA_MESSAGES_MYQUESTIONS';
 export const DATA_PROFILE_USERS ='DATA_PROFILE_USERS'
 export const TOP_DATA_CATEGORY='TOP_DATA_CATEGORY'
+export const DATA_NOTIFICATION ='DATA_NOTIFICATION'
+export const RECEIVE_DATA_NOTIFICATION ='RECEIVE_DATA_NOTIFICATION'
+export const RECEIVE_DATA_PROFILE='RECEIVE_DATA_PROFILE'
 /**
  * Traitements
  */
@@ -58,9 +61,10 @@ export const TOP_DATA_CATEGORY='TOP_DATA_CATEGORY'
 const reducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case RESPONSE_CONNECTION:
-       if(action.responseConnection){
-        AsyncStorage.setItem('sessionJWT', action.responseConnection)
-       }
+      console.log("reducer dans le action.reponseConnection ",action.responseConnection)
+       AsyncStorage.setItem('sessionJWT', action.responseConnection)
+      const t = AsyncStorage.getItem('sessionJWT')
+      console.log('reducer dans le reponse connection ', t)
       return {
         ...state,
         receiveResponseConnection:action.responseConnection,
@@ -87,7 +91,7 @@ const reducer = (state = initialState, action = {}) => {
           allDataMessagesHome:action.allMessageHome
         };
 
-    case DATA_PROFILE_USERS:
+    case RECEIVE_DATA_PROFILE:
         return {
           ...state,
           dataProfileUser:action.ProfileUser
@@ -127,6 +131,13 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         dataMessagesMyQuestions:action.dataMessagesMyQuestions
       };
+      
+    case RECEIVE_DATA_NOTIFICATION:
+      return {
+        ...state,
+        dataNotification:action.dataNotification
+      };
+
     default:
       return state;
   }

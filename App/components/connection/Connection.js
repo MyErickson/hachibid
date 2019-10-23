@@ -50,14 +50,15 @@ class Connection extends Component {
     }
 
     sendInformation= async ()=>{
-
+        
         const { login , password } = this.state;
            console.log(login,password)
            await  axios.post('https://rabbin-dev.digitalcube.fr/api/login_check',{
-                username:"admin@admin.fr",
-                password:"admin"
-            })
-            .then((response)=>{
+             
+                username:login,
+                password:password,
+              
+            }).then((response)=>{
             
                 this.setState({
                     login:undefined,
@@ -66,9 +67,10 @@ class Connection extends Component {
                     connection:response.data.token
                 })
                 this.props.responseConnection(response.data.token) 
-                 this.props.navigation.navigate("Home")
-            }).catch((err)=>{
-             console.log("rrrrrrr",err)
+                this.props.navigation.navigate("Home")
+            })
+            .catch((err)=>{
+             console.log("eroor connexion",err)
                 this.setState({
                     alertVisible:true,
                     style:false,

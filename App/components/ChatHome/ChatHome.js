@@ -16,14 +16,17 @@ class ChatHome extends Component {
     }
   
     async componentDidMount() {
-      const { dataMessages , dataMessagesHome,receiveResponseConnection} = this.props
-         await this.props.dataMessagesHome()
-        const allMessages = this.props.allDataMessagesHome
-        console.log('tejjjjjjjjjst',allMessages)
-        const t  = receiveResponseConnection
-         const sessionId = await AsyncStorage.getItem('sessionJWT')
+    
+        //  await this.props.dataMessagesHome()
+        // const allMessages = this.props.allDataMessagesHome
+        // console.log('tejjjjjjjjjst',allMessages)
+
+        const sessionId = await AsyncStorage.getItem('sessionJWT')
+        
          var decode = jwtDecode(sessionId)
-          console.log(decode)
+        console.log("decode de connexion",decode)
+          await this.props.dataProfileUsers(decode.id)
+         
        
           this.setState({
             _messages: message,
@@ -48,9 +51,9 @@ class ChatHome extends Component {
     console.log(text)
  }
  
- static  getDerivedStateFromProps(props,state){
-  // console.log('test',props.allDataMessagesHome)
- }
+//  static  getDerivedStateFromProps(props,state){
+//   console.log('test',props.allDataMessagesHome)
+//  }
  
   render() {
  
@@ -59,7 +62,7 @@ class ChatHome extends Component {
     return (
        
         <View   style={Style.container}>
-        <Menu nameMenu="Chat Géneral" toggle={this.props.navigation.toggleDrawer}/>
+        <Menu nameMenu="Chat Géneral" navigation={this.props.navigation}/>
       
         <View style={Style.messageContainer}>
           <Filtrate searchBar={this.searchBar} />

@@ -20,13 +20,15 @@ class Menu extends Component {
         <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
       </View>
     );
+
+
     return (
      
       <View>
         <Header style={Style.container}>
             <Left style={{flex:1}} >
               <TouchableOpacity 
-              onPress={this.props.toggle}>
+              onPress={this.props.navigation.toggleDrawer}>
                 <Icon style={Style.icon} name='menu' />
               </TouchableOpacity>
             </Left>
@@ -36,7 +38,7 @@ class Menu extends Component {
           </Body>
    
           <Right style={{flex:1}}>
-            <TouchableOpacity onPress={this.props.toggle}>
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate("Notification")}>
               <Icon style={Style.icon} name='notifications' />
             </TouchableOpacity>
           </Right>

@@ -1,20 +1,22 @@
-import {RECEIVE_DATA_UPDATE_PROFILE,SEND_DATA_UPDATE_PROFILE,DATA_PROFILE_USERS} from '../reducer'
+import {RECEIVE_DATA_UPDATE_PROFILE,SEND_DATA_UPDATE_PROFILE,DATA_PROFILE_USERS,RECEIVE_DATA_PROFILE} from '../reducer'
 
 export const receiveDataUpdateProfile=(ProfileUser)=>({
     type:RECEIVE_DATA_UPDATE_PROFILE,
     ProfileUser
   })
 
-  export const sendDataUpdateProfile=(login , email , password , confPwd)=>({
+  export const sendDataUpdateProfile=(data)=>({
     type:SEND_DATA_UPDATE_PROFILE,
-    login,
-    email,
-    password,
-    confPwd
+    data
   
   })
 
-  export const dataProfileUsers =()=>({
-    type: DATA_PROFILE_USERS
+  export const dataProfileUsers =(idUser)=>({
+    type: DATA_PROFILE_USERS,
+    idUser
   })
   
+  export const receiveDataProfile =(ProfileUser) =>({
+    type:RECEIVE_DATA_PROFILE,
+    ProfileUser
+  })

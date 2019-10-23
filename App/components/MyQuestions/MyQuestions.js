@@ -293,7 +293,7 @@ class MyQuestions extends Component {
     return (
     
       <View  style={Style.container}>
-        <Menu nameMenu="Mes questions" toggle={this.props.navigation.toggleDrawer}/>
+        <Menu nameMenu="Mes questions" navigation={this.props.navigation}/>
        <PlaySound 
         isModalVisible={this.state.isModalVisible}
         toggleModal={this.toggleModal}

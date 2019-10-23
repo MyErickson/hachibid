@@ -1,19 +1,22 @@
 import axios from 'axios';
 
-import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,
-     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_DATA_ALL_CATEGORY,
+import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
+     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,DATA_NOTIFICATION,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,  } from './reducer'
 
 
 import { receiveMessagesHome,receiveDataMessagesHome } from './actionCreator/ChatHome';
 import { responseForReset } from './actionCreator/ResetPassword';
-import { receiveDataUpdateProfile } from './actionCreator/Profile';
+import { receiveDataUpdateProfile ,receiveDataProfile} from './actionCreator/Profile';
 import { receiveDataMessagesCategory} from './actionCreator/MessageCategory';
- import {topDataCategory} from './actionCreator/MenuDrawer';
+import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
+import { receiveDataNotification } from './actionCreator/Notification'
 import AsyncStorage from '@react-native-community/async-storage';
+
+
 
 var sessionId =  AsyncStorage.getItem('sessionJWT')
 
@@ -55,7 +58,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             })
             break;
 
-
+// requete pour recuperer tout le top data pour la liste de category
         case RECEIVE_TOP_DATA_CATEGORY:
             next(action)
             await axios.get('categories/top-teen',{
@@ -65,7 +68,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                const allCategory = response.data["hydra:member"].map(value=>{
                 return value.title
            })
-           console.log('data category ',allCategory)
+         
            store.dispatch(topDataCategory(allCategory))
             }).catch((err)=>{
                 console.log(err)
@@ -78,50 +81,55 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             await axios.get('messages',{
             
             }).then((response)=>{
-                // console.log('rrrrr',response)
+                //  console.log('rrrrr',response)
                 store.dispatch(receiveMessagesHome(response))
             }).catch((err)=>{
-                console.log(err)
+                console.log("errrr",err)
                 
             })
             break;
 
 
-        // case DATA_PROFILE_USERS:
-        //     next(action)
-        //     await axios.get('users/{}',{
+        case DATA_PROFILE_USERS:
+            next(action)
+            await axios.get(`users/${action.idUser}`,{
             
-        //     }).then((response)=>{
-        //         //ici un autre axios
-              
-        //     }).catch((err)=>{
-        //         console.log(err)
+            }).then((response)=>{
+                //ici un autre axios
+               console.log('ajax profile user',response)
+               store.dispatch(receiveDataProfile(response))
+            }).catch((err)=>{
+                console.log("erroor ajax profil user ",err.response)
                 
-        //     })
-        //     break;
+            })
+            break;
 
             
         case SEND_DATA_UPDATE_PROFILE:
             next(action)
-            await axios.get('url',{
-            
-            }).then((response)=>{
-                //ici un autre axios
-              
-            }).catch((err)=>{
-                console.log(err)
+            console.log("axios update profile pour action",action)
+            await axios.put(`users/${action.data.id}`,{
+                email:action.data.email,
+                username:action.data.login,
+                password:action.data.password
+               }).then((response)=>{
                 
-            })
+                   console.log("axios update profile ",response)
+                   store.dispatch(receiveDataProfile(response))
+               }).catch((err)=>{
+                   console.log("axios error update profile ",err.response)
+                   
+               })
             break;
         case SEND_DATA_FILTER_HOME_MESSAGE:
                 next(action)
-                await axios.get('url',{
+                await axios.put(`url`,{
                 
                 }).then((response)=>{
                     //ici un autre axios
-                    receiveDataMessagesHome(response)
+                    store.dispatch(receiveDataMessagesHome(response))
                 }).catch((err)=>{
-                    console.log(err)
+                    console.log("axios ",err)
                     
                 })
                 break;
@@ -168,7 +176,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             next(action)
             await axios.get('categories')
             .then((response)=>{
-                console.log("eeeeeeeee",response)
+                
                  const allCategory = response.data["hydra:member"].map(value=>{
                       return value.title
                  })
@@ -192,6 +200,18 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 
             })
             break;
+        
+        case DATA_NOTIFICATION:
+           next(action)
+           await axios.get('url',{
+            
+        }).then((response)=>{
+            console.log(response)
+            store.dispatch(receiveDataNotification(response))
+        }).catch((err)=>{
+            console.log(err)
+            
+        })
         
     }
 

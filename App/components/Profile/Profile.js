@@ -3,10 +3,12 @@ import { View, Text,  ScrollView } from 'react-native';
 import { Button , Avatar , Icon} from 'react-native-elements';
 import { Style }  from './styleProfile'
 import { Form, Item, Input  } from 'native-base';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
+var jwtDecode = require('jwt-decode');
+
 
 class Profile extends Component {
 
@@ -18,7 +20,8 @@ class Profile extends Component {
         errorLoginCharacter:undefined,
         errorEmailCharacter:undefined,
         errorChangePwdCharacter:undefined,
-        errorPwdCharacter:undefined
+        errorPwdCharacter:undefined,
+        profileUser:undefined
 
     };
 
@@ -26,6 +29,16 @@ class Profile extends Component {
    componentDidMount(){
 
    }
+
+   static async getDerivedStateFromProps(props, state){
+    const profileUser=props.dataProfileUser
+    // console.log("profile props",profileUser)
+    console.log("Profile dans le get derived",profileUser)
+    if(profileUser){
+        state.profileUser=profileUser.data
+    }
+     
+    }
     collectDataForUpdate=(evt)=>{
         
         const { name }  = evt._targetInst.pendingProps;
@@ -63,23 +76,43 @@ class Profile extends Component {
     }
 
     
-    goToRegister=async ()=>{
+    goToRegister=async (e)=>{
+
+        e.preventDefault()
         const { login , 
             email , 
             password,
             changePassword,
              } = this.state
-             
-    // await this.props.sendDataUpdateProfile(login ,email, password,changePassword)
+             const {id} =  this.props.dataProfileUser.data  
+          console.log('profile fontion gotoregister',id)
+             var data = new Object 
+             data.id= id;
 
-    // const {dataProfileUser} = await this.props
+             if(login){
+                 data.login = login
+             }
+             if(email){
+                 data.email =email
+             }
+             if(password && password === changePassword)  {
+               
+                    data.password=password
+                
+             }else{
 
-    // this.setState({
-    //         login:dataProfileUser.login , 
-    //         email:dataProfileUser.email , 
-    //         password:dataProfileUser.password,
-    //         changePassword:dataProfileUser.confPwd,
-    // })
+             }
+            
+    await this.props.sendDataUpdateProfile(data)
+
+   
+ 
+    this.setState({
+            login:undefined , 
+            email:undefined  , 
+            password:undefined ,
+            changePassword:undefined ,
+    })
     }
 
 
@@ -93,15 +126,16 @@ class Profile extends Component {
             errorChangePwdCharacter,
             errorEmailCharacter,
             errorLoginCharacter,
-            errorPwdCharacter
+            errorPwdCharacter,
+            profileUser
              } = this.state
-
+   
     return (
      
         
         <AnimatedLinearGradient  customColors={presetColors.colorsProfile} speed={4000}> 
         <View style={Style.container}>
-            <Menu nameMenu="Profil" toggle={this.props.navigation.toggleDrawer}/>
+            <Menu nameMenu="Profil" navigation={this.props.navigation}/>
               <ScrollView
               bounces={true}
               style={Style.scrollview}
@@ -118,11 +152,11 @@ class Profile extends Component {
                         'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
                     }}
                 />
-                <View style={{margin:35}}>
-                    <Text style={{marginBottom:15}}>pseudo</Text>
-                    <Text>email</Text>
+                <View style={{margin:35 }}>
+                    <Text style={{marginBottom:15,fontSize: 18}}>{profileUser && profileUser.username}</Text>
+                    <Text style={{fontSize: 18}} >{profileUser && profileUser.email}</Text>
                 </View>
-              </View>s
+              </View>
             <View style={Style.form}>
               
                         <Form >

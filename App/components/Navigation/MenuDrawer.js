@@ -10,24 +10,28 @@ import { presetColors } from '../../data/dataCasual'
 
 
 
-
 export default class MenuDrawer extends React.Component{
      state={
          list:false,
          topDataCategory:undefined,
+         profileUser:undefined
      }
 
 
-    async componentDidMount(){
-         
-          await this.props.receiveTopDataCategory()
+   componentDidMount(){
        
-
+        this.props.receiveTopDataCategory()
+     
      }
 
     static async getDerivedStateFromProps(props, state){ 
         state.topDataCategory =  props.topDataCategory 
-
+ 
+        if(props.dataProfileUser){
+            state.profileUser = props.dataProfileUser.data.username
+           
+        }
+        
     }
    
      toggleList=()=>{
@@ -49,8 +53,10 @@ export default class MenuDrawer extends React.Component{
             this.props.navigation.navigate(nav,{
                 nameCategory:nav
             })
+            this.props.navigation.toggleDrawer()
         }else{
             this.props.navigation.navigate(nav)
+            this.props.navigation.toggleDrawer()
         }
     }
   
@@ -103,6 +109,8 @@ export default class MenuDrawer extends React.Component{
 
 
  render(){
+     const {profileUser} = this.state
+     
      return(
         <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
          <View style={Styles.container}>
@@ -113,7 +121,7 @@ export default class MenuDrawer extends React.Component{
                         <Image style={Styles.img} source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}/>
                     </View>
                     <View  style={Styles.profileText}>
-                        <Text style={Styles.nameText} > Pseudo</Text>
+                        <Text style={Styles.nameText} >{ profileUser && profileUser}</Text>
                     </View>
                 </View>
              </View>

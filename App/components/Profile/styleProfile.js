@@ -22,6 +22,7 @@ export const Style = StyleSheet.create({
     form:{
         width:300,
         marginTop:marginTop,
+        marginLeft:wp('5%'),
         
     },
     button:{

@@ -31,11 +31,11 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  sendDataUpdateProfile: (login ,email, password ,confPwd ) => {
-    dispatch(sendDataUpdateProfile(login ,email, password,confPwd));
+  sendDataUpdateProfile: (data) => {
+    dispatch(sendDataUpdateProfile(data));
   },
-  dataProfileUsers:()=>{
-    dispatch(dataProfileUsers())
+  dataProfileUsers:(idUser)=>{
+    dispatch(dataProfileUsers(idUser))
   }
 });
 

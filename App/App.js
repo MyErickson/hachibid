@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 
 import { createAppContainer , createSwitchNavigator} from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack'
+import { createStackNavigator } from 'react-navigation-stack';
 import { Provider } from "react-redux";
 import store from './store/';
-import DrawerNavigator from './components/Navigation/DrawerNavigator'
-
+import DrawerNavigator from './components/Navigation/DrawerNavigator';
 import Register from './components/Register/Register';
-import ResetPasswordContainer from './containers/ResetPassword/ResetPassword'
-import ConnectionContainer from './containers/Connection/Connection'
+import ResetPasswordContainer from './containers/ResetPassword/ResetPassword';
+import ConnectionContainer from './containers/Connection/Connection';
+
+
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -38,6 +40,8 @@ const StackNavigator = createStackNavigator(
       Connection:ConnectionContainer,
       Register: Register,
       ResetPassword:ResetPasswordContainer,
+   
+ 
 
       // The main application screen is our "ExampleScreen". Feel free to replace it with your
       // own screen and remove the example.

@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import Menu from '../Menu/Menu';
-import Filtrate from '../Filtrate/Filtrate';
-import { Style } from './styleCategory';
+import { Style } from './styleNotification';
+import  { casualList } from '../../data/dataCasual'
 
-
-class Category extends Component {
+class Notification extends Component {
 
     state = {
         allCategory:undefined
@@ -25,13 +24,13 @@ class Category extends Component {
       // })
 
     }
-  static async getDerivedStateFromProps(props, state){
-    // const { params } = props.navigation.state
-    // await this.props.receiveDataCategory(params.nameCategory)
+//   static async getDerivedStateFromProps(props, state){
+//     const { params } = props.navigation.state
+//     // await this.props.receiveDataCategory(params.nameCategory)
 
-      const allCategory =  props.dataStateAllCategory
-      state.allCategory= allCategory
-  }
+//      const allCategory =  props.dataStateAllCategory
+//        state.allCategory= allCategory
+//   }
 
   goToCategoryPage=(value)=>{
     this.props.navigation.navigate('MessageCategory',{
@@ -45,8 +44,8 @@ class Category extends Component {
    
     return (
       <View style={{flex:1}}>
-        <Menu nameMenu="Catégories" navigation={this.props.navigation}/>
-        <Filtrate searchBar={this.searchBar}/>
+        <Menu nameMenu="Notification" navigation={this.props.navigation} />
+     
         <ScrollView
               bounces={true}
               style={Style.scrollview}
@@ -55,16 +54,16 @@ class Category extends Component {
               >
         <Card containerStyle={{padding: 0}} >
         {
-            allCategory && allCategory.map((item, i) => {
+            casualList.map((item, i) => {
             return (
                 <ListItem
                 key={i}
                 roundAvatar
-                title={item}
-                leftIcon={{ name: 'star' }}
+                title={item.name}
+                leftIcon={{ name: 'notifications' }}
                 bottomDivider
                 chevron
-                onPress={()=>this.goToCategoryPage(item)}
+                onPress={()=>this.goToCategoryPage(item.name)}
                 />
             );
             })
@@ -76,4 +75,4 @@ class Category extends Component {
   }
 }
 
-export default Category;
+export default Notification;

@@ -8,7 +8,7 @@ import MenuDrawerContainer from '../../containers/MenuDrawer/MenuDrawer';
 import ChatHomeContainer  from '../../containers/ChatHome/ChatHome';
 import MessageCategoryContainer  from '../../containers/MessageCategory/MessageCategory';
 import CategoryContainer from '../../containers/Category/Category'
-
+import NotificationContainer from '../../containers/Notification/Notification';
 
 
 const WIDTH = Dimensions.get('window').width;
@@ -23,7 +23,9 @@ const DrawerConfig = {
 const DrawerNavigator = createDrawerNavigator(
     {
    
-    
+    Category:{
+        screen:CategoryContainer
+    },
     Home:{
         screen: ChatHomeContainer,
         
@@ -37,10 +39,10 @@ const DrawerNavigator = createDrawerNavigator(
     MessageCategory:{
         screen:MessageCategoryContainer
     },
-    Category:{
-        screen:CategoryContainer
-    }
    
+    Notification:{
+        screen:NotificationContainer,
+    }
 },
 DrawerConfig 
 )

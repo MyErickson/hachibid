@@ -88,7 +88,7 @@ class MessageCategory extends Component {
     return (
              
         <View   style={Style.container}>
-        <Menu nameMenu={title} toggle={navigation.toggleDrawer}/>
+        <Menu nameMenu={title} navigation={this.props.navigation}/>
       
         <View style={Style.messageContainer}>
         <Filtrate searchBar={this.searchBar} />
