@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
 
 // Action Creators
-import { sendMessageUser ,receiveDataMessageMyQuestions} from '../../store/actionCreator/MessageCategory'
+import { sendMessageUser ,receiveDataMessagesMyQuestions} from '../../store/actionCreator/MessageCategory'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -21,6 +21,7 @@ import { sendMessageUser ,receiveDataMessageMyQuestions} from '../../store/actio
  */
 const mapStateToProps = (state, ownProps) => ({
   dataMessagesMyQuestions: state.dataMessagesMyQuestions,
+  dataProfileUser: state.dataProfileUser,
 });
 
 /* === Actions ===
@@ -34,8 +35,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sendMessageUser: (message ) => {
     dispatch(sendMessageUser(message));
   },
-  receiveDataMessageMyQuestions:()=>{
-    dispatch(receiveDataMessageMyQuestions())
+  receiveDataMessagesMyQuestions:(id)=>{
+    dispatch(receiveDataMessagesMyQuestions(id))
   }
 });
 

@@ -127,11 +127,12 @@ export default class MenuDrawer extends React.Component{
              </View>
              
              <View style={Styles.bottomLinks}>
-                
-                 {this.navLink('Home','Chat Général','home')}
-                 {this.navLink('MyQuestions','Mes questions','chatbubbles')}
-                 {this.navLink('Profile','Profil','person')}
-                 {this.navLink('Category','Catégories','keypad',true)}  
+                <ScrollView > 
+                    {this.navLink('Home','Chat Général','home')}
+                    {this.navLink('MyQuestions','Mes questions','chatbubbles')}
+                    {this.navLink('Profile','Profil','person')}
+                    {this.navLink('Category','Catégories','keypad',true)}  
+                </ScrollView>
              </View>
       
         </View>

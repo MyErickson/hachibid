@@ -3,16 +3,29 @@ import { View, Text,  ScrollView } from 'react-native';
 import { Button , Avatar , Icon} from 'react-native-elements';
 import { Style }  from './styleProfile'
 import { Form, Item, Input  } from 'native-base';
-import AsyncStorage from '@react-native-community/async-storage';
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
-var jwtDecode = require('jwt-decode');
+import ImagePicker from 'react-native-image-picker';
+import {request, PERMISSIONS} from 'react-native-permissions';
+const options = {
+  title: 'Selectionner un Avatar',
+  mediaType:'photo',
+  cancelButtonTitle:'annuler',
+  takePhotoButtonTitle:"Prendre une Photo...",
+  chooseFromLibraryButtonTitle:"Galerie...",
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+};
+
 
 
 class Profile extends Component {
-
-    state = {
+  constructor(props){
+      super(props);
+      this.state = {
         login:undefined,
         email:undefined,
         password:undefined,
@@ -21,24 +34,39 @@ class Profile extends Component {
         errorEmailCharacter:undefined,
         errorChangePwdCharacter:undefined,
         errorPwdCharacter:undefined,
-        profileUser:undefined
+        profileUser:undefined,
+        avatarSource:undefined
 
     };
+    this.picture=undefined
+  }
+    
 
     
-   componentDidMount(){
+   async componentDidMount(){
+     try{
 
+        const permissionPicture= await request(PERMISSIONS.ANDROID.CAMERA)
+
+        this.picture=permissionPicture
+       
+      }catch(err){
+          console.log("eroor permission picture====== >",err)
+      }
    }
 
    static async getDerivedStateFromProps(props, state){
     const profileUser=props.dataProfileUser
-    // console.log("profile props",profileUser)
-    console.log("Profile dans le get derived",profileUser)
+   
+    // console.log("Profile dans le get derived",profileUser)
     if(profileUser){
         state.profileUser=profileUser.data
     }
      
     }
+
+
+
     collectDataForUpdate=(evt)=>{
         
         const { name }  = evt._targetInst.pendingProps;
@@ -76,9 +104,9 @@ class Profile extends Component {
     }
 
     
-    goToRegister=async (e)=>{
+    goToRegister=async()=>{
 
-        e.preventDefault()
+        
         const { login , 
             email , 
             password,
@@ -103,20 +131,43 @@ class Profile extends Component {
 
              }
             
-    await this.props.sendDataUpdateProfile(data)
+        await this.props.sendDataUpdateProfile(data)
 
-   
- 
-    this.setState({
-            login:undefined , 
-            email:undefined  , 
-            password:undefined ,
-            changePassword:undefined ,
-    })
+    
+    
+        this.setState({
+                login:undefined , 
+                email:undefined  , 
+                password:undefined ,
+                changePassword:undefined ,
+        })
     }
 
 
+   goToRegisterPicture=()=>{
 
+         ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+                } else if (response.error) {
+                    console.log('ImagePicker Error: ', response.error);
+                } else if (response.customButton) {
+                    console.log('User tapped custom button: ', response.customButton);
+                } else {
+                    const source = { uri: response.uri };
+                        console.log("data uri de la picture",response.uri)
+                    // You can also display the image using data:
+                    // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                this.setState({
+                avatarSource: source,
+                });
+            }
+        });     
+
+   }
 
   render() {
     const { login , 
@@ -127,30 +178,34 @@ class Profile extends Component {
             errorEmailCharacter,
             errorLoginCharacter,
             errorPwdCharacter,
-            profileUser
+            profileUser,
+            avatarSource
              } = this.state
+
+    const avatarDefault = { uri:
+                        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                    }
    
     return (
      
-        
+         
         <AnimatedLinearGradient  customColors={presetColors.colorsProfile} speed={4000}> 
-        <View style={Style.container}>
+    
             <Menu nameMenu="Profil" navigation={this.props.navigation}/>
+            <View style={Style.container}>
               <ScrollView
-              bounces={true}
+              
               style={Style.scrollview}
               showsVerticalScrollIndicator = {false}
-             
+               keyboardShouldPersistTaps="always"
               >
                 <View style={{flexDirection:"row",  marginTop:30,}}>
                 <Avatar
+                   onPress={this.goToRegisterPicture}
                     containerStyle={Style.avatar}
                     rounded
                     size={120}
-                    source={{
-                        uri:
-                        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    }}
+                    source={ avatarSource ? avatarSource : avatarDefault}
                 />
                 <View style={{margin:35 }}>
                     <Text style={{marginBottom:15,fontSize: 18}}>{profileUser && profileUser.username}</Text>

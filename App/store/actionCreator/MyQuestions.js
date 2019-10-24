@@ -5,9 +5,9 @@ export const sendMessageUser =( message ) =>({
     message
   })
 
-export const receiveDataMessagesMyQuestions=()=>({
+export const receiveDataMessagesMyQuestions=(id)=>({
   type:RECEIVE_DATA_MESSAGES_MYQUESTIONS,
-
+  id
 })
   
 export const DataMessagesMyQuestions=(dataMessageMyQuestions)=>({

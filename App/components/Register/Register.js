@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View , Text , TouchableOpacity,TouchableHighlight } from 'react-native';
+import { View , Text , ScrollView } from 'react-native';
 import { Button,Icon } from 'react-native-elements';
 import { Style }  from './styleRegister'
 import {  Content, Form, Item, Input, } from 'native-base';
@@ -65,10 +65,11 @@ class Register extends Component {
         this.setState({[name]:text})
      }
 
-     sendInformation= async ()=>{
+     sendInformation= ()=>{
         const { login , password,email,confPWD } = this.state;
-        
+        console.log("register data ",login , password,email,confPWD)
       if(confPWD === password ){
+        this.setState({errorRegister:false})
         if(login.trim()=== "" || email.trim() ===""  || password.trim() ==="" || confPWD.trim() ===""){
             this.setState({
                 alertVisible:true,
@@ -76,19 +77,11 @@ class Register extends Component {
                 style:false
             })
         }else{
-            await axios.post('https://rabbin-dev.digitalcube.fr/api/users',{
+             axios.post('https://rabbin-dev.digitalcube.fr/api/users',{
                 email:email,
                 username:login,
                 roles:["ROLE_USER"],
                 password:password
-            })
-            .then((response)=>{
-                 this.setState({
-                     alertVisible:true,
-                     messageAlert:"Vous etes maintenant enregistré",
-                     style:true
-                    })
-              
             }).catch((err)=>{
                 console.log(err)
                    
@@ -98,12 +91,20 @@ class Register extends Component {
                     messageAlert:"Erreur, Votre email à déja été enrigistré",
                     style:false
                 })
-                
+                return;
             })
-            
+            this.setState({
+                alertVisible:true,
+                messageAlert:"Vous etes maintenant enregistré",
+                style:true,
+                login:"",
+                email:"",
+                password:"",
+                confPWD:""
+               })
         }
         
-        this.setState({errorRegister:false})
+       
     }else{
         this.setState({errorRegister:true})
     }
@@ -128,8 +129,12 @@ class Register extends Component {
                 <Icon  underlayColor='none' onPress={()=>this.goBack()} size={30} name='keyboard-backspace'/> 
                 </View>
             <View style={Style.container}>
-            
-                <Text style={{color:'white',fontWeight:'bold',fontSize:20}}>Create My Account</Text>
+            <ScrollView
+                    
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="always"
+                 >
+                <Text style={{color:'white',fontWeight:'bold',fontSize:20,textAlign:"center"}}>Create My Account</Text>
             <View style={Style.form}>
      
        
@@ -221,7 +226,7 @@ class Register extends Component {
               
              
             </Content>
-         
+            </ScrollView>
         </View>
         </AnimatedLinearGradient>
         );

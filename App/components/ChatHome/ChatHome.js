@@ -6,7 +6,7 @@ import { Button  } from 'react-native-elements'
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
 import { GiftedChat  } from 'react-native-gifted-chat';
-import {message} from '../../data/dataCasual'
+
 var jwtDecode = require('jwt-decode');
 
 class ChatHome extends Component {
@@ -17,21 +17,15 @@ class ChatHome extends Component {
   
     async componentDidMount() {
     
-        //  await this.props.dataMessagesHome()
-        // const allMessages = this.props.allDataMessagesHome
-        // console.log('tejjjjjjjjjst',allMessages)
+         await this.props.dataMessagesHome()
 
         const sessionId = await AsyncStorage.getItem('sessionJWT')
-        
-         var decode = jwtDecode(sessionId)
-        console.log("decode de connexion",decode)
-          await this.props.dataProfileUsers(decode.id)
-         
-       
-          this.setState({
-            _messages: message,
-          })
+        var decode = jwtDecode(sessionId)
 
+        console.log("decode de connexion",decode)
+
+        await this.props.dataProfileUsers(decode.id)
+ 
   
         }
 
@@ -41,19 +35,22 @@ class ChatHome extends Component {
         this.setState({
           _messages:allMessages
         })
-      }
- searchBar= async (text)=>{
-    //   await this.props.sendDataFilterHomeMessage(text)
-    //   const _messages = await this.props.dataFilterHome
-    // this.setState({
-    //     _messages
-    // })
-    console.log(text)
- }
- 
-//  static  getDerivedStateFromProps(props,state){
-//   console.log('test',props.allDataMessagesHome)
-//  }
+    }
+
+
+    searchBar= async (text)=>{
+        //   await this.props.sendDataFilterHomeMessage(text)
+        //   const _messages = await this.props.dataFilterHome
+        // this.setState({
+        //     _messages
+        // })
+        console.log(text)
+    }
+    
+    static  getDerivedStateFromProps(props,state){
+     
+      state._messages = props.allDataMessagesHome
+    }
  
   render() {
  

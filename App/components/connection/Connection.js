@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { View , Text , TouchableOpacity, Animated} from 'react-native';
+import { View , Text , TouchableOpacity, Animated,ScrollView} from 'react-native';
 import { Button } from 'react-native-elements';
 import { Style }  from './styleConnection'
 import {  Content, Form, Item, Input } from 'native-base';
@@ -7,7 +7,7 @@ import ResetPassword from "../ResetPassword/ResetPassword"
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors } from '../../data/dataCasual'
 import Wave from 'react-native-waveview'
-import AsyncStorage from '@react-native-community/async-storage';
+
 
 import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
@@ -52,7 +52,7 @@ class Connection extends Component {
     sendInformation= async ()=>{
         
         const { login , password } = this.state;
-           console.log(login,password)
+      
            await  axios.post('https://rabbin-dev.digitalcube.fr/api/login_check',{
              
                 username:login,
@@ -100,7 +100,14 @@ class Connection extends Component {
       
         return (
             <Fragment>
+               <ScrollView
+                 
+                   showsVerticalScrollIndicator={false}
+                  keyboardShouldPersistTaps="always"
+                 >
                 <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
+             
+   
             <View style={Style.container}>
             <Text style={Style.textConnexion}>
                 Connexion</Text>
@@ -114,7 +121,11 @@ class Connection extends Component {
 
                 <Content>
                 <View style={Style.form}>
-              
+                <ScrollView
+                     keyboardShouldPersistTaps="always"
+                     showsVerticalScrollIndicator={false}
+             
+                 >
                         <Form >
                             <Item last  regular style={Style.containerInput}>
                          
@@ -149,11 +160,14 @@ class Connection extends Component {
                     />
                     
                         </Form>
-
+                        </ScrollView>
                 </View> 
-                <View style={{alignItems:"flex-end",marginTop:15}}>
+                <View style={{alignItems:"flex-end",marginTop:7
+            
+            
+            }}>
                             <TouchableOpacity
-                            onPress={this.toggleModal}
+                            onPress={this.toggleModal} 
                             >
                             <Text>Mot de passe oublié ?</Text>
                             </TouchableOpacity>
@@ -171,7 +185,7 @@ class Connection extends Component {
                         style={Style.wave}
                         H={25}
                         waveParams={[
-                            {A: 35, T:500, fill: '#ffffff'},
+                            {A:45, T:700, fill: '#ffffff'},
                             
                            
                         ]}
@@ -191,15 +205,17 @@ class Connection extends Component {
                             <Text style={{ 
                             color:'blue',
                              fontSize:15,
+                             
                              marginLeft:5,
                              fontWeight:'bold',
-                            zIndex:1}}> 
+                             zIndex:1}}> 
                                  inscrivez-vous  
                             </Text>
                        
                         </TouchableOpacity>
                         
                     </View>
+                    </ScrollView>      
         </Fragment>
         );
     }

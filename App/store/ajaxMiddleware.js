@@ -44,7 +44,6 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             })
             break;
         
-
         case SEND_MESSAGE_USER:
             next(action)
             await axios.post('url',{
@@ -57,6 +56,10 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 
             })
             break;
+
+
+
+
 
 // requete pour recuperer tout le top data pour la liste de category
         case RECEIVE_TOP_DATA_CATEGORY:
@@ -76,20 +79,42 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             })
             break;
 
+
+
+// recupere tout les données (message) dans la page Home 
         case DATA_MESSAGES_HOME:
             next(action)
             await axios.get('messages',{
             
             }).then((response)=>{
-                //  console.log('rrrrr',response)
-                store.dispatch(receiveMessagesHome(response))
+                
+                  const data = response.data['hydra:member'].map((value)=>{
+                      return{
+                          _id:value.id,
+                          text:value.content,
+                          createdAt:value.createdAt,
+                          type:value.type,
+                          user:{
+                              _id:value.userInfo.id,
+                              name:value.userInfo.username
+                          }
+
+
+                        }
+                  })
+             
+                store.dispatch(receiveMessagesHome(data))
             }).catch((err)=>{
-                console.log("errrr",err)
+                console.log("error axios data message home",err)
                 
             })
             break;
 
 
+
+
+
+// recupere les données d'un utilisateur
         case DATA_PROFILE_USERS:
             next(action)
             await axios.get(`users/${action.idUser}`,{
@@ -104,7 +129,11 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             })
             break;
 
-            
+
+
+
+
+ // envoye les données a modifier pour un utilisateur            
         case SEND_DATA_UPDATE_PROFILE:
             next(action)
             console.log("axios update profile pour action",action)
@@ -121,6 +150,11 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                    
                })
             break;
+
+
+
+
+
         case SEND_DATA_FILTER_HOME_MESSAGE:
                 next(action)
                 await axios.put(`url`,{
@@ -133,6 +167,9 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                     
                 })
                 break;
+
+
+
 
         case SEND_DATA_FILTER_MESSAGES_CATEGORY:
             next(action)
@@ -147,6 +184,9 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             })
             break;
 
+
+
+
         case RECEIVE_DATA_MESSAGES_CATEGORY:
             next(action)
             await axios.get('url',{
@@ -159,6 +199,9 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 
             })
             break;
+
+
+
         case SEND_DATA_FILTER_CATEGORY:
             next(action)
             await axios.get('url',{
@@ -171,6 +214,9 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 
             })
             break;
+
+
+
 // requete pour recuperer tout le data pour la liste de category
         case DATA_ALL_CATEGORY:
             next(action)
@@ -188,15 +234,35 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             })
             break;
 
+
+
+
+
+// recupere les doonées (message) de l'utisateur , page my questions            
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
-            await axios.get('messages',{
+            console.log("axios pour action myquestion",action)
+            await axios.get(`messages/${action.id}`,{
             
             }).then((response)=>{
-                console.log(response)
-                store.dispatch(DataMessagesMyQuestions(response))
+                  console.log("axios messsage myqyestion ", response)
+                     const data = response.data['hydra:member'].map((value)=>{
+                      return{
+                          _id:value.id,
+                          text:value.content,
+                          createdAt:value.createdAt,
+                          type:value.type,
+                          user:{
+                              _id:value.userInfo.id,
+                              name:value.userInfo.username
+                          }
+
+
+                        }
+                  })
+                store.dispatch(DataMessagesMyQuestions(data))
             }).catch((err)=>{
-                console.log(err)
+                console.log("erroorr dans messages myquestion",err)
                 
             })
             break;

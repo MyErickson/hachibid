@@ -22,7 +22,7 @@ export const Style = StyleSheet.create({
     form:{
         width:300,
         marginTop:marginTop,
-        marginLeft:wp('5%'),
+        marginLeft:wp("8%"),
         
     },
     button:{
@@ -49,8 +49,7 @@ export const Style = StyleSheet.create({
     scrollview:{
         marginHorizontal: 0,
         backgroundColor:'white',
-        backgroundColor:null
-        
+        backgroundColor:null,
     }
   
     

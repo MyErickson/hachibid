@@ -11,6 +11,7 @@ export const Style = StyleSheet.create({
         alignItems:'center',
         justifyContent:"space-between",
         top:hp('15%'),
+       
         
     },
     
@@ -35,25 +36,14 @@ export const Style = StyleSheet.create({
         flexDirection:'row',
         alignItems:"center",
         backgroundColor:'white',
-        paddingLeft:wp('5%'),
-        flex:1
-    },
-    ocean:{
-        height: '30%',
-        width:'100%',
-        position:'absolute',
-        bottom:0,
-        left:0,
-        backgroundColor: 'white', 
+        justifyContent:"center",
+        paddingTop:60,
+        paddingBottom:40
         
+      
     },
-    wave:{
-        position: 'absolute',
-        top: 10,
-        width: 'auto',
-        height: 'auto',
-        
-    },
+
+
     textConnexion:{
         color:'white',
         fontSize:25,
@@ -62,14 +52,14 @@ export const Style = StyleSheet.create({
  
     },
     waveContainer:{
-
+ 
         height:hp('70%')
         
         
       
     },
     wave: {
-        width: wp('100%'),
+        minWidth: wp('100%'),
      
         height:hp('70%')
     },

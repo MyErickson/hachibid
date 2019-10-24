@@ -61,10 +61,9 @@ export const RECEIVE_DATA_PROFILE='RECEIVE_DATA_PROFILE'
 const reducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case RESPONSE_CONNECTION:
-      console.log("reducer dans le action.reponseConnection ",action.responseConnection)
+      
        AsyncStorage.setItem('sessionJWT', action.responseConnection)
-      const t = AsyncStorage.getItem('sessionJWT')
-      console.log('reducer dans le reponse connection ', t)
+      
       return {
         ...state,
         receiveResponseConnection:action.responseConnection,

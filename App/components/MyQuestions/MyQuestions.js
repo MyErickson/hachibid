@@ -18,7 +18,7 @@ class MyQuestions extends Component {
   constructor(props){
     super(props);
     this.state = {
-      messages:undefined,
+      _messages:undefined,
       recordDuration:undefined,
       recordTime:undefined,
       currentPositionSec:undefined,
@@ -32,7 +32,7 @@ class MyQuestions extends Component {
 
 
     };
-    //  this.play= false
+  
     this.permission = undefined;
     this.writeExternalStorage = undefined ;
     this.audioRecorderPlayer = new AudioRecorderPlayer();
@@ -40,8 +40,10 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-      // await this.props.receiveDataMessageMyQuestions()
-    //  const allMessages =   this.props.dataMessagesMyQuestions
+        const { dataProfileUser } = this.props
+       console.log("componentdidmount du dataprofile ===>",dataProfileUser.data.id)
+        await this.props.receiveDataMessagesMyQuestions(dataProfileUser.data.id)
+    
  
       try{
         const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
@@ -53,20 +55,13 @@ class MyQuestions extends Component {
           console.log("eroor ====== >",err)
       }
     
-      this.setState({
-        messages: [
-          {
-            _id: 1,
-            text: 'Hello developer',
-            createdAt: new Date(),
-            type:'message',
-            user: {name:'erickson'}
-
-          },
-        ],
-      })
+   
     }
-
+  
+     static async getDerivedStateFromProps(props, state){ 
+          console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
+             state._messages = props.dataMessagesMyQuestions
+     }
 
     searchBar= async (text)=>{
       //   await this.props.sendDatafilterMessage(text)
@@ -262,8 +257,7 @@ class MyQuestions extends Component {
       
     });
     this.setState({play:false})
-  };
-
+  }
   onPausePlay =  async (propsSounder) => {
   const currentPath = propsSounder.currentMessage.content.split('//')
   console.log('onPausePlay');

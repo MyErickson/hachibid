@@ -6,7 +6,8 @@ import {
 
 export const Style = StyleSheet.create({
     container:{
-        width: wp('100%')
+        
+        minWidth: wp('100%')
     },
     icon:{
         color:'white',
