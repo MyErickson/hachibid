@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
 
 // Action Creators
-import { sendMessageUser ,receiveDataMessagesMyQuestions} from '../../store/actionCreator/MessageCategory'
+import { sendMessageUser ,receiveDataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation

@@ -51,7 +51,7 @@ export const Style = StyleSheet.create({
         borderRadius:10,
         paddingBottom:10,
         paddingTop:10 ,
-        flexDirection:'row'
+     
     },
 
     Modal:{

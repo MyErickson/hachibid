@@ -9,7 +9,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar, Message,} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound';
 
-class MyQuestions extends Component {
+class Test extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -338,4 +338,4 @@ class MyQuestions extends Component {
   }
 }
 
-export default MyQuestions;
+export default Test;

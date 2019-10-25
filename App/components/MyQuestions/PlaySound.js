@@ -23,7 +23,7 @@ const PlaySound = ({
     currentPositionSec
 }) =>{
   // console.log('propsssssss',currentPositionSec,currentDurationSec)
-  // console.log('propsssssss',propsSounder)
+ console.log('play sound propsSounder ===>',propsSounder)
     // const { text } = propsSounder.currentMessage
    
    

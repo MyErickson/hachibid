@@ -43,16 +43,23 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 responseForReset(false)
             })
             break;
-        
+     
+            
         case SEND_MESSAGE_USER:
             next(action)
-            await axios.post('url',{
-            
+            console.log("axios envoyer un message ====>",action)
+            await axios.post('messages',{
+                content:action.message[0].text,
+                type:action.message[0].type,
+                user:`api/users/${action.message[0].user._id}`,
+                valid:false
+
             }).then((response)=>{
                 //ici un autre axios pour recevoir tout les messages
-                receiveDataMessagesMyQuestions(response)
+                console.log("response axios send message user ===>",response)
+                stor.dispatch(receiveDataMessagesMyQuestions(action.message.id))
             }).catch((err)=>{
-                console.log(err)
+                console.log("error axios message send user",err)
                 
             })
             break;
