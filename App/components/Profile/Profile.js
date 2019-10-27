@@ -8,6 +8,10 @@ import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
 import ImagePicker from 'react-native-image-picker';
 import {request, PERMISSIONS} from 'react-native-permissions';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
+
 const options = {
   title: 'Selectionner un Avatar',
   mediaType:'photo',
@@ -169,6 +173,23 @@ class Profile extends Component {
 
    }
 
+   logOut =()=>{
+    console.log('logout')
+    
+    // this.props.responseConnection(undefined)
+    
+     AsyncStorage.removeItem('sessionJWT')
+    const t = AsyncStorage.getItem('sessionJWT')
+    console.log('logout piur la variable t ', t)
+    this.props.initializeState()
+    this.props.navigation.navigate("Connection")
+   }
+
+   componentWillUnmount(){
+       console.log('je suis demonter')
+       AsyncStorage.removeItem('sessionJWT')
+   }
+
   render() {
     const { login , 
             email , 
@@ -279,6 +300,12 @@ class Profile extends Component {
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
                         onPress= {this.goToRegister}
                         title= 'Modifier'
+                       />
+                        <Button 
+                        containerStyle={Style.button}
+                        buttonStyle={{borderRadius:30, backgroundColor:'rgba(232,63,63,0.8)'}}
+                        onPress= {this.logOut}
+                        title= 'déconnection'
                        />
                        
                 </View>             

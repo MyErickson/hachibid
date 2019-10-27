@@ -19,22 +19,23 @@ const PlaySound = ({
     onPausePlay,
     play,
     propsSounder,
-    currentDurationSec,
     currentPositionSec
 }) =>{
   // console.log('propsssssss',currentPositionSec,currentDurationSec)
- console.log('play sound propsSounder ===>',propsSounder)
+//  console.log('play sound propsSounder ===>',propsSounder)
     // const { text } = propsSounder.currentMessage
    
    
 //   if(t >= 1){
 //       t=0
 //     }
-  var progress = currentPositionSec/currentDurationSec
- if(progress ===  1){
+console.log("temps de la progression  ======>", currentPositionSec )
+  var progress =propsSounder && currentPositionSec/propsSounder.currentMessage.recordDuration;
+
+ if(progress > 1.1){
    progress=0
  }
- console.log(progress )
+
  return(
     <Modal style={Style.Modal} 
     isVisible={isModalVisible}
@@ -42,21 +43,11 @@ const PlaySound = ({
     >
         <Icon style={Style.iconClose}  name="close" onPress={()=>toggleModal()}/> 
     <View  style={Style.recorderPlaySound}>
-          {play?<IconElement  style={Style.iconRecorder} size={35} name="pause" onPress={()=>onPausePlay(propsSounder)
+          {play?<IconElement  style={Style.iconRecorder} size={35} name="pause" onPress={()=>onPausePlay(propsSounder,currentPositionSec)
       }/>  
           :<Icon style={Style.iconRecorder} name="play" onPress={()=>onStartPlay(propsSounder)}/> }
-          {/* <Slider
-          style={{flex:1}}
-          minimumValue={t}
-          maximumValue={1}
-          thumbStyle={{backgroundColor:'blue'}}
-          animateTransitions={true}
-          disabled={true}
-          value={t}
-          orientation={true}
-          onValueChange={value => value}
-        /> */}
-        {play&& <ProgressBar progress={progress } style={{width:wp("70%"),top:hp("2,2%")}} color={	"#404040"} /> }
+
+        {<ProgressBar progress={progress?progress:0} style={{width:wp("70%"),top:hp("2.5%")}} color={	"#404040"} /> }
       </View>
     </Modal>
 );

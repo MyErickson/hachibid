@@ -22,7 +22,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
  const  ajaxMiddleware = store => next => async action => {
     //  console.log(next,'action')
-
+       console.log("dans ajax middleware sessinID  =======>",sessionId)
     //match(/"(.*?)"/)[1] recuperer le token sans les ""
    
      axios.defaults.headers.common['Authorization']= "Bearer "+sessionId._55;

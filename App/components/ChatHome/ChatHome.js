@@ -20,9 +20,11 @@ class ChatHome extends Component {
          await this.props.dataMessagesHome()
 
         const sessionId = await AsyncStorage.getItem('sessionJWT')
+
+        console.log("ASYNCSTORAGE avant le decode ===>",sessionId)
         var decode = jwtDecode(sessionId)
 
-        console.log("decode de connexion",decode)
+        console.log("decode du TOKEN ====>",decode)
 
         await this.props.dataProfileUsers(decode.id)
  
@@ -52,6 +54,18 @@ class ChatHome extends Component {
       state._messages = props.allDataMessagesHome
     }
  
+
+    componentWillUnmount(){
+      console.log("je suis dmeonter chathome")
+        AsyncStorage.removeItem('sessionJWT')
+    }
+    
+
+
+
+
+
+
   render() {
  
    const { _messages }=this.state

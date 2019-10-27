@@ -4,7 +4,7 @@ import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import Menu from '../Menu/Menu';
 import Filtrate from '../Filtrate/Filtrate';
 import { Style } from './styleCategory';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Category extends Component {
 
@@ -39,6 +39,16 @@ class Category extends Component {
         navigation:this.props.navigation
     })
  }
+
+
+ componentWillUnmount(){
+  console.log("je suis dmeonter category")
+    AsyncStorage.removeItem('sessionJWT')
+}
+
+
+
+
 
   render() {
      const { allCategory } =this.state

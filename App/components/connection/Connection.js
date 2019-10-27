@@ -7,7 +7,7 @@ import ResetPassword from "../ResetPassword/ResetPassword"
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors } from '../../data/dataCasual'
 import Wave from 'react-native-waveview'
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
@@ -31,6 +31,7 @@ class Connection extends Component {
          this.position = new Animated.Value(0)
     }
     componentDidMount(){
+        AsyncStorage.removeItem('sessionJWT')
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,
@@ -95,8 +96,12 @@ class Connection extends Component {
 
 
     render() {
+        AsyncStorage.removeItem('sessionJWT')
+        const storageConnection = AsyncStorage.getItem('sessionJWT')
+        console.log('Connexion  asyncStorage vaut ', storageConnection)
         const { login , password,messageAlert,style } = this.state;
-       this.state.connection && this.props.receiveResponseConnection && this.props.navigation.navigate("Home")
+        console.log('dans le component CO0NECTION RENDER', this.state.connection, storageConnection )
+       this.state.connection && storageConnection && this.props.navigation.navigate("Home")
       
         return (
             <Fragment>

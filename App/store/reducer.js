@@ -50,7 +50,8 @@ export const DATA_PROFILE_USERS ='DATA_PROFILE_USERS'
 export const TOP_DATA_CATEGORY='TOP_DATA_CATEGORY'
 export const DATA_NOTIFICATION ='DATA_NOTIFICATION'
 export const RECEIVE_DATA_NOTIFICATION ='RECEIVE_DATA_NOTIFICATION'
-export const RECEIVE_DATA_PROFILE='RECEIVE_DATA_PROFILE'
+export const RECEIVE_DATA_PROFILE='RECEIVE_DATA_PROFILE';
+export const INITITALIZE_STATE= 'INITITALIZE_STATE'
 /**
  * Traitements
  */
@@ -61,8 +62,9 @@ export const RECEIVE_DATA_PROFILE='RECEIVE_DATA_PROFILE'
 const reducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case RESPONSE_CONNECTION:
+  
+        AsyncStorage.setItem('sessionJWT', action.responseConnection)
       
-       AsyncStorage.setItem('sessionJWT', action.responseConnection)
       
       return {
         ...state,
@@ -136,6 +138,11 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         dataNotification:action.dataNotification
       };
+    case INITITALIZE_STATE:
+      return {
+        state
+      };
+
 
     default:
       return state;

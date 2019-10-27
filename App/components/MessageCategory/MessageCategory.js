@@ -4,7 +4,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import { Style } from './styleMessageCategory'
 import Filtrate from '../Filtrate/Filtrate'
 import Menu from '../Menu/Menu';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 class MessageCategory extends Component {
   constructor(props) {
@@ -80,7 +80,13 @@ class MessageCategory extends Component {
       // })
       console.log(text)
    }
-    
+   
+   
+   componentWillUnmount(){
+  console.log("je suis dmeonter messagecategoryn")
+    AsyncStorage.removeItem('sessionJWT')
+}
+
   render() {
      const { _messages,title }=this.state
      const {navigation} = this.props.navigation.state.params

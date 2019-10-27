@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import Profile from '../../components/Profile/Profile';
 
 // Action Creators
-import { sendDataUpdateProfile ,dataProfileUsers } from '../../store/actionCreator/Profile';
+import { sendDataUpdateProfile ,dataProfileUsers ,initializeState} from '../../store/actionCreator/Profile';
+import {responseConnection} from '../../store/actionCreator/Connection';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -36,7 +37,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dataProfileUsers:(idUser)=>{
     dispatch(dataProfileUsers(idUser))
+  },
+    responseConnection:(token)=>{
+    dispatch(responseConnection(token))
+  },
+  initializeState:()=>{
+    dispatch(initializeState())
   }
+ 
 });
 
 // Container

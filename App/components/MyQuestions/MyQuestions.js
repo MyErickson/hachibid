@@ -8,7 +8,11 @@ import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar, Message,} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound';
+import AsyncStorage from '@react-native-community/async-storage';
 
+
+
+var timer;
 class MyQuestions extends Component {
   constructor(props){
     super(props);
@@ -16,7 +20,7 @@ class MyQuestions extends Component {
       _messages:undefined,
       recordDuration:undefined,
       recordTime:undefined,
-      currentPositionSec:undefined,
+      currentPositionSec:0,
       currentDurationSec:undefined,
       playTime:undefined,
       duration:undefined,
@@ -36,9 +40,12 @@ class MyQuestions extends Component {
     
     async componentDidMount() {
         const { dataProfileUser } = this.props
-       console.log("componentdidmount du dataprofile ===>",dataProfileUser.data.id)
-        // await this.props.receiveDataMessagesMyQuestions(dataProfileUser.data.id)
-    
+        if(dataProfileUser){
+          console.log("componentdidmount du dataprofile ===>",dataProfileUser.data.id)
+          // await this.props.receiveDataMessagesMyQuestions(dataProfileUser.data.id)
+      
+        }
+     
  
       try{
         const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
@@ -195,12 +202,11 @@ class MyQuestions extends Component {
       stop:!stop
     })
 
-   const result = await this.audioRecorderPlayer.stopRecorder(this.path);
+    const result = await this.audioRecorderPlayer.stopRecorder(this.path);
 
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
-     console.log("reeee",this.audioRecorderPlayer.mmss(
-      this.state.recordSecs,
-    ),)
+  
+   
     this.setState(previousState=>({
       recordSecs: 0,
       messages: GiftedChat.append(previousState.messages,  {
@@ -217,75 +223,92 @@ class MyQuestions extends Component {
         valid: true
       },),
     }));
-     
+    let formData = new FormData();
+     formData.append('file',{
+       uri: result,
+       name: Date.now(),
+       type: ".mp4"
+     })
+
+     console.log(formData)
 
   };
 
   onStartPlay = async (propsSounder) => {
      const currentPath = propsSounder.currentMessage.text.split('//')
     console.log('onStartPlay',currentPath);
-    
-    var change =true;
-    var  t = 0 ;
+  
+    this.setState({
+      play:true
+    })
 
     const msg = await this.audioRecorderPlayer.startPlayer(currentPath[1]);
     console.log("msg ==>",msg,this.path);
-    this.audioRecorderPlayer.addPlayBackListener(async(e) => {
-      // console.log("Ons tart play fonction dans le adddPlabaclisterner===>",e)
-      // console.log("resumeplayer  ===>",this.audioRecorderPlayer.resumePlayer(currentPath[1]))
-        
-      this.setState({
-        currentPositionSec: change && e.current_position,
-        currentDurationSec: e.duration,
-        playTime: this.audioRecorderPlayer.mmssss(Math.floor(e.current_position)),
-        duration: this.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
-        play:true
-      });
-      if(t===e.current_position){
-         console.log("t dans on start palyer",t)
-       
-         change =false
-      } else{
-        console.log("t dans on start palyer pas egal",t)
-        t=e.current_position
-        change = true
+     timer=setInterval(()=>{
+       console.log("dans le timer 2");
+       this.setState({
+         currentPositionSec: 100 + this.state.currentPositionSec
+      })
+      if (this.state.currentPositionSec > propsSounder.currentMessage.recordDuration){
+         this.onStopPlay(propsSounder)
       }
+    },100)
+
+
+    await this.audioRecorderPlayer.addPlayBackListener(async(e) => {
 
       if (e.current_position === e.duration) {
-      
-        
-        //  this.audioRecorderPlayer.removeRecordBackListener(currentPath[1]);
          this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
-    
-        this.setState({
-          play:false
-        });
       }
-      
+      return e.current_position;
     });
- 
-    this.setState({play:false})
+
+    
+    
   }
-  onPausePlay =  (propsSounder) => {
+
+ onStopPlay=(propsSounder)=>{
   const currentPath = propsSounder.currentMessage.text.split('//')
-  console.log('onPausePlay');
-   this.setState({play:false})
-  this.audioRecorderPlayer.stopPlayer(currentPath[1]);
-  //  this.audioRecorderPlayer.removeRecordBackListener(currentPath[1]);
+  clearInterval(timer)  
+   this.setState({
+     play:false ,
+     currentPositionSec:0
+    })
+    this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
+ }
+
+
+  onPausePlay =  (propsSounder,currentPositionSec) => {
+  const currentPath = propsSounder.currentMessage.text.split('//')
+  clearInterval(timer)  
+
+   this.setState({
+     play:false ,
+     currentPositionSec:currentPositionSec
+    })
+  this.audioRecorderPlayer.pausePlayer(currentPath[1]);
+  
   };
 
 
  // ******************** Modal *******************
 
  toggleModal=(props)=>{
+  clearInterval(timer) 
    const { isModalVisible } = this.state
   this.setState({isModalVisible: !isModalVisible,
-                propsSounder:props
+                propsSounder:props,
+                play:false ,
+                currentPositionSec:0
   })
  }
 
 
 
+ componentWillUnmount(){
+      console.log("je suis dmeonter myquestion")
+  AsyncStorage.removeItem('sessionJWT')
+}
 
 
 
@@ -304,7 +327,6 @@ class MyQuestions extends Component {
         play={this.state.play}
         propsSounder={this.state.propsSounder}
         duration={this.state.duration}
-        currentDurationSec={this.state.currentDurationSec}
         currentPositionSec={this.state.currentPositionSec}
        />
         <View style={Style.messageContainer}>
