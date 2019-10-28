@@ -5,12 +5,16 @@ import { Button, Icon } from 'react-native-elements';
 import Modal from "react-native-modal";
 import { Style } from './styleResetPassword'
 import LinearGradient from 'react-native-linear-gradient';
+import axios from 'axios';
+
+
 export class ResetPassword extends Component {
     state={
         email:undefined,
         messageErrorForReset:undefined,
         modalVisible: this.props.isModalVisible,
-        showValidate:undefined
+        showValidate:undefined,
+    
     }
 
     
@@ -18,28 +22,32 @@ export class ResetPassword extends Component {
 
         const { email } = this.state;
 
-        // await this.props.sendDataForReset( email );
-        // const validateForReset = await this.props.receiveResponseForReset
-     
-        if (true){
+        console.log(email)
+         await axios.post('https://rabbin-dev.digitalcube.fr/forgot-password',{
+             email
+        }).then((response)=>{
+       
+            console.log('dans le component reset pour la reponse',response)
             this.setState({
                 email:undefined,
             })
-            this.setState({messageErrorForReset:false , showValidate:true})
-            this.props.navigation.navigate('Connection')
-        }else{
-            this.setState({messageErrorForReset:true, showValidate:true})
-        }
-    }
+            this.setState({messageErrorForReset:false , showValidate:true })
+        }).catch((err)=>{
 
-    goToRegister=()=>{
-        this.props.navigation.navigate('Register')
-    }
+             console.log('error dans le component reset ',err)
+            this.setState({messageErrorForReset:true, showValidate:false})
+        })
+     }
+    
+     collectLoginAndPwd=(text)=>{
+         this.setState({email:text})
+     }
 
      closeModal =()=>{
        
-        this.setState({showValidate:false})
+    
         this.props.toggleModal()
+        this.setState({showValidate:false, messageErrorForReset:false })
     }
 
     render() {
@@ -63,8 +71,8 @@ export class ResetPassword extends Component {
             }
             {showValidate ? 
                 <View style={{flexDirection:'row',justifyContent:'center'}}>
-                    <Icon name='done' color='green' size={60} />
-                    <Text style={{marginTop:15, fontSize:30,color:'green'}}>Modifié</Text>
+                    <Icon name='done' color='green' size={40} />
+                    <Text style={{marginTop:15, fontSize:20,color:'green'}}>Un mail vous a été envoyé</Text>
                 </View>
             :
           <View style={{width:300}}>

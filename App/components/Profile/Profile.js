@@ -32,14 +32,16 @@ class Profile extends Component {
       this.state = {
         login:undefined,
         email:undefined,
-        password:undefined,
-        changePassword:undefined,
+        password:"",
+        changePassword:"",
         errorLoginCharacter:undefined,
         errorEmailCharacter:undefined,
         errorChangePwdCharacter:undefined,
         errorPwdCharacter:undefined,
+        errorPwd:undefined,
         profileUser:undefined,
-        avatarSource:undefined
+        avatarSource:undefined,
+        sessionId:undefined
 
     };
     this.picture=undefined
@@ -59,9 +61,11 @@ class Profile extends Component {
       }
    }
 
+
+
    static async getDerivedStateFromProps(props, state){
-    const profileUser=props.dataProfileUser
-   
+    const profileUser =props.dataProfileUser
+    state.sessionId = props.receiveResponseConnection
     // console.log("Profile dans le get derived",profileUser)
     if(profileUser){
         state.profileUser=profileUser.data
@@ -115,11 +119,17 @@ class Profile extends Component {
             email , 
             password,
             changePassword,
+            sessionId
              } = this.state
-             const {id} =  this.props.dataProfileUser.data  
-          console.log('profile fontion gotoregister',id)
-             var data = new Object 
-             data.id= id;
+        
+        const {id} =  this.props.dataProfileUser.data  
+             
+
+
+             var data = new Object ;
+
+             data.id= id ;
+             data.token=sessionId ;
 
              if(login){
                  data.login = login
@@ -127,12 +137,12 @@ class Profile extends Component {
              if(email){
                  data.email =email
              }
-             if(password && password === changePassword)  {
+             if(password.trim() && password === changePassword)  {
                
                     data.password=password
-                
+                    this.setState({errorPwd:false})
              }else{
-
+                this.setState({errorPwd:true})
              }
             
         await this.props.sendDataUpdateProfile(data)
@@ -176,9 +186,9 @@ class Profile extends Component {
    logOut =()=>{
     console.log('logout')
     
-    // this.props.responseConnection(undefined)
     
-     AsyncStorage.removeItem('sessionJWT')
+    
+    AsyncStorage.removeItem('sessionJWT')
     const t = AsyncStorage.getItem('sessionJWT')
     console.log('logout piur la variable t ', t)
     this.props.initializeState()
@@ -234,7 +244,7 @@ class Profile extends Component {
                 </View>
               </View>
             <View style={Style.form}>
-              
+            {this.state.errorPwd && <Text style={{color:"red",marginTop:40,textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
                         <Form >
                            
                         <Item last style={Style.containerInput}>
@@ -305,7 +315,7 @@ class Profile extends Component {
                         containerStyle={Style.button}
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(232,63,63,0.8)'}}
                         onPress= {this.logOut}
-                        title= 'déconnection'
+                        title= 'déconnexion'
                        />
                        
                 </View>             

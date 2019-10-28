@@ -21,7 +21,8 @@ import { dataAllCategory,sendDataFilterCategory } from '../../store/actionCreato
  */
 const mapStateToProps = (state, ownProps) => ({
     dataMessagesHome: state.dataMessagesHome,
-    dataStateAllCategory:state.dataAllCategory
+    dataStateAllCategory:state.dataAllCategory,
+    receiveResponseConnection:state.receiveResponseConnection
 });
 
 /* === Actions ===
@@ -32,8 +33,8 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  dataAllCategory: () => {
-    dispatch(dataAllCategory());
+  dataAllCategory: (token) => {
+    dispatch(dataAllCategory(token));
   },
   sendDataFilterCategory:(text)=>{
       dispatch(sendDataFilterCategory(text));

@@ -4,8 +4,9 @@ export const receiveMessagesHome=(allMessageHome)=>({
     type:RECEIVE_MESSAGES_HOME,
     allMessageHome
   })
-export const dataMessagesHome=()=>({
+export const dataMessagesHome=(token)=>({
     type:DATA_MESSAGES_HOME,
+    token,
   })
 
 export const sendDataFilterHomeMessage=(text)=>({

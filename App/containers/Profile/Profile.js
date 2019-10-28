@@ -22,6 +22,7 @@ import {responseConnection} from '../../store/actionCreator/Connection';
  */
 const mapStateToProps = (state, ownProps) => ({
     dataProfileUser: state.dataProfileUser,
+    receiveResponseConnection:state.receiveResponseConnection
 });
 
 /* === Actions ===

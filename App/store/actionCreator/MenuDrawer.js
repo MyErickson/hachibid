@@ -1,8 +1,8 @@
 import {RECEIVE_TOP_DATA_CATEGORY,TOP_DATA_CATEGORY} from '../reducer'
 
-export const receiveTopDataCategory=()=>({
+export const receiveTopDataCategory=(token)=>({
     type:RECEIVE_TOP_DATA_CATEGORY,
- 
+    token
   })
 
 export const topDataCategory=(topDataCategory )=>({

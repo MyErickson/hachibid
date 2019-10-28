@@ -24,7 +24,7 @@ import {dataProfileUsers } from '../../store/actionCreator/Profile';
 const mapStateToProps = (state, ownProps) => ({
     topDataCategory: state.topDataCategory,
     dataProfileUser: state.dataProfileUser,
-    
+   receiveResponseConnection:state.receiveResponseConnection
 });
 
 /* === Actions ===
@@ -35,11 +35,11 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    receiveTopDataCategory:()=>{
-        dispatch(receiveTopDataCategory())
+    receiveTopDataCategory:(token)=>{
+        dispatch(receiveTopDataCategory(token))
     },
-    dataAllCategory: () => {
-        dispatch(dataAllCategory());
+    dataAllCategory: (token) => {
+        dispatch(dataAllCategory(token));
       },
     dataProfileUsers:(idUser)=>{
         dispatch(dataProfileUsers(idUser))

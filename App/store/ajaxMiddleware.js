@@ -22,27 +22,15 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
  const  ajaxMiddleware = store => next => async action => {
     //  console.log(next,'action')
-       console.log("dans ajax middleware sessinID  =======>",sessionId)
+    //    console.log("dans ajax middleware sessinID  =======>",sessionId)
     //match(/"(.*?)"/)[1] recuperer le token sans les ""
    
-     axios.defaults.headers.common['Authorization']= "Bearer "+sessionId._55;
+    // axios.defaults.headers.common['Authorization']= "Bearer "+sessionId._55;
     axios.defaults.baseURL = 'https://rabbin-dev.digitalcube.fr/api/'
     next(action);
+     
     switch(action.type){
 
-
-        case SEND_DATA_RESET_PASSWORD:
-            next(action)
-            await axios.post('url',{
-         
-            }).then((response)=>{
-                console.log(response)
-                responseForReset(true)
-            }).catch((err)=>{
-                console.log(err)
-                responseForReset(false)
-            })
-            break;
      
             
         case SEND_MESSAGE_USER:
@@ -52,8 +40,8 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 content:action.message[0].text,
                 type:action.message[0].type,
                 user:`api/users/${action.message[0].user._id}`,
-                valid:false
-
+                valid:false,
+              
             }).then((response)=>{
                 //ici un autre axios pour recevoir tout les messages
                 console.log("response axios send message user ===>",response)
@@ -71,8 +59,11 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 // requete pour recuperer tout le top data pour la liste de category
         case RECEIVE_TOP_DATA_CATEGORY:
             next(action)
+            console.log("je suis dans le midleware data mcategory ",action.token)
             await axios.get('categories/top-teen',{
-           
+                headers:{
+                    'Authorization':"Bearer "+action.token
+                } 
             }).then((response)=>{
             
                const allCategory = response.data["hydra:member"].map(value=>{
@@ -91,10 +82,13 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 // recupere tout les données (message) dans la page Home 
         case DATA_MESSAGES_HOME:
             next(action)
+           
             await axios.get('messages',{
-            
+                headers:{
+                    'Authorization':"Bearer "+action.token
+                } 
             }).then((response)=>{
-                
+                 console.log("axios pour tout les data deu message home ",response)
                   const data = response.data['hydra:member'].map((value)=>{
                       return{
                           _id:value.id,
@@ -110,9 +104,9 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                         }
                   })
              
-                store.dispatch(receiveMessagesHome(data))
+                store.dispatch(receiveMessagesHome(data.reverse()))
             }).catch((err)=>{
-                console.log("error axios data message home",err)
+                console.log("error axios data message home",err.response)
                 
             })
             break;
@@ -124,8 +118,11 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 // recupere les données d'un utilisateur
         case DATA_PROFILE_USERS:
             next(action)
-            await axios.get(`users/${action.idUser}`,{
-            
+            console.log("je suis dans profile user axios ", action.idUser.token)
+            await axios.get(`users/${action.idUser.id}`,{
+               headers:{
+                   'Authorization':"Bearer "+action.idUser.token
+               } 
             }).then((response)=>{
                 //ici un autre axios
                console.log('ajax profile user',response)
@@ -147,7 +144,10 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             await axios.put(`users/${action.data.id}`,{
                 email:action.data.email,
                 username:action.data.login,
-                password:action.data.password
+                password:action.data.password,
+                headers:{
+                    'Authorization':"Bearer "+action.data.token
+                } 
                }).then((response)=>{
                 
                    console.log("axios update profile ",response)
@@ -227,7 +227,11 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 // requete pour recuperer tout le data pour la liste de category
         case DATA_ALL_CATEGORY:
             next(action)
-            await axios.get('categories')
+            await axios.get('categories',{
+                headers:{
+                    'Authorization':"Bearer "+action.token
+                } 
+             })
             .then((response)=>{
                 
                  const allCategory = response.data["hydra:member"].map(value=>{
@@ -267,7 +271,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
                         }
                   })
-                store.dispatch(DataMessagesMyQuestions(data))
+                store.dispatch(DataMessagesMyQuestions(data.reverse()))
             }).catch((err)=>{
                 console.log("erroorr dans messages myquestion",err)
                 

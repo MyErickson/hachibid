@@ -81,11 +81,7 @@ class MessageCategory extends Component {
       console.log(text)
    }
    
-   
-   componentWillUnmount(){
-  console.log("je suis dmeonter messagecategoryn")
-    AsyncStorage.removeItem('sessionJWT')
-}
+
 
   render() {
      const { _messages,title }=this.state
@@ -99,6 +95,7 @@ class MessageCategory extends Component {
         <View style={Style.messageContainer}>
         <Filtrate searchBar={this.searchBar} />
               <GiftedChat
+                scrollToBottom={true}
                 messages={_messages}
                 renderAvatar={null}
                 isAnimated= {true}

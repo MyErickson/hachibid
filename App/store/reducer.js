@@ -62,10 +62,10 @@ export const INITITALIZE_STATE= 'INITITALIZE_STATE'
 const reducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case RESPONSE_CONNECTION:
-  
+         
         AsyncStorage.setItem('sessionJWT', action.responseConnection)
       
-      
+        console.log("je suis dans le reducer au reponse conenction ==))====>",action.responseConnection)
       return {
         ...state,
         receiveResponseConnection:action.responseConnection,
@@ -139,8 +139,22 @@ const reducer = (state = initialState, action = {}) => {
         dataNotification:action.dataNotification
       };
     case INITITALIZE_STATE:
+    
       return {
-        state
+        receiveResponseConnection: undefined,
+        receiveResponseRegister:undefined,
+        receiveResponseForReset:undefined,
+        dataCategory:undefined,
+        allDataMessagesHome:undefined,
+        dataProfileUser:undefined,
+        dataFilterHome:undefined,
+        dataMessagesCategory:undefined,
+        dataFilterCategory:undefined,
+        dataMessagesMyQuestions:undefined,
+        dataFilterMessagesCategory:undefined,
+        dataFilterCategory:undefined,
+        topDataCategory:undefined,
+        dataNotification:undefined
       };
 
 

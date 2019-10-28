@@ -305,11 +305,6 @@ class MyQuestions extends Component {
 
 
 
- componentWillUnmount(){
-      console.log("je suis dmeonter myquestion")
-  AsyncStorage.removeItem('sessionJWT')
-}
-
 
 
   render() {
@@ -332,6 +327,7 @@ class MyQuestions extends Component {
         <View style={Style.messageContainer}>
             <Filtrate searchBar={this.searchBar} />
               <GiftedChat
+                scrollToBottom={true}
                 messages={this.state.messages}
                 onSend={messages => this.onSend(messages)}
                 renderUsernameOnMessage={true}

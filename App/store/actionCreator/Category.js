@@ -12,9 +12,9 @@ export const receiveDataFilterCategory=(dataFilterCategory)=>({
 
 })
 
-export const dataAllCategory=()=>({
+export const dataAllCategory=(token)=>({
     type:DATA_ALL_CATEGORY,
-    
+    token
 })
 
 export const receiveDataAllCategory=(dataAllCategory)=>({

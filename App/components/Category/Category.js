@@ -13,7 +13,7 @@ class Category extends Component {
     }
   
     async componentDidMount(){
-      await this.props.dataAllCategory()
+      await this.props.dataAllCategory(this.props.receiveResponseConnection)
     }
 
     searchBar= async (text)=>{
@@ -40,11 +40,6 @@ class Category extends Component {
     })
  }
 
-
- componentWillUnmount(){
-  console.log("je suis dmeonter category")
-    AsyncStorage.removeItem('sessionJWT')
-}
 
 
 

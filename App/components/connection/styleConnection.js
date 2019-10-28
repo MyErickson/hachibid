@@ -32,6 +32,7 @@ export const Style = StyleSheet.create({
        marginTop:20,
         justifyContent:"center"
     },
+    
     textRegister:{
         flexDirection:'row',
         alignItems:"center",
@@ -54,8 +55,6 @@ export const Style = StyleSheet.create({
     waveContainer:{
  
         height:hp('70%')
-        
-        
       
     },
     wave: {

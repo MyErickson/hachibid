@@ -14,28 +14,36 @@ export default class MenuDrawer extends React.Component{
      state={
          list:false,
          topDataCategory:undefined,
-         profileUser:undefined
+         profileUser:undefined,
+         receiveResponseConnection:undefined
      }
 
 
-   componentDidMount(){
-       
-        this.props.receiveTopDataCategory()
-     
-     }
 
     static async getDerivedStateFromProps(props, state){ 
-        state.topDataCategory =  props.topDataCategory 
- 
-        if(props.dataProfileUser){
-            state.profileUser = props.dataProfileUser.data.username
+       
+        const { receiveResponseConnection ,
            
+            topDataCategory ,
+            dataProfileUser} = props
+
+        state.topDataCategory =  topDataCategory 
+        
+        if(dataProfileUser){
+            state.profileUser = dataProfileUser.data.username
+           
+        }
+        if(receiveResponseConnection){
+           
+           state.receiveResponseConnection = receiveResponseConnection
         }
         
     }
    
      toggleList=()=>{
-         const { list } = this.state
+        
+         const { list ,receiveResponseConnection } = this.state
+         this.props.receiveTopDataCategory(receiveResponseConnection)
             this.setState({list:!list})
      }
       
@@ -48,7 +56,8 @@ export default class MenuDrawer extends React.Component{
 
 
     gotToNavLink=async (nav)=>{
-        await this.props.dataAllCategory()
+        const { receiveResponseConnection } =this.state
+        await this.props.dataAllCategory(receiveResponseConnection)
         if(nav === 'Category'){
             this.props.navigation.navigate(nav,{
                 nameCategory:nav
@@ -109,7 +118,7 @@ export default class MenuDrawer extends React.Component{
 
 
  render(){
-     const {profileUser} = this.state
+     const {profileUser,receiveResponseConnection} = this.state
      
      return(
         <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>

@@ -16,24 +16,27 @@ class ChatHome extends Component {
     }
   
     async componentDidMount() {
-    
-         await this.props.dataMessagesHome()
+      var data = new Object 
+      const sessionId = await AsyncStorage.getItem('sessionJWT')
 
-        const sessionId = await AsyncStorage.getItem('sessionJWT')
-
-        console.log("ASYNCSTORAGE avant le decode ===>",sessionId)
-        var decode = jwtDecode(sessionId)
+      // console.log("ASYNCSTORAGE avant le decode ===>",this.props.receiveResponseConnection)
+  
+        var decode = jwtDecode(this.props.receiveResponseConnection)
 
         console.log("decode du TOKEN ====>",decode)
+         data.id =decode.id 
+         data.token = this.props.receiveResponseConnection
+        await this.props.dataProfileUsers( data )
+      await this.props.dataMessagesHome(this.props.receiveResponseConnection)
 
-        await this.props.dataProfileUsers(decode.id)
  
   
         }
 
    actualize= async ()=>{
    
-        const allMessages =  await this.props.dataMessages
+        const allMessages =  this.state._messages
+        console.log("je suis dans chat home pour alllmessages ",allMessages)
         this.setState({
           _messages:allMessages
         })
@@ -55,12 +58,6 @@ class ChatHome extends Component {
     }
  
 
-    componentWillUnmount(){
-      console.log("je suis dmeonter chathome")
-        AsyncStorage.removeItem('sessionJWT')
-    }
-    
-
 
 
 
@@ -78,6 +75,7 @@ class ChatHome extends Component {
         <View style={Style.messageContainer}>
           <Filtrate searchBar={this.searchBar} />
               <GiftedChat
+                scrollToBottom={true}
                 messages={_messages}
                 renderAvatar={null}
                 isAnimated= {true}
