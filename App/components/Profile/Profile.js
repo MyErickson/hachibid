@@ -30,8 +30,8 @@ class Profile extends Component {
   constructor(props){
       super(props);
       this.state = {
-        login:undefined,
-        email:undefined,
+        login:"",
+        email:"",
         password:"",
         changePassword:"",
         errorLoginCharacter:undefined,
@@ -124,7 +124,7 @@ class Profile extends Component {
         
         const {id} =  this.props.dataProfileUser.data  
              
-
+      
 
              var data = new Object ;
 
@@ -141,20 +141,20 @@ class Profile extends Component {
                
                     data.password=password
                     this.setState({errorPwd:false})
-             }else{
+             }else if (password.trim() && password !== changePassword){
                 this.setState({errorPwd:true})
              }
             
-        await this.props.sendDataUpdateProfile(data)
+             await this.props.sendDataUpdateProfile(data)
 
-    
-    
-        this.setState({
+             this.setState({
                 login:undefined , 
                 email:undefined  , 
                 password:undefined ,
                 changePassword:undefined ,
         })
+    
+       
     }
 
 
@@ -195,10 +195,7 @@ class Profile extends Component {
     this.props.navigation.navigate("Connection")
    }
 
-   componentWillUnmount(){
-       console.log('je suis demonter')
-       AsyncStorage.removeItem('sessionJWT')
-   }
+   
 
   render() {
     const { login , 
@@ -244,7 +241,7 @@ class Profile extends Component {
                 </View>
               </View>
             <View style={Style.form}>
-            {this.state.errorPwd && <Text style={{color:"red",marginTop:40,textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
+            {this.state.errorPwd && <Text style={{color:"red",textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
                         <Form >
                            
                         <Item last style={Style.containerInput}>

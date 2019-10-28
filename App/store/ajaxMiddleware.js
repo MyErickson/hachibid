@@ -119,6 +119,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
         case DATA_PROFILE_USERS:
             next(action)
             console.log("je suis dans profile user axios ", action.idUser.token)
+            
             await axios.get(`users/${action.idUser.id}`,{
                headers:{
                    'Authorization':"Bearer "+action.idUser.token
@@ -141,13 +142,13 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
         case SEND_DATA_UPDATE_PROFILE:
             next(action)
             console.log("axios update profile pour action",action)
+            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             await axios.put(`users/${action.data.id}`,{
-                email:action.data.email,
-                username:action.data.login,
-                password:action.data.password,
-                headers:{
-                    'Authorization':"Bearer "+action.data.token
-                } 
+             
+                    email:action.data.email,
+                    username:action.data.login,
+                    password:action.data.password,
+          
                }).then((response)=>{
                 
                    console.log("axios update profile ",response)
