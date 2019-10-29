@@ -20,7 +20,7 @@ import { receiveDataMessagesCategory,sendDatafilterMessageCategory} from '../../
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    dataMessagesCategory: state.dataMessagesCategory,
+   dataMessagesCategory: state.dataMessagesCategory,
     dataFilterCategory:state.dataFilterCategory
 });
 

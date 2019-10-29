@@ -14,6 +14,7 @@ import MenuDrawer from '../../components/Navigation/MenuDrawer'
 import { receiveTopDataCategory } from '../../store/actionCreator/MenuDrawer'
 import { dataAllCategory } from '../../store/actionCreator/Category';
 import {dataProfileUsers } from '../../store/actionCreator/Profile';
+import { receiveDataMessagesCategory} from '../../store/actionCreator/MessageCategory';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -24,7 +25,7 @@ import {dataProfileUsers } from '../../store/actionCreator/Profile';
 const mapStateToProps = (state, ownProps) => ({
     topDataCategory: state.topDataCategory,
     dataProfileUser: state.dataProfileUser,
-   receiveResponseConnection:state.receiveResponseConnection
+    receiveResponseConnection:state.receiveResponseConnection
 });
 
 /* === Actions ===
@@ -43,6 +44,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       },
     dataProfileUsers:(idUser)=>{
         dispatch(dataProfileUsers(idUser))
+    },
+    receiveDataMessagesCategory:(data)=>{
+        dispatch(receiveDataMessagesCategory(data))
     }
   
 });

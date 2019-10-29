@@ -37,8 +37,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   dataMessagesHome: (token) => {
     dispatch(dataMessagesHome(token));
   },
-  sendDataFilterHomeMessage:(text)=>{
-      dispatch(sendDataFilterHomeMessage(text));
+  sendDataFilterHomeMessage:(data)=>{
+      dispatch(sendDataFilterHomeMessage(data));
   },
   dataProfileUsers:(idUser)=>{
     dispatch(dataProfileUsers(idUser))

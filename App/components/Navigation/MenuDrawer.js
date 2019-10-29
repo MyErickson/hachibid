@@ -23,14 +23,13 @@ export default class MenuDrawer extends React.Component{
     static async getDerivedStateFromProps(props, state){ 
        
         const { receiveResponseConnection ,
-           
-            topDataCategory ,
-            dataProfileUser} = props
+              topDataCategory ,
+              dataProfileUser} = props
 
         state.topDataCategory =  topDataCategory 
         
         if(dataProfileUser){
-            state.profileUser = dataProfileUser.data.username
+            state.profileUser = dataProfileUser.data
            
         }
         if(receiveResponseConnection){
@@ -43,13 +42,24 @@ export default class MenuDrawer extends React.Component{
      toggleList=()=>{
         
          const { list ,receiveResponseConnection } = this.state
+         
          this.props.receiveTopDataCategory(receiveResponseConnection)
             this.setState({list:!list})
      }
       
-     goToCategoryPage=(value)=>{
+     goToCategoryPage=async(value)=>{
+
+        const { receiveResponseConnection }=this.state
+        await this.props.dataAllCategory(receiveResponseConnection)
+
+         var data = new Object
+         data.token = receiveResponseConnection
+         data.id = value.id
+
+        this.props.receiveDataMessagesCategory(data)
+
         this.props.navigation.navigate('MessageCategory',{
-            nameCategory:value,
+            nameCategory:value.title,
             navigation:this.props.navigation
         })
      }
@@ -57,7 +67,9 @@ export default class MenuDrawer extends React.Component{
 
     gotToNavLink=async (nav)=>{
         const { receiveResponseConnection } =this.state
+
         await this.props.dataAllCategory(receiveResponseConnection)
+
         if(nav === 'Category'){
             this.props.navigation.navigate(nav,{
                 nameCategory:nav
@@ -102,7 +114,7 @@ export default class MenuDrawer extends React.Component{
                                     return (
                                         
                                         <ListItem key={Date.now()+key} onPress={()=> this.goToCategoryPage(value)}>
-                                            <Text>{value}</Text>
+                                            <Text>{value.title}</Text>
                                         </ListItem>
 
                                     )
@@ -116,10 +128,10 @@ export default class MenuDrawer extends React.Component{
             )
     }
 
-
+    
  render(){
-     const {profileUser,receiveResponseConnection} = this.state
-     
+     const {profileUser} = this.state
+    
      return(
         <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
          <View style={Styles.container}>
@@ -127,10 +139,10 @@ export default class MenuDrawer extends React.Component{
              <View style={Styles.topLinks} >
                 <View style={Styles.profile}>
                     <View  style={Styles.imgView}>
-                        <Image style={Styles.img} source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}/>
+                        <Image style={Styles.img} source={profileUser && profileUser.image ?{uri: profileUser.image}:{uri:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}/>
                     </View>
                     <View  style={Styles.profileText}>
-                        <Text style={Styles.nameText} >{ profileUser && profileUser}</Text>
+                        <Text style={Styles.nameText} >{ profileUser && profileUser.username}</Text>
                     </View>
                 </View>
              </View>

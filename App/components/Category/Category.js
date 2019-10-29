@@ -9,7 +9,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 class Category extends Component {
 
     state = {
-        allCategory:undefined
+        allCategory:undefined,
+        receiveResponseConnection:undefined
     }
   
     async componentDidMount(){
@@ -26,16 +27,24 @@ class Category extends Component {
 
     }
   static async getDerivedStateFromProps(props, state){
-    // const { params } = props.navigation.state
-    // await this.props.receiveDataCategory(params.nameCategory)
+  
+    state.receiveResponseConnection=props.receiveResponseConnection
+    state.allCategory =  props.dataStateAllCategory
+     console.log(props.dataStateAllCategory)
 
-      const allCategory =  props.dataStateAllCategory
-      state.allCategory= allCategory
   }
 
-  goToCategoryPage=(value)=>{
+  goToCategoryPage=async (value)=>{
+    const { receiveResponseConnection } =this.state
+    await this.props.dataAllCategory(receiveResponseConnection)
+
+     var data = new Object
+     data.token = receiveResponseConnection
+     data.id = value.id
+
+    this.props.receiveDataMessagesCategory(data)
     this.props.navigation.navigate('MessageCategory',{
-        nameCategory:value,
+        nameCategory:value.title,
         navigation:this.props.navigation
     })
  }
@@ -65,7 +74,7 @@ class Category extends Component {
                 <ListItem
                 key={i}
                 roundAvatar
-                title={item}
+                title={item.title}
                 leftIcon={{ name: 'star' }}
                 bottomDivider
                 chevron

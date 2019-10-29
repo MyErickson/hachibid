@@ -67,7 +67,7 @@ class Register extends Component {
 
      sendInformation= ()=>{
         const { login , password,email,confPWD } = this.state;
-        console.log("register data ",login , password,email,confPWD)
+     
       if(confPWD === password ){
         this.setState({errorRegister:false})
         if(login.trim()=== "" || email.trim() ===""  || password.trim() ==="" || confPWD.trim() ===""){

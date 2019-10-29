@@ -11,7 +11,7 @@ import Category from '../../components/Category/Category'
 
 // Action Creators
 import { dataAllCategory,sendDataFilterCategory } from '../../store/actionCreator/Category';
-
+import { receiveDataMessagesCategory} from '../../store/actionCreator/MessageCategory';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -38,6 +38,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   sendDataFilterCategory:(text)=>{
       dispatch(sendDataFilterCategory(text));
+  },
+  receiveDataMessagesCategory:(data)=>{
+    dispatch(receiveDataMessagesCategory(data))
   }
 });
 

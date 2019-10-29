@@ -33,7 +33,6 @@ class Connection extends Component {
     componentDidMount(){
         AsyncStorage.removeItem('sessionJWT')
 
-        console.log("je suis dans le component de conexxion ",AsyncStorage.getItem('sessionJWT'))
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,
@@ -100,9 +99,9 @@ class Connection extends Component {
     render() {
         
         const storageConnection = AsyncStorage.getItem('sessionJWT')
-        console.log('Connexion  asyncStorage vaut ', storageConnection)
+
         const { login , password,messageAlert,style } = this.state;
-        console.log('dans le component CO0NECTION RENDER', this.state.connection, storageConnection )
+       
        this.state.connection && storageConnection && this.props.navigation.navigate("Home")
       
         return (

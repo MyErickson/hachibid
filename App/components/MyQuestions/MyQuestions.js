@@ -166,7 +166,7 @@ class MyQuestions extends Component {
  }
 
 
-// ******************************* Mehtode Soundrecorder *******************************
+// ******************************* Methode Soundrecorder *******************************
 
 
 

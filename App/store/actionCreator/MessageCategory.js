@@ -5,9 +5,9 @@ export const sendDatafilterMessageCategory=(category)=>({
     category
   })
   
-  export const receiveDataMessagesCategory=(dataMessagesCategory)=>({
+  export const receiveDataMessagesCategory=(data)=>({
     type:RECEIVE_DATA_MESSAGES_CATEGORY,
-    dataMessagesCategory
+    data
   })
 
   export const dataMessagesCategory=(messagesCategory)=>({

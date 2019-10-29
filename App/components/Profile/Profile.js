@@ -6,6 +6,7 @@ import { Form, Item, Input  } from 'native-base';
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
+import AlertDialog from '../AlertDialog/AlertDialog';
 import ImagePicker from 'react-native-image-picker';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -41,7 +42,8 @@ class Profile extends Component {
         errorPwd:undefined,
         profileUser:undefined,
         avatarSource:undefined,
-        sessionId:undefined
+        token:undefined,
+        alertVisible:undefined
 
     };
     this.picture=undefined
@@ -65,8 +67,8 @@ class Profile extends Component {
 
    static async getDerivedStateFromProps(props, state){
     const profileUser =props.dataProfileUser
-    state.sessionId = props.receiveResponseConnection
-    // console.log("Profile dans le get derived",profileUser)
+    state.token = props.receiveResponseConnection
+    
     if(profileUser){
         state.profileUser=profileUser.data
     }
@@ -119,7 +121,7 @@ class Profile extends Component {
             email , 
             password,
             changePassword,
-            sessionId
+            token,
              } = this.state
         
         const {id} =  this.props.dataProfileUser.data  
@@ -129,18 +131,21 @@ class Profile extends Component {
              var data = new Object ;
 
              data.id= id ;
-             data.token=sessionId ;
+             data.token=token ;
 
              if(login){
                  data.login = login
              }
+
              if(email){
                  data.email =email
              }
+
              if(password.trim() && password === changePassword)  {
                
                     data.password=password
                     this.setState({errorPwd:false})
+                    
              }else if (password.trim() && password !== changePassword){
                 this.setState({errorPwd:true})
              }
@@ -158,9 +163,11 @@ class Profile extends Component {
     }
 
 
-   goToRegisterPicture=()=>{
-
-         ImagePicker.showImagePicker(options, (response) => {
+   goToRegisterPicture= ()=>{
+    const { token  } = this.state
+    const {id} =  this.props.dataProfileUser.data  
+    var data = new Object ;
+         ImagePicker.showImagePicker(options, async(response) => {
             console.log('Response = ', response);
 
             if (response.didCancel) {
@@ -172,25 +179,22 @@ class Profile extends Component {
                 } else {
                     const source = { uri: response.uri };
                         console.log("data uri de la picture",response.uri)
+                        data.id= id
+                        data.token = token
+                        data.image = response.uri
                     // You can also display the image using data:
                     // const source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-                this.setState({
-                avatarSource: source,
-                });
+                await this.props.sendDataUpdateProfile(data)
             }
         });     
 
    }
 
    logOut =()=>{
-    console.log('logout')
-    
-    
-    
+ 
     AsyncStorage.removeItem('sessionJWT')
-    const t = AsyncStorage.getItem('sessionJWT')
-    console.log('logout piur la variable t ', t)
+ 
     this.props.initializeState()
     this.props.navigation.navigate("Connection")
    }
@@ -207,7 +211,7 @@ class Profile extends Component {
             errorLoginCharacter,
             errorPwdCharacter,
             profileUser,
-            avatarSource
+           
              } = this.state
 
     const avatarDefault = { uri:
@@ -233,7 +237,7 @@ class Profile extends Component {
                     containerStyle={Style.avatar}
                     rounded
                     size={120}
-                    source={ avatarSource ? avatarSource : avatarDefault}
+                    source={profileUser && profileUser.image  ? {uri:profileUser.image} : avatarDefault}
                 />
                 <View style={{margin:35 }}>
                     <Text style={{marginBottom:15,fontSize: 18}}>{profileUser && profileUser.username}</Text>
@@ -256,7 +260,7 @@ class Profile extends Component {
                              />
                           
                         </Item>
-                        { errorLoginCharacter && (<Text style={{color:'red'}}>Il faut au moins 3 caractères</Text>)}
+                        { errorLoginCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 3 caractères</Text>)}
                         
 
                      
@@ -270,20 +274,20 @@ class Profile extends Component {
                             onChange={this.collectDataForUpdate}/>
                         </Item>
 
-                        { errorEmailCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
+                        { errorEmailCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
 
                         
                         <Item last style={Style.containerInput}>
                         <Icon  active name='lock'/> 
                          <Input 
-                         placeholder='Mot de passe *'
+                         placeholder='Changer mon mot de passe *'
                          name="password"
                          secureTextEntry={true}
                          maxLength={255}
                          value={password}
                          onChange={this.collectDataForUpdate}/>
                      </Item>
-                     {errorPwdCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
+                     {errorPwdCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
                     
 
                     
@@ -291,14 +295,14 @@ class Profile extends Component {
                      <Item last style={Style.containerInput}>
                      <Icon  active name='lock'/> 
                          <Input 
-                         placeholder='Changer mon mot de passe *'
+                         placeholder='Confirmation du mot de passe *'
                          name="changePassword"
                          secureTextEntry={true}
                          maxLength={255}
                          value={changePassword}
                          onChange={this.collectDataForUpdate}/>
                      </Item>
-                     {errorChangePwdCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
+                     {errorChangePwdCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
                         </Form>
                  
                
@@ -318,7 +322,12 @@ class Profile extends Component {
                 </View>             
                 </ScrollView>  
 
-          
+                <AlertDialog 
+                    alertVisible={this.state.alertVisible}
+                    messageAlert={this.state.messageAlert}
+                    closeAlert={this.closeAlert}
+                    style={this.state.style}
+                 />
             </View>
             </AnimatedLinearGradient>
  

@@ -8,26 +8,26 @@ import Filtrate from '../Filtrate/Filtrate'
 import { GiftedChat  } from 'react-native-gifted-chat';
 
 var jwtDecode = require('jwt-decode');
-
+const input = React.createRef();
 class ChatHome extends Component {
  
     state = {
       _messages:undefined,
+      _messageFilter:undefined,
+      filter:undefined
     }
   
     async componentDidMount() {
-      var data = new Object 
-      const sessionId = await AsyncStorage.getItem('sessionJWT')
+       let data = new Object 
+       const sessionId = await AsyncStorage.getItem('sessionJWT')
 
       // console.log("ASYNCSTORAGE avant le decode ===>",this.props.receiveResponseConnection)
   
         var decode = jwtDecode(this.props.receiveResponseConnection)
-
-        console.log("decode du TOKEN ====>",decode)
-         data.id =decode.id 
-         data.token = this.props.receiveResponseConnection
+        data.id =decode.id 
+        data.token = this.props.receiveResponseConnection
         await this.props.dataProfileUsers( data )
-      await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+        await this.props.dataMessagesHome(this.props.receiveResponseConnection)
 
  
   
@@ -43,18 +43,39 @@ class ChatHome extends Component {
     }
 
 
-    searchBar= async (text)=>{
-        //   await this.props.sendDataFilterHomeMessage(text)
+    searchBar = async (text)=>{
+        //   
         //   const _messages = await this.props.dataFilterHome
         // this.setState({
         //     _messages
         // })
         console.log(text)
+        if(text.length > 2 ){
+          let data = new Object
+          data.text = text
+          data.token = this.props.receiveResponseConnection
+          await this.props.sendDataFilterHomeMessage(data)
+          this.setState({ filter:true})    
+        }else{
+          this.setState({ filter:undefined})     
+          }
     }
     
+    clear=()=>{
+      input.current.clear();
+    }
+
+
     static  getDerivedStateFromProps(props,state){
+     console.log("je suis dans get derived ", props.dataFilterHome)
+     if(props.dataFilterHome){
+      state._messageFilter = props.dataFilterHome
      
-      state._messages = props.allDataMessagesHome
+     }else{
+      state._messageFilter =undefined
+     }
+     state._messages = props.allDataMessagesHome
+     
     }
  
 
@@ -65,18 +86,18 @@ class ChatHome extends Component {
 
   render() {
  
-   const { _messages }=this.state
-
+   const { _messages,_messageFilter,filter }=this.state
+     console.log("je suis dans le chathome",_messageFilter)
     return (
        
         <View   style={Style.container}>
         <Menu nameMenu="Chat Géneral" navigation={this.props.navigation}/>
       
         <View style={Style.messageContainer}>
-          <Filtrate searchBar={this.searchBar} />
+          <Filtrate ref={input} searchBar={this.searchBar} clear={this.clear}/>
               <GiftedChat
                 scrollToBottom={true}
-                messages={_messages}
+                messages={filter?_messageFilter :_messages}
                 renderAvatar={null}
                 isAnimated= {true}
                 minInputToolbarHeight={20}

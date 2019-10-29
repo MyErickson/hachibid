@@ -29,7 +29,7 @@ export const RESPONSE_CONNECTION = 'REPONSE_CONNECTION';
 export const RESPONSE_FOR_RESET = ' RESPONSE_FOR_RESET';
 export const RECEIVE_TOP_DATA_CATEGORY ='RECEIVE_TOP_DATA_CATEGORY';
 export const RECEIVE_MESSAGES_HOME ='RECEIVE_MESSAGES_HOME';
-export const RECEIVE_DATA_FILTER_MESSAGE ='RECEIVE_DATA_FILTER_MESSAGE';
+export const RECEIVE_DATA_FILTER_MESSAGES_HOME ='RECEIVE_DATA_FILTER_MESSAGES_HOME';
 export const RECEIVE_DATA_UPDATE_PROFILE ='RECEIVE_DATA_UPDATE_PROFILE';
 export const SEND_DATA_UPDATE_PROFILE ='SEND_DATA_UPDATE_PROFILE';
 export const SEND_DATA_FILTER_HOME_MESSAGE='SEND_DATA_FILTER_HOME_MESSAGE';
@@ -65,7 +65,6 @@ const reducer = (state = initialState, action = {}) => {
          
         AsyncStorage.setItem('sessionJWT', action.responseConnection)
       
-        console.log("je suis dans le reducer au reponse conenction ==))====>",action.responseConnection)
       return {
         ...state,
         receiveResponseConnection:action.responseConnection,
@@ -97,7 +96,7 @@ const reducer = (state = initialState, action = {}) => {
           ...state,
           dataProfileUser:action.ProfileUser
         };
-    case RECEIVE_DATA_FILTER_MESSAGE:
+    case RECEIVE_DATA_FILTER_MESSAGES_HOME:
     return {
       ...state,
       dataFilterHome:action.dataFilterMessage
