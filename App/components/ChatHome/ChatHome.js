@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { View} from 'react-native';
 import { Style} from './styleChatHome';
-import { Button  } from 'react-native-elements'
+import { Button ,Icon } from 'react-native-elements'
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
 import { GiftedChat  } from 'react-native-gifted-chat';
 
 var jwtDecode = require('jwt-decode');
-const input = React.createRef();
+
 class ChatHome extends Component {
  
     state = {
@@ -34,11 +34,12 @@ class ChatHome extends Component {
         }
 
    actualize= async ()=>{
-   
+    // await this.props.dataMessagesHome(this.props.receiveResponseConnection)
         const allMessages =  this.state._messages
         console.log("je suis dans chat home pour alllmessages ",allMessages)
         this.setState({
-          _messages:allMessages
+          _messages:allMessages,
+          filter:undefined
         })
     }
 
@@ -61,14 +62,11 @@ class ChatHome extends Component {
           }
     }
     
-    clear=()=>{
-      input.current.clear();
-    }
-
+  
 
     static  getDerivedStateFromProps(props,state){
      console.log("je suis dans get derived ", props.dataFilterHome)
-     if(props.dataFilterHome){
+     if(props.dataFilterHome && state.filter){
       state._messageFilter = props.dataFilterHome
      
      }else{
@@ -94,7 +92,7 @@ class ChatHome extends Component {
         <Menu nameMenu="Chat Géneral" navigation={this.props.navigation}/>
       
         <View style={Style.messageContainer}>
-          <Filtrate ref={input} searchBar={this.searchBar} clear={this.clear}/>
+          <Filtrate  searchBar={this.searchBar} />
               <GiftedChat
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
@@ -110,15 +108,12 @@ class ChatHome extends Component {
                   
                 }}
               />
-             <Button rounded info 
-                        containerStyle={Style.button}
-                        buttonStyle={{borderRadius:10,height:45,backgroundColor:'rgba(41,113,232,0.8)'}}
-                        onPress= {this.actualize}
-                        title= 'Actualiser'
-              />
+             <View style={Style.containerIcon } >
+               <Icon containerStyle={{width:40}} onPress={this.actualize} name="refresh" />
+              </View>
         </View>
-       
-
+      
+     
       </View>
     );
   }

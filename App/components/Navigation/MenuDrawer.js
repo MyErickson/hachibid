@@ -96,10 +96,10 @@ export default class MenuDrawer extends React.Component{
                             <Text style={Styles.link}>{text}</Text>
                         </View>
                         { text ==='Catégories' && (
-                        <Icon style={Styles.iconList} 
-                        name='list'
+                        <Text style={Styles.iconList} 
+                        
                         onPress={()=>this.toggleList() }
-                        />)}
+                        >{`>`}</Text>)}
                         
 
                     </TouchableOpacity>
@@ -131,7 +131,7 @@ export default class MenuDrawer extends React.Component{
     
  render(){
      const {profileUser} = this.state
-    
+
      return(
         <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
          <View style={Styles.container}>
@@ -149,8 +149,9 @@ export default class MenuDrawer extends React.Component{
              
              <View style={Styles.bottomLinks}>
                 <ScrollView > 
-                    {this.navLink('Home','Chat Général','home')}
-                    {this.navLink('MyQuestions','Mes questions','chatbubbles')}
+
+                    {profileUser && profileUser.roleTitle === "Utilisateur" && this.navLink('Home','Chat Général','home') }
+                    {profileUser && profileUser.roleTitle === "Utilisateur" ? this.navLink('MyQuestions','Mes questions','chatbubbles') :this.navLink('MyQuestions','Chat Général','home') }
                     {this.navLink('Profile','Profil','person')}
                     {this.navLink('Category','Catégories','keypad',true)}  
                 </ScrollView>

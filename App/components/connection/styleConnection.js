@@ -11,8 +11,7 @@ export const Style = StyleSheet.create({
         alignItems:'center',
         justifyContent:"space-between",
         top:hp('15%'),
-       
-        
+
     },
     
     containerInput:{

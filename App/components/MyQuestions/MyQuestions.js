@@ -27,7 +27,8 @@ class MyQuestions extends Component {
       stop:false,
       play:false,
       isModalVisible:false,
-      propsSounder:undefined
+      propsSounder:undefined,
+      dataProfileUser:undefined
 
 
     };
@@ -63,6 +64,7 @@ class MyQuestions extends Component {
      static async getDerivedStateFromProps(props, state){ 
           console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
              state._messages = props.dataMessagesMyQuestions
+             state.ProfileUser = props.dataProfileUser
      }
 
     searchBar= async (text)=>{
@@ -119,6 +121,7 @@ class MyQuestions extends Component {
           <Bubble
             
             {...props}
+          
            />
       );
      }
@@ -147,20 +150,24 @@ class MyQuestions extends Component {
   }
 
   renderActions=(props)=>{
-    const { stop } = this.state
-     if (stop){
-      return (
-        <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-        <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
-        </TouchableOpacity>
-      )
-     }else{
-      return (
-        <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-        <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
-        </TouchableOpacity>
-      )
-     }
+    console.log("My questions  dans le render Actions",props)
+    const { ProfileUser, stop  } = this.state
+ if(ProfileUser.data.roles[0]=== "ROLE_ADMIN"){
+  if (stop){
+    return (
+      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+      <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
+      </TouchableOpacity>
+    )
+   }else{
+    return (
+      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+      <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
+      </TouchableOpacity>
+    )
+   }
+ }
+    
     
     
  }
@@ -308,12 +315,14 @@ class MyQuestions extends Component {
 
 
   render() {
+     const { ProfileUser } = this.state
 
+      const nameMenu = ProfileUser && ProfileUser.data.roleTitle === "Administrateur" ? "Chat Général":  "Mes questions" 
 
     return (
     
       <View  style={Style.container}>
-        <Menu nameMenu="Mes questions" navigation={this.props.navigation}/>
+        <Menu nameMenu={nameMenu} navigation={this.props.navigation}/>
        <PlaySound 
         isModalVisible={this.state.isModalVisible}
         toggleModal={this.toggleModal}
@@ -343,7 +352,8 @@ class MyQuestions extends Component {
                 renderActions={this.renderActions}
                 timeFormat='HH:mm'
                 user={{
-                  _id: this.props.dataProfileUser.data.id,
+                  _id: ProfileUser &&  ProfileUser.data.id,
+
                   
                 }}
               />

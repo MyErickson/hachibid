@@ -15,7 +15,7 @@ export const Style = StyleSheet.create({
   
     messageContainer:{
         flex:1,
-        paddingHorizontal: 15,
+
         paddingTop: 10,
         paddingBottom: 15,
         borderRadius: 20,

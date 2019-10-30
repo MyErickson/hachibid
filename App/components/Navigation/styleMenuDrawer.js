@@ -37,7 +37,8 @@ export const Styles = StyleSheet.create({
     iconList:{
         padding:6,
         paddingLeft:60,
-        margin:5,
+        fontSize:25,
+        margin:4,
     },
     profile:{
         flex:1,

@@ -11,7 +11,7 @@ import Connection from '../../components/Connection/Connection'
 
 // Action Creators
 import { sendDataConnection,responseConnection} from '../../store/actionCreator/Connection';
-
+import { dataProfileUsers } from '../../store/actionCreator/Profile';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -37,7 +37,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   responseConnection:(token)=>{
     dispatch(responseConnection(token))
-  }
+  },
+  dataProfileUsers:(idUser)=>{
+    dispatch(dataProfileUsers(idUser))
+  },
  
 
 

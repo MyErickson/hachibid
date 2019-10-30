@@ -14,10 +14,11 @@ export const Style = StyleSheet.create({
     },
     messageContainer:{
         flex:1,
-        paddingHorizontal: 15,
+        // paddingHorizontal: 15,
         paddingTop: 10,
         paddingBottom: 20,
-        borderRadius: 20,
+  
+       
  
       
     },
@@ -25,9 +26,14 @@ export const Style = StyleSheet.create({
     message:{
 
         paddingTop: 5,
-   
+     
        
     },
+   
+    containerIcon :{
+        flexDirection:"row",
+        justifyContent:"center"
+    }
     
     
  

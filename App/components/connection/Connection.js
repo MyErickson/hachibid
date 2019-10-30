@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
 
+var jwtDecode = require('jwt-decode');
 
 
 
@@ -61,7 +62,7 @@ class Connection extends Component {
                 password:password,
               
             }).then(async(response)=>{
-            
+                let data = new Object 
                 this.setState({
                     login:undefined,
                     password:undefined,
@@ -69,7 +70,21 @@ class Connection extends Component {
                     connection:response.data.token
                 })
                 await this.props.responseConnection(response.data.token) 
-                this.props.navigation.navigate("Home")
+             
+                var decode = jwtDecode(response.data.token)
+
+                console.log("je sui dns connection ", decode.roles[0])
+                data.id =decode.id 
+                data.token = this.props.receiveResponseConnection
+                await this.props.dataProfileUsers( data )
+
+
+                if(decode.roles[0]=== "ROLE_ADMIN"){
+                    this.props.navigation.navigate("MyQuestions")
+                }else {
+                    this.props.navigation.navigate("Home")
+                }
+              
             })
             .catch((err)=>{
              console.log("eroor connexion",err)

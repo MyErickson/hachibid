@@ -36,7 +36,8 @@ export const Style = StyleSheet.create({
     messageContainer:{
         flex:1,
         justifyContent:'flex-end',
-    
+        paddingTop: 10,
+
         borderColor:'black',
         // backgroundColor:'red'
 
