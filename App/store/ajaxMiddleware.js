@@ -9,7 +9,7 @@ import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
 import { receiveMessagesHome,receiveDataFilterMessagesHome } from './actionCreator/ChatHome';
 import { responseForReset } from './actionCreator/ResetPassword';
 import { receiveDataUpdateProfile ,receiveDataProfile} from './actionCreator/Profile';
-import { dataMessagesCategory} from './actionCreator/MessageCategory';
+import { dataMessagesCategory,dataFilterMessagesCategory} from './actionCreator/MessageCategory';
 import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
@@ -168,7 +168,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case SEND_DATA_FILTER_HOME_MESSAGE:
                 next(action)
-                console.log("axios bare de recherche ",action)
+           
                 axios.get(`messages?content=${action.data.text}`,{
                     headers:{
                         'Authorization':"Bearer "+action.data.token
@@ -182,14 +182,14 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                         _id:value.id,
                         text:value.content,
                         createdAt:value.createdAt,
-                        type:value.type,
+                        type:value["@type"],
                         user:{
                             _id:value.user.id,
                             name:value.user.username
                         }
                       }
                 })
-                console.log("axios ",response)
+                console.log("axios sans ke friktre des messsage  ",response)
                      store.dispatch(receiveDataFilterMessagesHome(data.reverse()))
                 }).catch((err)=>{
                     console.log("axios ",err.response)
@@ -202,13 +202,30 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case SEND_DATA_FILTER_MESSAGES_CATEGORY:
             next(action)
-            axios.get('url',{
-            
+         
+            axios.get(`messages?content=${action.data.text}&category=${action.data.id}`,{
+                headers:{
+                    'Authorization':"Bearer "+action.data.token
+                } 
             }).then((response)=>{
-                //ici un autre axios
-                dataFilterMessagesCategory(response)
+          
+                const data = response.data['hydra:member'].map((value)=>{
+                    
+                    return{
+                        _id:value.id,
+                        text:value.content,
+                        createdAt:value.createdAt,
+                        type:value["@type"],
+                        user:{
+                            _id:value.user.id,
+                            name:value.user.username
+                        }
+                      }
+                })
+    
+                store.dispatch(dataFilterMessagesCategory(data))
             }).catch((err)=>{
-                console.log(err)
+                console.log("ERRROR axios sans ke filtre message catefory ",err)
                 
             })
             break;
@@ -218,13 +235,13 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case RECEIVE_DATA_MESSAGES_CATEGORY:
             next(action)
-       
+        console.log("action dans receive data message category", action)
             axios.get(`categories/${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
-               console.log(response)
+               console.log("je suis dans receive data message category",response)
                 const dataMessage = response.data.messages.map((value)=>{
                       const id = value['@id'].split('/')
                     return {
@@ -232,7 +249,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                         _id:id[3],
                         text:value.content,
                         createdAt:value.createdAt,
-                        type:value.type,
+                        type:value["@type"],
                         user:{
                             _id:value.user.id,
                             name:value.user.username

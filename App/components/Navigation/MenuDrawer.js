@@ -55,12 +55,13 @@ export default class MenuDrawer extends React.Component{
          var data = new Object
          data.token = receiveResponseConnection
          data.id = value.id
-
+ 
         this.props.receiveDataMessagesCategory(data)
 
         this.props.navigation.navigate('MessageCategory',{
             nameCategory:value.title,
-            navigation:this.props.navigation
+            navigation:this.props.navigation,
+            id:value.id
         })
      }
 

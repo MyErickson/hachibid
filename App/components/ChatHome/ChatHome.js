@@ -16,6 +16,7 @@ class ChatHome extends Component {
       _messageFilter:undefined,
       filter:undefined,
       deleteTextSearchBar:undefined,
+      _textFilter:undefined,
     }
   
     async componentDidMount() {
@@ -47,12 +48,12 @@ class ChatHome extends Component {
 
 
     searchBar = async (text)=>{
-        //   
-        //   const _messages = await this.props.dataFilterHome
-        // this.setState({
-        //     _messages
-        // })
-        console.log(text)
+        
+        const _textFilter = text
+        this.setState({
+            _textFilter 
+        })
+
         if(text && text.length > 2 ){
           let data = new Object
           data.text = text
@@ -95,7 +96,7 @@ class ChatHome extends Component {
 
   render() {
  
-   const { _messages,_messageFilter,filter,deleteTextSearchBar }=this.state
+   const { _messages,_messageFilter,filter,deleteTextSearchBar,_textFilter  }=this.state
     //  console.log("je suis dans le chathome",_messageFilter)
     return (
        
@@ -103,7 +104,7 @@ class ChatHome extends Component {
         <Menu nameMenu="Chat Géneral" navigation={this.props.navigation} />
       
         <View style={Style.messageContainer}>
-          <Filtrate  searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar} />
+          <Filtrate  searchBar={this.searchBar} textFilter={_textFilter} deleteTextSearchBar={deleteTextSearchBar} />
               <GiftedChat
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}

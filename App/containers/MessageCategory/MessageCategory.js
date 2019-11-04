@@ -21,7 +21,8 @@ import { receiveDataMessagesCategory,sendDatafilterMessageCategory} from '../../
  */
 const mapStateToProps = (state, ownProps) => ({
    dataMessagesCategory: state.dataMessagesCategory,
-    dataFilterCategory:state.dataFilterCategory
+   dataFilterMessagesCategory:state.dataFilterMessagesCategory,
+    receiveResponseConnection: state.receiveResponseConnection,
 });
 
 /* === Actions ===
@@ -32,8 +33,8 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    receiveDataMessagesCategory: (category) => {
-    dispatch(receiveDataMessagesCategory(category));
+    receiveDataMessagesCategory: (data) => {
+    dispatch(receiveDataMessagesCategory(data));
   },
   sendDatafilterMessageCategory:(text)=>{
       dispatch(sendDatafilterMessageCategory(text));

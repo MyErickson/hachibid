@@ -16,7 +16,6 @@ const WIDTH = Dimensions.get('window').width;
 const DrawerConfig = {
     drawerWidth: WIDTH*0.83,
     keyboardDismissMode:'none',
-    backBehavior:'none',
     drawerBackgroundColor:"none",
     contentComponent:({navigation})=>{
         return(<MenuDrawerContainer navigation={navigation}/>)

@@ -45,7 +45,8 @@ class Category extends Component {
     this.props.receiveDataMessagesCategory(data)
     this.props.navigation.navigate('MessageCategory',{
         nameCategory:value.title,
-        navigation:this.props.navigation
+        navigation:this.props.navigation,
+        id:value.id
     })
  }
 

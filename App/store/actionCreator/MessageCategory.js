@@ -1,8 +1,8 @@
 import {SEND_DATA_FILTER_MESSAGES_CATEGORY,RECEIVE_DATA_MESSAGES_CATEGORY,DATA_MESSAGES_CATEGORY,DATA_FILTER_MESSAGES_CATEGORY} from '../reducer'
 
-export const sendDatafilterMessageCategory=(category)=>({
+export const sendDatafilterMessageCategory=(data)=>({
     type: SEND_DATA_FILTER_MESSAGES_CATEGORY,
-    category
+    data
   })
   
   export const receiveDataMessagesCategory=(data)=>({

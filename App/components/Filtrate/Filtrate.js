@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text } from 'native-base';
+import React from 'react';
+import { View} from 'native-base';
 import { Input,Icon} from 'react-native-elements';
 
 
@@ -9,26 +9,22 @@ const input = React.createRef();
  Filtrate =(props)=>{
 
 
- const { searchBar,deleteTextSearchBar} = props
+ const { searchBar,deleteTextSearchBar,textFilter} = props
 
 
  const clear=()=>{
   input.current.clear();
   searchBar(null)
 }
-
+ console.log("je suis dans filtrate",textFilter)
     return (
       <View>
         <Input ref={input}
          placeholder='Recherche'
+         value={textFilter}
          onChangeText={(text)=> searchBar(text)} 
          rightIcon={
            deleteTextSearchBar &&
-        //  <Text 
-        //  style ={{color:"grey",fontSize:13}} 
-        //  onPress={clear} >
-        //    effacer
-        //  </Text>} 
          <Icon name="clear" onPress={clear}  /> }
         />
       </View>
