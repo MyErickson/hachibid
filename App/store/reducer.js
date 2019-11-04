@@ -14,7 +14,7 @@ const initialState = {
   dataMessagesCategory:undefined,
   dataFilterCategory:undefined,
   dataMessagesMyQuestions:undefined,
-  dataFilterMessagesCategory:undefined,
+  filterMessagesCategory:undefined,
   dataFilterCategory:undefined,
   topDataCategory:undefined,
   dataNotification:undefined
@@ -109,12 +109,14 @@ const reducer = (state = initialState, action = {}) => {
       };
 
     case DATA_FILTER_MESSAGES_CATEGORY:
+    
     return {
       ...state,
-      dataFilterMessagesCategory:action.dataFilterMessagesCategory
+     filterMessagesCategory:action.dataFilterMessagesCategory
     };
 
     case RECEIVE_DATA_FILTER_CATEGORY:
+
     return {
       ...state,
       dataFilterCategory:action.dataFilterCategory

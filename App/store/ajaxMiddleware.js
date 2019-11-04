@@ -202,13 +202,13 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case SEND_DATA_FILTER_MESSAGES_CATEGORY:
             next(action)
-         
+            console.log("ACTIOOOON axios sans ke filtre message catefory ",action)
             axios.get(`messages?content=${action.data.text}&category=${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
-          
+                
                 const data = response.data['hydra:member'].map((value)=>{
                     
                     return{
@@ -226,7 +226,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 store.dispatch(dataFilterMessagesCategory(data))
             }).catch((err)=>{
                 console.log("ERRROR axios sans ke filtre message catefory ",err)
-                
+                store.dispatch(dataFilterMessagesCategory(undefined))
             })
             break;
 

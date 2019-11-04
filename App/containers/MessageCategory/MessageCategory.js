@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import MessageCategory from '../../components/MessageCategory/MessageCategory'
 
 // Action Creators
-import { receiveDataMessagesCategory,sendDatafilterMessageCategory} from '../../store/actionCreator/MessageCategory';
+import { receiveDataMessagesCategory,sendDatafilterMessageCategory, dataFilterMessagesCategory } from '../../store/actionCreator/MessageCategory';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -21,7 +21,7 @@ import { receiveDataMessagesCategory,sendDatafilterMessageCategory} from '../../
  */
 const mapStateToProps = (state, ownProps) => ({
    dataMessagesCategory: state.dataMessagesCategory,
-   dataFilterMessagesCategory:state.dataFilterMessagesCategory,
+   filterMessagesCategory:state.filterMessagesCategory,
     receiveResponseConnection: state.receiveResponseConnection,
 });
 
@@ -38,7 +38,11 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   sendDatafilterMessageCategory:(text)=>{
       dispatch(sendDatafilterMessageCategory(text));
+  },
+  dataFilterMessagesCategory:()=>{
+    dispatch(dataFilterMessagesCategory(undefined))
   }
+
 });
 
 // Container

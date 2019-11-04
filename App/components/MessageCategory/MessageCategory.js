@@ -24,50 +24,52 @@ class MessageCategory extends Component {
     static  getDerivedStateFromProps(props, state){
     const { params } = props.navigation.state
 
-         console.log("je suis dans get derirev message category",props.dataFilterMessagesCategory)
+         console.log("je suis dans get derirev message category",props.filterMessagesCategory)
          console.log("je suis dans get derirev message category",state._messageFilter)
-         console.log("je suis dans get derirev 2nd message category",props.dataMessagesCategory)
+        //  console.log("je suis dans get derirev 2nd message category",props.dataMessagesCategory)
         props.navigation.closeDrawer()
-        if(state._messageFilter  === props.dataFilterMessagesCategory){
-          state.filter= undefined
-          state._messageFilter= props.dataFilterMessagesCategory
-        }else {
-          state._messageFilter= props.dataFilterMessagesCategory
-        }
+        state._messages=undefined
         state.title = params.nameCategory
-        state._messages=  props.dataMessagesCategory
+        state._messageFilter = props.filterMessagesCategory
+        state._messages= props.dataMessagesCategory
         
   
     }
 
-    searchBar= async (text)=>{
-       const {sendDatafilterMessageCategory, receiveResponseConnection , navigation}=this.props
+    searchBar= (text)=>{
+       const {sendDatafilterMessageCategory,dataFilterMessagesCategory, receiveResponseConnection , navigation}=this.props
 
-       const _textFilter = text
-       this.setState({
-           _textFilter 
-       })
-
-  
+    
+   
       if(text && text.length > 2 ){
         let data = new Object
         data.text = text
         data.token = receiveResponseConnection
         data.id = navigation.state.params.id
-        await sendDatafilterMessageCategory(data)
+        sendDatafilterMessageCategory(data)
+    
         this.setState({
           filter:true,
           deleteTextSearchBar:true,
-        })    
-      }else if (text){
-        this.setState({ deleteTextSearchBar:true})     
+        })  
+    
+      }else if (text ){
+        dataFilterMessagesCategory()
+        this.setState({ deleteTextSearchBar:true,
+          _messageFilter: undefined
+        })     
       }else{
+        dataFilterMessagesCategory()
           this.setState({
             filter:false,
-            deleteTextSearchBar:false
-          
+            deleteTextSearchBar:false,
+            _messageFilter: undefined
          }) 
         }
+        this.setState({
+          _textFilter : text
+      })
+
   
    }
    
@@ -76,7 +78,7 @@ class MessageCategory extends Component {
   render() {
      const { _messages,title,deleteTextSearchBar,filter ,_messageFilter,_textFilter }=this.state
    
-   
+    console.log("je suis dans message category RENDEr",_messages,filter)
     return (
              
         <View   style={Style.container}>
@@ -86,9 +88,10 @@ class MessageCategory extends Component {
         <Filtrate searchBar={this.searchBar} textFilter={_textFilter } deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 scrollToBottom={true}
-                messages={filter?_messageFilter :_messages}
+                messages={filter?_messageFilter:_messages}
                 renderAvatar={null}
-                isAnimated= {true}
+                extraData={this.state._messages}
+                shouldUpdateMessage={()=>_messages}
                 minInputToolbarHeight={20}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}

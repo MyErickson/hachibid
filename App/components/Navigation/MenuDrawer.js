@@ -48,7 +48,7 @@ export default class MenuDrawer extends React.Component{
      }
       
      goToCategoryPage=async(value)=>{
-
+         this.props.dataFilterMessagesCategory()
         const { receiveResponseConnection }=this.state
         await this.props.dataAllCategory(receiveResponseConnection)
 
@@ -67,6 +67,7 @@ export default class MenuDrawer extends React.Component{
 
 
     gotToNavLink=async (nav)=>{
+         this.props.dataFilterMessagesCategory()
         const { receiveResponseConnection } =this.state
 
         await this.props.dataAllCategory(receiveResponseConnection)
@@ -84,7 +85,7 @@ export default class MenuDrawer extends React.Component{
   
 
   navLink(nav,text,icon,show=false){
-      
+     
           const {topDataCategory } = this.state
             return(
                 <Fragment>
