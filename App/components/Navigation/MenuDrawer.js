@@ -6,7 +6,7 @@ import { Styles } from './styleMenuDrawer';
 import { Icon,Container, Header, Content, List, ListItem, } from 'native-base';
 import { casualList} from '../../data/dataCasual'
 import { presetColors } from '../../data/dataCasual'
-
+import {  SafeAreaView } from 'react-navigation';
 
 
 
@@ -104,11 +104,14 @@ export default class MenuDrawer extends React.Component{
 
                     </TouchableOpacity>
                         { this.state.list && show === true && (
-                             <Container style={{}}>
+                             <Container style={Styles.list}>
                              <Header style={{height:20,backgroundColor:'#3399ff'}}/>
-                             <ScrollView style={{flex:1}}>
+                             <ScrollView style={{flex:1}}
+                                showsVerticalScrollIndicator={false}
+                                keyboardShouldPersistTaps="always"
+                             >
                              <Content>
-                               <List>
+                               <List style={{paddingRight:15}}>
                                { topDataCategory && topDataCategory.map((value,key)=>{
                                            
                                     return (
@@ -133,32 +136,32 @@ export default class MenuDrawer extends React.Component{
      const {profileUser} = this.state
 
      return(
-        <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
-         <View style={Styles.container}>
+        // <AnimatedLinearGradient   customColors={presetColors.backgroundColor} speed={4000}>
+            <SafeAreaView style={Styles.container}>
         
-             <View style={Styles.topLinks} >
-                <View style={Styles.profile}>
-                    <View  style={Styles.imgView}>
-                        <Image style={Styles.img} source={profileUser && profileUser.image ?{uri: profileUser.image}:{uri:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}/>
-                    </View>
-                    <View  style={Styles.profileText}>
-                        <Text style={Styles.nameText} >{ profileUser && profileUser.username}</Text>
+            
+                <View style={Styles.topLinks} >
+                    <View style={Styles.profile}>
+                     
+                        <View  style={Styles.profileText}>
+                            <Text style={Styles.nameText} >{ profileUser && profileUser.username}</Text>
+                        </View>
                     </View>
                 </View>
-             </View>
-             
-             <View style={Styles.bottomLinks}>
-                <ScrollView > 
+                
+                <View style={Styles.bottomLinks}>
+           
 
-                    {profileUser && profileUser.roleTitle === "Utilisateur" && this.navLink('Home','Chat Général','home') }
-                    {profileUser && profileUser.roleTitle === "Utilisateur" ? this.navLink('MyQuestions','Mes questions','chatbubbles') :this.navLink('MyQuestions','Chat Général','home') }
-                    {this.navLink('Profile','Profil','person')}
-                    {this.navLink('Category','Catégories','keypad',true)}  
-                </ScrollView>
-             </View>
-      
-        </View>
-        </AnimatedLinearGradient>
+                        {profileUser && profileUser.roleTitle === "Utilisateur" && this.navLink('Home','Chat Général','home') }
+                        {profileUser && profileUser.roleTitle === "Utilisateur" ? this.navLink('MyQuestions','Mes questions','chatbubbles') :this.navLink('MyQuestions','Chat Général','home') }
+                        {this.navLink('Profile','Profil','person')}
+                        {this.navLink('Category','Catégories','keypad',true)}  
+           
+                </View>
+                
+        
+        </SafeAreaView>
+        // </AnimatedLinearGradient>
         
      )
  }

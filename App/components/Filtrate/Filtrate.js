@@ -9,16 +9,28 @@ const input = React.createRef();
  Filtrate =(props)=>{
 
 
- const { searchBar} = props
+ const { searchBar,deleteTextSearchBar} = props
 
 
  const clear=()=>{
   input.current.clear();
+  searchBar(null)
 }
 
     return (
       <View>
-        <Input ref={input} placeholder='Recherche'  onChangeText={(text)=> searchBar(text)} rightIcon={<Text style ={{color:"grey",fontSize:13}} onPress={clear} >effacer</Text>} />
+        <Input ref={input}
+         placeholder='Recherche'
+         onChangeText={(text)=> searchBar(text)} 
+         rightIcon={
+           deleteTextSearchBar &&
+        //  <Text 
+        //  style ={{color:"grey",fontSize:13}} 
+        //  onPress={clear} >
+        //    effacer
+        //  </Text>} 
+         <Icon name="clear" onPress={clear}  /> }
+        />
       </View>
     );
   }

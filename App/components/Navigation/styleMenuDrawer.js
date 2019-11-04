@@ -7,21 +7,37 @@ import {
 
 export const Styles = StyleSheet.create({
     container:{
-        flex:1,
-      
+        height:hp("80%"),
+        borderRadius:20,
+        
+       
     },
     topLinks:{
-        height:160,
+        marginTop:20,
+        marginLeft:15,
+        backgroundColor:"rgba(16,55,121,0.6)",
+        height:96,
+        borderTopLeftRadius:20,
+        borderTopRightRadius:20,
+        borderColor:"white"
        
     },
     bottomLinks:{
-       flex:1,
-        backgroundColor:'white',
+
+        flex:1,
+        marginLeft:15,
+        backgroundColor:"rgba(9,55,121,0.6)",
         paddingTop:10,
-        height:hp('100%'),
+        borderBottomRightRadius:20,
+        borderBottomLeftRadius:20,
+        
+    },
+    list:{
+        borderBottomRightRadius:20,
+        borderBottomLeftRadius:20,
     },
     link:{
-        
+        color:"white",
         fontSize:20,
         padding:6,
         paddingLeft:14,
@@ -29,12 +45,13 @@ export const Styles = StyleSheet.create({
         textAlign:'left'
     },
     icons:{
-    
+        color:"white",
         padding:6,
         paddingLeft:25,
         margin:5,
     },
     iconList:{
+        color:"white",
         padding:6,
         paddingLeft:60,
         fontSize:25,
@@ -45,23 +62,15 @@ export const Styles = StyleSheet.create({
 
         alignItems: 'center',
         borderBottomWidth:1,
-        borderBottomColor:'#777777',
-    },
-    imgView:{
-        flex:1,
-        justifyContent:'center'
-    },
-    img:{
-        height:95,
-        width:95,
-        borderRadius:50
+        borderBottomColor:'black',
     },
     profileText:{
         paddingBottom:20
     },
     nameText:{
-        color:'white',
-        fontSize:20 ,
+         top:30,
+         color:'white',
+         fontSize:20 ,
          fontWeight:'bold'
     }
 })

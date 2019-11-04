@@ -31,13 +31,14 @@ class Connection extends Component {
          };
          this.position = new Animated.Value(0)
     }
-    componentDidMount(){
+    async   componentDidMount (){
         AsyncStorage.removeItem('sessionJWT')
 
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,
           }).start();
+
         
     }
 

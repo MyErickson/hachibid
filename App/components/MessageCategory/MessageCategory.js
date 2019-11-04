@@ -40,7 +40,7 @@ class MessageCategory extends Component {
 
   render() {
      const { _messages,title }=this.state
-     const {navigation} = this.props.navigation.state.params
+   
    
     return (
              
