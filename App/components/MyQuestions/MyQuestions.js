@@ -40,11 +40,14 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-        const { dataProfileUser } = this.props
+        const { dataProfileUser, receiveResponseConnection} = this.props
+        const data = new Object
+        data.token = receiveResponseConnection
+        data.id = dataProfileUser .data.id
         if(dataProfileUser){
-          console.log("componentdidmount du dataprofile ===>",dataProfileUser.data.id)
-          // await this.props.receiveDataMessagesMyQuestions(dataProfileUser.data.id)
-      
+          console.log("componentdidmount du dataprofile ===>",dataProfileUser)
+           await this.props.receiveDataMessagesMyQuestions(data)
+         
         }
      
  
@@ -61,11 +64,17 @@ class MyQuestions extends Component {
   
     }
   
-     static async getDerivedStateFromProps(props, state){ 
+
+
+     static getDerivedStateFromProps(props, state){ 
           console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
              state._messages = props.dataMessagesMyQuestions
              state.ProfileUser = props.dataProfileUser
+
      }
+
+
+
 
     searchBar= async (text)=>{
       //   await this.props.sendDatafilterMessage(text)
@@ -79,23 +88,33 @@ class MyQuestions extends Component {
 
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
-     const {_id , createdAt , text , user  , recordDuration,
+    const { ProfileUser } = this.state
+    const {  receiveResponseConnection } = this.props
+    const {_id ,
+      createdAt ,
+      text ,
+      user  ,
+      recordDuration,
       recordPosition} = messages[0]
+    const data = new Object
+    data.token = receiveResponseConnection
+    data.id = ProfileUser.data.id
+ 
      const newMessage = [{
        _id,
        createdAt,
        text,
-       type:'message',
        user,
        recordDuration,
-       recordPosition
+       recordPosition,
+       token: receiveResponseConnection
      }]
      console.log("MYQESTION on send message ===>",newMessage)
     this.setState(previousState =>({
       messages: GiftedChat.append(previousState.messages, newMessage),
     }))
-    // await  this.props.sendMessageUser(newMessage)
-    // await this.props.receiveDataMessagesMyQuestions(dataProfileUser.data.id)
+     await  this.props.sendMessageUser(newMessage)
+     await this.props.receiveDataMessagesMyQuestions(data)
 
   }
 
@@ -150,7 +169,7 @@ class MyQuestions extends Component {
   }
 
   renderActions=(props)=>{
-    console.log("My questions  dans le render Actions",props)
+ 
     const { ProfileUser, stop  } = this.state
  if(ProfileUser.data.roles[0]=== "ROLE_ADMIN"){
   if (stop){
@@ -241,6 +260,7 @@ class MyQuestions extends Component {
 
   };
 
+
   onStartPlay = async (propsSounder) => {
      const currentPath = propsSounder.currentMessage.text.split('//')
     console.log('onStartPlay',currentPath);
@@ -315,7 +335,7 @@ class MyQuestions extends Component {
 
 
   render() {
-     const { ProfileUser } = this.state
+     const { ProfileUser,_messages } = this.state
 
       const nameMenu = ProfileUser && ProfileUser.data.roleTitle === "Administrateur" ? "Chat Général":  "Mes questions" 
 
@@ -337,7 +357,9 @@ class MyQuestions extends Component {
             <Filtrate searchBar={this.searchBar} />
               <GiftedChat
                 scrollToBottom={true}
-                messages={this.state.messages}
+                messages={_messages}
+                extraData={_messages}
+                shouldUpdateMessage={()=>_messages}
                 onSend={messages => this.onSend(messages)}
                 renderUsernameOnMessage={true}
                 renderAvatar={null}

@@ -1,17 +1,21 @@
-import {SEND_MESSAGE_USER,RECEIVE_DATA_MESSAGES_MYQUESTIONS,DATA_MESSAGES_MYQUESTIONS} from '../reducer'
+import {SEND_MESSAGE_USER,RECEIVE_DATA_MESSAGES_MYQUESTIONS,DATA_MESSAGES_MYQUESTIONS , SEND_DATA_FILTER_MESSAGE_MYQUESTION} from '../reducer'
 
 export const sendMessageUser =( message ) =>({
     type: SEND_MESSAGE_USER,
     message
   })
 
-export const receiveDataMessagesMyQuestions=(id)=>({
+export const receiveDataMessagesMyQuestions=(data)=>({
   type:RECEIVE_DATA_MESSAGES_MYQUESTIONS,
-  id
+  data
 })
   
-export const DataMessagesMyQuestions=(dataMessageMyQuestions)=>({
+export const DataMessagesMyQuestions=(dataMessagesMyQuestions)=>({
   type:DATA_MESSAGES_MYQUESTIONS,
-  dataMessageMyQuestions
+  dataMessagesMyQuestions
 })
   
+export const sendDatafilterMessageMyQuestion=(data)=>({
+  type:SEND_DATA_FILTER_MESSAGE_MYQUESTION,
+  data
+})

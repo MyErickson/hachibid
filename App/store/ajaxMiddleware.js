@@ -1,31 +1,32 @@
 import axios from 'axios';
 
-import { SEND_DATA_RESET_PASSWORD, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
+import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
      RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,DATA_NOTIFICATION,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,  } from './reducer'
 
 
 import { receiveMessagesHome,receiveDataFilterMessagesHome } from './actionCreator/ChatHome';
-import { responseForReset } from './actionCreator/ResetPassword';
-import { receiveDataUpdateProfile ,receiveDataProfile} from './actionCreator/Profile';
+import { receiveDataProfile} from './actionCreator/Profile';
 import { dataMessagesCategory,dataFilterMessagesCategory} from './actionCreator/MessageCategory';
 import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
 import { receiveDataNotification } from './actionCreator/Notification'
+
+
 import AsyncStorage from '@react-native-community/async-storage';
 
 
 
-var sessionId =  AsyncStorage.getItem('sessionJWT')
+
 
  const  ajaxMiddleware = store => next => async action => {
     //  console.log(next,'action')
-    //    console.log("dans ajax middleware sessinID  =======>",sessionId)
+  
     //match(/"(.*?)"/)[1] recuperer le token sans les ""
    
-    // axios.defaults.headers.common['Authorization']= "Bearer "+sessionId._55;
+    
     axios.defaults.baseURL = 'https://rabbin-dev.digitalcube.fr/api/'
     next(action);
      
@@ -36,18 +37,18 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
         case SEND_MESSAGE_USER:
             next(action)
             console.log("axios envoyer un message ====>",action)
+            axios.defaults.headers['Authorization']= "Bearer "+action.message[0].token;
             axios.post('messages',{
                 content:action.message[0].text,
-                type:action.message[0].type,
                 user:`api/users/${action.message[0].user._id}`,
                 valid:false,
               
             }).then((response)=>{
                 //ici un autre axios pour recevoir tout les messages
                 console.log("response axios send message user ===>",response)
-                stor.dispatch(receiveDataMessagesMyQuestions(action.message.id))
+                stor.dispatch(receiveDataMessagesMyQuestions(action.message[0].user._id))
             }).catch((err)=>{
-                console.log("error axios message send user",err)
+                console.log("error axios message send user",err.response)
                 
             })
             break;
@@ -202,7 +203,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case SEND_DATA_FILTER_MESSAGES_CATEGORY:
             next(action)
-            console.log("ACTIOOOON axios sans ke filtre message catefory ",action)
+      
             axios.get(`messages?content=${action.data.text}&category=${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
@@ -235,13 +236,13 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 
         case RECEIVE_DATA_MESSAGES_CATEGORY:
             next(action)
-        console.log("action dans receive data message category", action)
+                
             axios.get(`categories/${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
-               console.log("je suis dans receive data message category",response)
+         
                 const dataMessage = response.data.messages.map((value)=>{
                       const id = value['@id'].split('/')
                     return {
@@ -289,7 +290,7 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
                 } 
              })
             .then((response)=>{
-                 console.log("axios all category ===>",response)
+             
                  const allCategory = response.data["hydra:member"].map(value=>{
                       return{
                           id:value.id,
@@ -311,26 +312,82 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
 // recupere les doonées (message) de l'utisateur , page my questions            
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
+            console.log("je suis dans receive data my questions", action)
+            axios.get(`users/${action.data.id}`,{
+                headers:{
+                    'Authorization':"Bearer "+action.data.token
+                } 
+            }).then(async (response)=>{
+              console.log("je suis dans receive data my questions", response)
+  
+              var data = [];
+             const   requete  = await  response.data.messages.map(async (value)=>{
+                      
+                            const id = value.split('/')
+                            
+                           
+                       const t  = await axios.get(`messages/${id[3]}`,{
+                                headers:{
+                                    'Authorization':"Bearer "+action.data.token
+                                } 
+                            }).then((res)=>{
+                                console.log("requete des messsages ", res)
+                                if(res.data.answers){
+                                
+
+                                     res.data.answers.map((value)=>{
+                                      data.push({
+                                        _id:value.id,
+                                        text:value.content,
+                                        createdAt:new Date(value.createdAt),
+                                        user:{
+                                              _id:value.id,
+                                              name:value.username
+                                          }
+                                    })})
+                                }
+                                    data.push( {
+                                        _id:res.data.id,
+                                        text:res.data.content,
+                                        createdAt:new Date(res.data.createdAt),
+                                        user:{
+                                              _id:res.data.user.id,
+                                              name:res.data.user.username
+                                          }
+                                        })
+                        
+   
+                            var  nex=   data.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())
+                            console.log("je suis la valeur de nex',",nex)
+                            return nex 
+                             
+                                // store.dispatch(DataMessagesMyQuestions(data.reverse()))
+                            })
+                            console.log("je suis la valeur de nexttttttttttt',",t)
+                           return t
+                            
+                        })
+                        console.log("je suis la valeur de nex222222222',",requete)
+                        var promise =  Promise.resolve(requete)
+                        promise.then((value)=> console.log("la promesse de value",value))
          
-            axios.get(`messages/${action.id}`,{
-            
-            }).then((response)=>{
-              
-                     const data = response.data['hydra:member'].map((value)=>{
-                      return{
-                          _id:value.id,
-                          text:value.content,
-                          createdAt:value.createdAt,
-                          type:value.type,
-                          user:{
-                              _id:value.userInfo.id,
-                              name:value.userInfo.username
-                          }
+          
+               
+                        
+                         
+                        
+                //   return{
+                //     _id:value.id,
+                //     text:value.content,
+                //     createdAt:value.createdAt,
+                //     user:{
+                //         _id:value.userInfo.id,
+                //         name:value.userInfo.username
+                //     }
 
 
-                        }
-                  })
-                store.dispatch(DataMessagesMyQuestions(data.reverse()))
+                //   }
+                // 
             }).catch((err)=>{
                 console.log("erroorr dans messages myquestion",err)
                 
@@ -348,7 +405,20 @@ var sessionId =  AsyncStorage.getItem('sessionJWT')
             console.log(err)
             
         })
-        
+         break;
+
+         case SEND_DATA_FILTER_MESSAGE_MYQUESTION:
+         next(action)
+         axios.get('url',{
+            
+        }).then((response)=>{
+            console.log(response)
+            store.dispatch(receiveDataNotification(response))
+        }).catch((err)=>{
+            console.log(err)
+            
+        })
+         break;
     }
 
   };

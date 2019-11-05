@@ -16,7 +16,7 @@ const input = React.createRef();
   input.current.clear();
   searchBar(null)
 }
- console.log("je suis dans filtrate",textFilter)
+
     return (
       <View>
         <Input ref={input}

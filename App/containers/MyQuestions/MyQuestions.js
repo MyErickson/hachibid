@@ -22,7 +22,8 @@ import { sendMessageUser ,receiveDataMessagesMyQuestions} from '../../store/acti
 const mapStateToProps = (state, ownProps) => ({
   dataMessagesMyQuestions: state.dataMessagesMyQuestions,
   dataProfileUser: state.dataProfileUser,
-});
+  receiveResponseConnection: state.receiveResponseConnection,
+} );
 
 /* === Actions ===
  * - mapDispatchToProps retroune un objet de props pour le composant de présentation
@@ -35,8 +36,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   sendMessageUser: (message ) => {
     dispatch(sendMessageUser(message));
   },
-  receiveDataMessagesMyQuestions:(id)=>{
-    dispatch(receiveDataMessagesMyQuestions(id))
+  receiveDataMessagesMyQuestions:(data)=>{
+    dispatch(receiveDataMessagesMyQuestions(data))
   }
 });
 

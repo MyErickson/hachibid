@@ -14,8 +14,8 @@ import MenuDrawer from '../../components/Navigation/MenuDrawer'
 import { receiveTopDataCategory } from '../../store/actionCreator/MenuDrawer'
 import { dataAllCategory } from '../../store/actionCreator/Category';
 import {dataProfileUsers } from '../../store/actionCreator/Profile';
-import { receiveDataMessagesCategory} from '../../store/actionCreator/MessageCategory';
-import { dataFilterMessagesCategory} from '../../store/actionCreator/MessageCategory';
+import { receiveDataMessagesCategory,dataFilterMessagesCategory, dataMessagesCategory} from '../../store/actionCreator/MessageCategory';
+
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -51,6 +51,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     },
     dataFilterMessagesCategory:()=>{
         dispatch(dataFilterMessagesCategory(undefined))
+      },
+      dataMessagesCategory:()=>{
+          dispatch(dataMessagesCategory(undefined))
       }
     
   

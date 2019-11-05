@@ -17,6 +17,7 @@ class ChatHome extends Component {
       filter:undefined,
       deleteTextSearchBar:undefined,
       _textFilter:undefined,
+      idUser:undefined
     }
   
     async componentDidMount() {
@@ -26,18 +27,31 @@ class ChatHome extends Component {
       console.log("ASYNCSTORAGE avant le decode ===>",this.props.receiveResponseConnection)
   
         var decode = jwtDecode(this.props.receiveResponseConnection)
-        data.id =decode.id 
+        console.log(decode)
+        data.id = decode.id 
         data.token = this.props.receiveResponseConnection
         await this.props.dataProfileUsers( data )
         await this.props.dataMessagesHome(this.props.receiveResponseConnection)
       
-    
- 
+        // axios.get('https://rabbin-dev.digitalcube.fr/api/messages/15',{
+        //   headers:{
+        //     'Authorization':"Bearer "+this.props.receiveResponseConnection
+        // } 
+        // }).then((response)=>{
+        //     console.log("response pour le filte message ",response)
+        
+        // }).catch((err)=>{
+        //     console.log(err)
+            
+        // })
+        this.setState({
+          idUser:decode.id
+        })
   
         }
 
    actualize= async ()=>{
-    // await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+     await this.props.dataMessagesHome(this.props.receiveResponseConnection)
         const allMessages =  this.state._messages
         console.log("je suis dans chat home pour alllmessages ",allMessages)
         this.setState({
@@ -77,7 +91,7 @@ class ChatHome extends Component {
   
 
     static  getDerivedStateFromProps(props,state){
-    //  console.log("je suis dans get derived ", props.dataFilterHome)
+      console.log("je suis dans get derived ", props.dataFilterHome)
      if(props.dataFilterHome && state.filter){
       state._messageFilter = props.dataFilterHome
      
@@ -96,7 +110,7 @@ class ChatHome extends Component {
 
   render() {
  
-   const { _messages,_messageFilter,filter,deleteTextSearchBar,_textFilter  }=this.state
+   const { _messages,_messageFilter,filter,deleteTextSearchBar,_textFilter,idUser  }=this.state
     //  console.log("je suis dans le chathome",_messageFilter)
     return (
        
@@ -116,7 +130,7 @@ class ChatHome extends Component {
                 renderUsernameOnMessage={true}
                 keyboardShouldPersistTaps={'never'}
                 user={{
-                  _id: 'Id user',
+                  _id: idUser,
                   
                 }}
               />

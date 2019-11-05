@@ -23,10 +23,7 @@ class MessageCategory extends Component {
   
     static  getDerivedStateFromProps(props, state){
     const { params } = props.navigation.state
-
-         console.log("je suis dans get derirev message category",props.filterMessagesCategory)
-         console.log("je suis dans get derirev message category",state._messageFilter)
-        //  console.log("je suis dans get derirev 2nd message category",props.dataMessagesCategory)
+    
         props.navigation.closeDrawer()
         state._messages=undefined
         state.title = params.nameCategory
@@ -78,7 +75,7 @@ class MessageCategory extends Component {
   render() {
      const { _messages,title,deleteTextSearchBar,filter ,_messageFilter,_textFilter }=this.state
    
-    console.log("je suis dans message category RENDEr",_messages,filter)
+
     return (
              
         <View   style={Style.container}>

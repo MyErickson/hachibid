@@ -49,6 +49,7 @@ export default class MenuDrawer extends React.Component{
       
      goToCategoryPage=async(value)=>{
          this.props.dataFilterMessagesCategory()
+         this.props.dataMessagesCategory()
         const { receiveResponseConnection }=this.state
         await this.props.dataAllCategory(receiveResponseConnection)
 

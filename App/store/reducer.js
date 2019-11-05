@@ -51,7 +51,8 @@ export const TOP_DATA_CATEGORY='TOP_DATA_CATEGORY'
 export const DATA_NOTIFICATION ='DATA_NOTIFICATION'
 export const RECEIVE_DATA_NOTIFICATION ='RECEIVE_DATA_NOTIFICATION'
 export const RECEIVE_DATA_PROFILE='RECEIVE_DATA_PROFILE';
-export const INITITALIZE_STATE= 'INITITALIZE_STATE'
+export const INITITALIZE_STATE= 'INITITALIZE_STATE';
+export const SEND_DATA_FILTER_MESSAGE_MYQUESTION = 'SEND_DATA_FILTER_MESSAGE_MYQUESTION'
 /**
  * Traitements
  */
@@ -129,6 +130,7 @@ const reducer = (state = initialState, action = {}) => {
       };
     
     case DATA_MESSAGES_MYQUESTIONS:
+      console.log("je suis dans reducer",action.dataMessagesMyQuestions)
       return {
         ...state,
         dataMessagesMyQuestions:action.dataMessagesMyQuestions
