@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
-import {Icon } from 'native-base'
+import {Icon, Row } from 'native-base'
 import { Style} from './styleMyQuestions';
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
@@ -68,6 +68,7 @@ class MyQuestions extends Component {
 
      static getDerivedStateFromProps(props, state){ 
           console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
+          
              state._messages = props.dataMessagesMyQuestions
              state.ProfileUser = props.dataProfileUser
 
@@ -110,9 +111,9 @@ class MyQuestions extends Component {
        token: receiveResponseConnection
      }]
      console.log("MYQESTION on send message ===>",newMessage)
-    this.setState(previousState =>({
-      messages: GiftedChat.append(previousState.messages, newMessage),
-    }))
+    // this.setState(previousState =>({
+    //   messages: GiftedChat.append(previousState.messages, newMessage),
+    // }))
      await  this.props.sendMessageUser(newMessage)
      await this.props.receiveDataMessagesMyQuestions(data)
 
@@ -121,28 +122,51 @@ class MyQuestions extends Component {
 
 
   renderBubble(props) {
-   const { type ,createdAt } = props.currentMessage
-     if(type === "record"){
-       var minutes = createdAt.getMinutes() 
-        if(createdAt.getMinutes() < 10){
-            minutes = `0`+createdAt.getMinutes()
+   const { type ,createdAt , answer , text ,user } = props.currentMessage
+   console.log("answer dans le renderbubble",answer)
+   var minutes = createdAt.getMinutes() 
+   if(createdAt.getMinutes() < 10){
+    minutes = `0`+createdAt.getMinutes()
         }
+     if(type === "record"){
+   
+      
        return (
         <View style={Style.recorder}>    
-        <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
-        <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+          <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
+          <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
         
-      </View>
+        </View>
        )
      }else{
-      return (
-      
-          <Bubble
-            
-            {...props}
+      if(answer){
+        return(
+            <View style={Style.answer}> 
+                 <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
+                 <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{answer.name}</Text>   
+                 <Text  style={{margin:5}}>{answer.text}</Text>   
+                 </View>
+             
+                <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
+           
+              <View style={{flexDirection:"row"}}>
+                <Text  style={{fontSize:11, textAlign:"right",marginLeft:8}}>{`~${user.name}`}</Text>
+                <Text  style={{fontSize:11, textAlign:"right",marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+              </View>
+            </View>
+        )
+      }else{
+        return (
           
-           />
-      );
+            <Bubble
+              
+              {...props}
+            
+            />
+           );
+      }
+      
+     
      }
 
     
@@ -356,6 +380,7 @@ class MyQuestions extends Component {
         <View style={Style.messageContainer}>
             <Filtrate searchBar={this.searchBar} />
               <GiftedChat
+              inverted={true}
                 scrollToBottom={true}
                 messages={_messages}
                 extraData={_messages}

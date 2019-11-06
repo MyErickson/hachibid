@@ -313,81 +313,77 @@ import AsyncStorage from '@react-native-community/async-storage';
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
             console.log("je suis dans receive data my questions", action)
+            var data = [];
+            var res = [];
             axios.get(`users/${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then(async (response)=>{
-              console.log("je suis dans receive data my questions", response)
-  
-              var data = [];
-             const   requete  = await  response.data.messages.map(async (value)=>{
+             
+           
+             const  requete = response.data.messages.map( (value)=>{
                       
-                            const id = value.split('/')
-                            
+                        const id = value.split('/')
+                       
                            
-                       const t  = await axios.get(`messages/${id[3]}`,{
+                        return axios.get(`messages/${id[3]}`,{
                                 headers:{
                                     'Authorization':"Bearer "+action.data.token
                                 } 
-                            }).then((res)=>{
-                                console.log("requete des messsages ", res)
-                                if(res.data.answers){
-                                
+                            })
+                           
+                        })
+               
 
-                                     res.data.answers.map((value)=>{
-                                      data.push({
-                                        _id:value.id,
-                                        text:value.content,
-                                        createdAt:new Date(value.createdAt),
-                                        user:{
-                                              _id:value.id,
-                                              name:value.username
-                                          }
-                                    })})
-                                }
-                                    data.push( {
-                                        _id:res.data.id,
-                                        text:res.data.content,
-                                        createdAt:new Date(res.data.createdAt),
-                                        user:{
-                                              _id:res.data.user.id,
-                                              name:res.data.user.username
-                                          }
-                                        })
+                            console.log("je suis la valeur de nex222222222",requete)
+                //                 if(res.data.answers){
+                                   
+
+                //                      res.data.answers.map((value)=>{
+                //                       data.push({
+                //                         _id:value.id,
+                //                         text:value.content,
+                //                         answer:{
+                //                             text:res.data.content,
+                //                             name:res.data.user.username
+                //                                     },
+                //                         createdAt:new Date(value.createdAt),
+                //                         user:{
+                //                               _id:value.id,
+                //                               name:"admin"
+                //                           }
+                //                     })})
+                              
+                //                 }
+                //                     data.push( {
+                //                         _id:res.data.id,
+                //                         text:res.data.content,
+                //                         createdAt:new Date(res.data.createdAt),
+                //                         user:{
+                //                               _id:res.data.user.id,
+                //                               name:res.data.user.username
+                //                           }
+                //                         })
                         
    
-                            var  nex=   data.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())
-                            console.log("je suis la valeur de nex',",nex)
-                            return nex 
-                             
-                                // store.dispatch(DataMessagesMyQuestions(data.reverse()))
-                            })
-                            console.log("je suis la valeur de nexttttttttttt',",t)
-                           return t
+                //           data.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())
+        
+                           
+                    
                             
-                        })
-                        console.log("je suis la valeur de nex222222222',",requete)
-                        var promise =  Promise.resolve(requete)
-                        promise.then((value)=> console.log("la promesse de value",value))
-         
-          
+                  
+                    Promise.resolve(requete)
+                  .then((value)=>{
+                    Promise.resolve(value).then((t)=>{
+                        console.log("la proessse vaut ",t)
+                      })
+                   
+                        // store.dispatch(DataMessagesMyQuestions(value.reverse()))
+                    })
+              
                
                         
-                         
-                        
-                //   return{
-                //     _id:value.id,
-                //     text:value.content,
-                //     createdAt:value.createdAt,
-                //     user:{
-                //         _id:value.userInfo.id,
-                //         name:value.userInfo.username
-                //     }
-
-
-                //   }
-                // 
             }).catch((err)=>{
                 console.log("erroorr dans messages myquestion",err)
                 

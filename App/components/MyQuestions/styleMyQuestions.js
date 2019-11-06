@@ -54,6 +54,13 @@ export const Style = StyleSheet.create({
         paddingTop:10 ,
      
     },
+    answer:{
+        padding:5,
+        backgroundColor:"#ECEBEB",
+        borderRadius:10,
+        paddingBottom:10,
+        paddingTop:10 ,
+    },
 
     Modal:{
         maxHeight:hp('20%'),
