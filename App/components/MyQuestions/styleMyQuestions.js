@@ -55,6 +55,7 @@ export const Style = StyleSheet.create({
      
     },
     answer:{
+        maxWidth:wp("80%"),
         padding:5,
         backgroundColor:"#ECEBEB",
         borderRadius:10,

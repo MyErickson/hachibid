@@ -20,7 +20,7 @@ const input = React.createRef();
     return (
       <View>
         <Input ref={input}
-         placeholder='Recherche'
+         placeholder='Recherche Questions'
          value={textFilter}
          onChangeText={(text)=> searchBar(text)} 
          rightIcon={

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import ChatHome from '../../components/ChatHome/ChatHome'
 
 // Action Creators
-import { dataMessagesHome,sendDataFilterHomeMessage } from '../../store/actionCreator/ChatHome';
+import { dataMessagesHome,sendDataFilterHomeMessage , receiveMessagesHome } from '../../store/actionCreator/ChatHome';
 import { dataProfileUsers } from '../../store/actionCreator/Profile';
 import { responseConnection} from '../../store/actionCreator/Connection';
 /* === State (données) ===
@@ -45,6 +45,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   responseConnection:(token)=>{
     dispatch(responseConnection(token))
+  },
+  receiveMessagesHome:()=>{
+    dispatch(receiveMessagesHome(undefined))
   }
 });
 

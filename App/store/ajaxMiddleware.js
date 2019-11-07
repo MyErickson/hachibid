@@ -16,6 +16,7 @@ import { receiveDataNotification } from './actionCreator/Notification'
 
 
 import AsyncStorage from '@react-native-community/async-storage';
+import { object } from 'prop-types';
 
 
 
@@ -45,10 +46,13 @@ import AsyncStorage from '@react-native-community/async-storage';
               
             }).then((response)=>{
                 //ici un autre axios pour recevoir tout les messages
-                console.log("response axios send message user ===>",response)
-                stor.dispatch(receiveDataMessagesMyQuestions(action.message[0].user._id))
+                // console.log("response axios send message user ===>",response)
+                const data = new Object
+                data.id = action.message[0].user._id
+                data.token = action.message[0].token
+                store.dispatch(receiveDataMessagesMyQuestions(data))
             }).catch((err)=>{
-                console.log("error axios message send user",err.response)
+                console.log("error axios message send user",err)
                 
             })
             break;
@@ -92,13 +96,13 @@ import AsyncStorage from '@react-native-community/async-storage';
                     'Authorization':"Bearer "+action.token
                 } 
             }).then((response)=>{
-               
-                  const data = response.data['hydra:member'].map((value)=>{
+                console.log("axios data message home",response)
+                  const dataMessage = response.data['hydra:member'].map((value)=>{
                     
                       return{
                           _id:value.id,
                           text:value.content,
-                          createdAt:value.createdAt,
+                          createdAt:new Date (value.createdAt),
                           type:value.type,
                           user:{
                               _id:value.user.id,
@@ -106,9 +110,31 @@ import AsyncStorage from '@react-native-community/async-storage';
                           }
                         }
                   })
-           
+
+                  response.data["hydra:member"].map((value)=>{
+                    if(value.answers.length){
+                         value.answers.map((valueAnswers)=>{
+
+                            dataMessage.push({
+                            _id:valueAnswers.id,
+                            text:valueAnswers.content,
+                            answer:{
+                                text:value.content,
+                                name:value.user.username
+                                        },
+                            createdAt:new Date(valueAnswers.createdAt),
+                            user:{
+                                  _id:valueAnswers.id,
+                                  name:"admin"
+                              }
+
+                        })})
+                        
+                    }
+              
+                })
      
-                store.dispatch(receiveMessagesHome(data.reverse()))
+                store.dispatch(receiveMessagesHome(dataMessage.reverse()))
             }).catch((err)=>{
                 console.log("error axios data message home",err.response)
                 
@@ -176,13 +202,13 @@ import AsyncStorage from '@react-native-community/async-storage';
                     } 
                 }).then((response)=>{
                     //ici un autre axios
-                     
-                  const data = response.data['hydra:member'].map((value)=>{
+                     console.log("je suis la reponse de filter home", response )
+                  const dataMessage= response.data['hydra:member'].map((value)=>{
                     
                     return{
                         _id:value.id,
                         text:value.content,
-                        createdAt:value.createdAt,
+                        createdAt:new Date(value.createdAt),
                         type:value["@type"],
                         user:{
                             _id:value.user.id,
@@ -190,8 +216,31 @@ import AsyncStorage from '@react-native-community/async-storage';
                         }
                       }
                 })
-                console.log("axios sans ke friktre des messsage  ",response)
-                     store.dispatch(receiveDataFilterMessagesHome(data.reverse()))
+
+                response.data["hydra:member"].map((value)=>{
+                    if(value.answers.length){
+                         value.answers.map((valueAnswers)=>{
+
+                            dataMessage.push({
+                            _id:valueAnswers.id,
+                            text:valueAnswers.content,
+                            answer:{
+                                text:value.content,
+                                name:value.user.username
+                                        },
+                            createdAt:new Date(valueAnswers.createdAt),
+                            user:{
+                                  _id:valueAnswers.id,
+                                  name:"admin"
+                              }
+
+                        })})
+                        
+                    }
+              
+                })
+                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                     store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
                 }).catch((err)=>{
                     console.log("axios ",err.response)
                     
@@ -215,7 +264,7 @@ import AsyncStorage from '@react-native-community/async-storage';
                     return{
                         _id:value.id,
                         text:value.content,
-                        createdAt:value.createdAt,
+                        createdAt:new Date(value.createdAt),
                         type:value["@type"],
                         user:{
                             _id:value.user.id,
@@ -249,7 +298,7 @@ import AsyncStorage from '@react-native-community/async-storage';
                 
                         _id:id[3],
                         text:value.content,
-                        createdAt:value.createdAt,
+                        createdAt: new Date(value.createdAt),
                         type:value["@type"],
                         user:{
                             _id:value.user.id,
@@ -313,75 +362,60 @@ import AsyncStorage from '@react-native-community/async-storage';
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
             console.log("je suis dans receive data my questions", action)
-            var data = [];
-            var res = [];
-            axios.get(`users/${action.data.id}`,{
+          
+           
+            axios.get(`messages?user=${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then(async (response)=>{
              
-           
-             const  requete = response.data.messages.map( (value)=>{
-                      
-                        const id = value.split('/')
-                       
-                           
-                        return axios.get(`messages/${id[3]}`,{
-                                headers:{
-                                    'Authorization':"Bearer "+action.data.token
-                                } 
-                            })
-                           
-                        })
-               
+                console.log("requete message dans axios",response)
+             const  dataMessage = response.data["hydra:member"].map( (value)=>{
 
-                            console.log("je suis la valeur de nex222222222",requete)
-                //                 if(res.data.answers){
-                                   
-
-                //                      res.data.answers.map((value)=>{
-                //                       data.push({
-                //                         _id:value.id,
-                //                         text:value.content,
-                //                         answer:{
-                //                             text:res.data.content,
-                //                             name:res.data.user.username
-                //                                     },
-                //                         createdAt:new Date(value.createdAt),
-                //                         user:{
-                //                               _id:value.id,
-                //                               name:"admin"
-                //                           }
-                //                     })})
-                              
-                //                 }
-                //                     data.push( {
-                //                         _id:res.data.id,
-                //                         text:res.data.content,
-                //                         createdAt:new Date(res.data.createdAt),
-                //                         user:{
-                //                               _id:res.data.user.id,
-                //                               name:res.data.user.username
-                //                           }
-                //                         })
-                        
-   
-                //           data.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())
-        
-                           
-                    
+                                    let  data = {
+                                        _id:value.id,
+                                        text:value.content,
+                                        createdAt:new Date(value.createdAt),
+                                        user:{
+                                              _id:value.user.id,
+                                              name:value.user.username
+                                          }
+                                        }
+                                        return data
+                                     
                             
-                  
-                    Promise.resolve(requete)
-                  .then((value)=>{
-                    Promise.resolve(value).then((t)=>{
-                        console.log("la proessse vaut ",t)
-                      })
-                   
-                        // store.dispatch(DataMessagesMyQuestions(value.reverse()))
-                    })
+  
+                })
+
+
+                response.data["hydra:member"].map((value)=>{
+                    if(value.answers.length){
+                         value.answers.map((valueAnswers)=>{
+                            dataMessage.push({
+                            _id:valueAnswers.id,
+                            text:valueAnswers.content,
+                            answer:{
+                                text:value.content,
+                                name:value.user.username
+                                        },
+                            createdAt:new Date(valueAnswers.createdAt),
+                            user:{
+                                  _id:valueAnswers.id,
+                                  name:"admin"
+                              }
+                        })})
+                        
+                    }
               
+                })
+    
+                                   
+                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())   
+
+          
+             store.dispatch(DataMessagesMyQuestions(allDataMessageUser.reverse()))
+          
                
                         
             }).catch((err)=>{

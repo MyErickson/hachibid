@@ -33,7 +33,23 @@ export const Style = StyleSheet.create({
     containerIcon :{
         flexDirection:"row",
         justifyContent:"center"
-    }
+    },
+       recorder:{
+        padding:5,
+        backgroundColor:"gray",
+        borderRadius:10,
+        paddingBottom:10,
+        paddingTop:10 ,
+     
+    },
+    answer:{
+        maxWidth:wp("81%"),
+        padding:5,
+        backgroundColor:"#ECEBEB",
+        borderRadius:10,
+        paddingBottom:10,
+        paddingTop:10 ,
+    },
     
     
  

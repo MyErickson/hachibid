@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { View} from 'react-native';
+import { View, Text,TouchableOpacity} from 'react-native';
 import { Style} from './styleChatHome';
 import { Button ,Icon } from 'react-native-elements'
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
-import { GiftedChat  } from 'react-native-gifted-chat';
+import { GiftedChat ,Bubble } from 'react-native-gifted-chat';
 import axios from 'axios';
+import AlertDialog  from '../AlertDialog/AlertDialog'
 var jwtDecode = require('jwt-decode');
+
 
 class ChatHome extends Component {
  
@@ -17,7 +19,8 @@ class ChatHome extends Component {
       filter:undefined,
       deleteTextSearchBar:undefined,
       _textFilter:undefined,
-      idUser:undefined
+      idUser:undefined,
+      alertVisible:false,
     }
   
     async componentDidMount() {
@@ -51,13 +54,15 @@ class ChatHome extends Component {
         }
 
    actualize= async ()=>{
-     await this.props.dataMessagesHome(this.props.receiveResponseConnection)
-        const allMessages =  this.state._messages
-        console.log("je suis dans chat home pour alllmessages ",allMessages)
         this.setState({
-          _messages:allMessages,
-          filter:undefined
-        })
+      
+        filter:undefined
+      })
+    await this.props.receiveMessagesHome()
+     await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+        // const allMessages =  this.state._messages
+        // console.log("je suis dans chat home pour alllmessages ",allMessages)
+      
     }
 
 
@@ -92,6 +97,7 @@ class ChatHome extends Component {
 
     static  getDerivedStateFromProps(props,state){
       console.log("je suis dans get derived ", props.dataFilterHome)
+      console.log("je suis dans get derived ", props.allDataMessagesHome)
      if(props.dataFilterHome && state.filter){
       state._messageFilter = props.dataFilterHome
      
@@ -104,13 +110,77 @@ class ChatHome extends Component {
  
 
 
+    renderBubble(props) {
+      const { type ,createdAt , answer , text ,user } = props.currentMessage
+      console.log("answer dans le renderbubble",answer,createdAt )
+      var minutes = createdAt.getMinutes() 
+      if(createdAt.getMinutes() < 10){
+       minutes = `0`+createdAt.getMinutes()
+           }
+        if(type === "record"){
+      
+         
+          return (
+           <View style={Style.recorder}>    
+             <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
+             <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+           
+           </View>
+          )
+        }else{
+         if(answer){
+           return(
+               <View style={Style.answer}> 
+                    <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
+                    <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{answer.name}</Text>   
+                    <Text  style={{margin:5}}>{answer.text}</Text>   
+                    </View>
+                
+                   <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
+              
+                 <View style={{flexDirection:"row"}}>
+                   <Text  style={{fontSize:11, marginLeft:8}}>{`~${user.name}`}</Text>
+                   <Text  style={{fontSize:11, marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+                   <TouchableOpacity
+                     onPress={()=>this.alertPrecision()}
+                   >
+                    <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginRight:20}}>plus de précision</Text>
+                   </TouchableOpacity>
+                 </View>
+               </View>
+           )
+         }else{
+           return (
+             
+               <Bubble
+                 
+                 {...props}
+               
+               />
+              );
+         }
+         
+        
+        }
+   
+       
+     }
 
+  alertPrecision = ()=>{
+    this.setState({
+      alertVisible:true
+    })
+  }
 
-
+  closeAlert=()=>{
+    this.setState({
+      alertVisible:false
+    })
+  }
 
   render() {
  
-   const { _messages,_messageFilter,filter,deleteTextSearchBar,_textFilter,idUser  }=this.state
+   const { _messages,_messageFilter,filter,deleteTextSearchBar,_textFilter,idUser ,alertVisible }=this.state
     //  console.log("je suis dans le chathome",_messageFilter)
     return (
        
@@ -123,12 +193,14 @@ class ChatHome extends Component {
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
                 renderAvatar={null}
-                isAnimated= {true}
+                isAnimated= {false}
                 minInputToolbarHeight={1}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
                 renderUsernameOnMessage={true}
                 keyboardShouldPersistTaps={'never'}
+                renderBubble={(props)=>this.renderBubble(props)}
+                timeFormat='HH:mm'
                 user={{
                   _id: idUser,
                   
@@ -138,7 +210,12 @@ class ChatHome extends Component {
                <Icon containerStyle={{width:40}} onPress={this.actualize} name="refresh" />
               </View>
         </View>
-      
+        <AlertDialog 
+          alertVisible={this.state.alertVisible}
+          messageAlert="Une demande de précision a été envoyé"
+          closeAlert={this.closeAlert}
+          style={true}
+                 />
      
       </View>
     );

@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
-import {Icon, Row } from 'native-base'
+import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
 import Menu from '../Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import { GiftedChat , Bubble, Send , InputToolbar, Message,} from 'react-native-gifted-chat'
+import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
+
 
 
 
@@ -110,12 +111,13 @@ class MyQuestions extends Component {
        recordPosition,
        token: receiveResponseConnection
      }]
-     console.log("MYQESTION on send message ===>",newMessage)
-    // this.setState(previousState =>({
-    //   messages: GiftedChat.append(previousState.messages, newMessage),
-    // }))
+  
+    this.setState(previousState =>({
+      ...this.state._messages,
+      _messages: GiftedChat.append(previousState.messages, newMessage),
+    }))
      await  this.props.sendMessageUser(newMessage)
-     await this.props.receiveDataMessagesMyQuestions(data)
+  
 
   }
 
@@ -362,7 +364,7 @@ class MyQuestions extends Component {
      const { ProfileUser,_messages } = this.state
 
       const nameMenu = ProfileUser && ProfileUser.data.roleTitle === "Administrateur" ? "Chat Général":  "Mes questions" 
-
+  
     return (
     
       <View  style={Style.container}>
