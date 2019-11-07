@@ -21,6 +21,9 @@ class ChatHome extends Component {
       _textFilter:undefined,
       idUser:undefined,
       alertVisible:false,
+      alertText :undefined,
+      alertConfirm:undefined,
+      style:undefined
     }
   
     async componentDidMount() {
@@ -168,19 +171,39 @@ class ChatHome extends Component {
 
   alertPrecision = ()=>{
     this.setState({
-      alertVisible:true
+      alertVisible:true,
+      alertText:"êtes vous sur de vouloir faire une demande de plus de précision ?",
+      alertConfirm:true,
+      style:false
+
     })
   }
 
   closeAlert=()=>{
     this.setState({
-      alertVisible:false
+      alertVisible:false,
+   
+
+    })
+  }
+  sendPrecision=()=>{
+    this.setState({
+      alertText:"Une demande de precision à bien été envoyé",
+      alertConfirm:false,
+      style:true
+
     })
   }
 
   render() {
  
-   const { _messages,_messageFilter,filter,deleteTextSearchBar,_textFilter,idUser ,alertVisible }=this.state
+   const { _messages,
+    _messageFilter,
+    filter,
+    deleteTextSearchBar,
+    _textFilter,
+    idUser ,
+    alertVisible,alertText,alertConfirm ,style}=this.state
     //  console.log("je suis dans le chathome",_messageFilter)
     return (
        
@@ -211,10 +234,12 @@ class ChatHome extends Component {
               </View>
         </View>
         <AlertDialog 
-          alertVisible={this.state.alertVisible}
-          messageAlert="Une demande de précision a été envoyé"
+          alertVisible={alertVisible}
+          messageAlert={alertText}
           closeAlert={this.closeAlert}
-          style={true}
+          alertConfirm={alertConfirm}
+          sendPrecision={this.sendPrecision}
+          style={style}
                  />
      
       </View>

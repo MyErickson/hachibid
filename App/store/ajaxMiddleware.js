@@ -133,8 +133,8 @@ import { object } from 'prop-types';
                     }
               
                 })
-     
-                store.dispatch(receiveMessagesHome(dataMessage.reverse()))
+                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                store.dispatch(receiveMessagesHome( allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("error axios data message home",err.response)
                 
