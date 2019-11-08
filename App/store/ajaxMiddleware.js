@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
-     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,DATA_NOTIFICATION,
+     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_PRECISION,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,
-        SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,  } from './reducer'
+        SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,ASK_PRECISION  } from './reducer'
 
 
 import { receiveMessagesHome,receiveDataFilterMessagesHome } from './actionCreator/ChatHome';
@@ -98,42 +98,59 @@ import { object } from 'prop-types';
             }).then((response)=>{
                 console.log("axios data message home",response)
                   const dataMessage = response.data['hydra:member'].map((value)=>{
-                    
-                      return{
-                          _id:value.id,
-                          text:value.content,
-                          createdAt:new Date (value.createdAt),
-                          type:value.type,
-                          user:{
-                              _id:value.user.id,
-                              name:value.user.username
-                          }
+    
+                    return{
+                        _id:value.id,
+                        text:value.content,
+                        createdAt:new Date (value.createdAt),
+                        type:value.type,
+                        valid:value.valid,
+                        user:{
+                            _id:value.user.id,
+                            name:value.user.username
                         }
+                      }
+
+        
+                     
+                       
+                       
+              
                   })
 
                   response.data["hydra:member"].map((value)=>{
-                    if(value.answers.length){
-                         value.answers.map((valueAnswers)=>{
-
-                            dataMessage.push({
-                            _id:valueAnswers.id,
-                            text:valueAnswers.content,
-                            answer:{
-                                text:value.content,
-                                name:value.user.username
-                                        },
-                            createdAt:new Date(valueAnswers.createdAt),
-                            user:{
-                                  _id:valueAnswers.id,
-                                  name:"admin"
-                              }
-
-                        })})
-                        
-                    }
+                    if(value.valid){
+                        if(value.answers.length){
+                            value.answers.map((valueAnswers)=>{
+   
+                               dataMessage.push({
+                               _id:valueAnswers.id,
+                               text:valueAnswers.content,
+                               valid:value.valid,
+                               question:{
+                                   idUser:value.user["@id"], 
+                                   text:value.content,
+                                   name:value.user.username
+                                           },
+                               createdAt:new Date(valueAnswers.createdAt),
+                               idMessage:value["@id"] ,
+                               user:{
+                                     _id:valueAnswers.id,
+                                     name:"admin"
+                                 }
+   
+                           })})
+                           
+                       }
+                    }  
+                   
               
                 })
-                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+
+          
+               const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
+             
+                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
                 store.dispatch(receiveMessagesHome( allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("error axios data message home",err.response)
@@ -210,6 +227,7 @@ import { object } from 'prop-types';
                         text:value.content,
                         createdAt:new Date(value.createdAt),
                         type:value["@type"],
+                        valid:value.valid,
                         user:{
                             _id:value.user.id,
                             name:value.user.username
@@ -222,17 +240,21 @@ import { object } from 'prop-types';
                          value.answers.map((valueAnswers)=>{
 
                             dataMessage.push({
-                            _id:valueAnswers.id,
-                            text:valueAnswers.content,
-                            answer:{
-                                text:value.content,
-                                name:value.user.username
-                                        },
-                            createdAt:new Date(valueAnswers.createdAt),
-                            user:{
-                                  _id:valueAnswers.id,
-                                  name:"admin"
-                              }
+                                _id:valueAnswers.id,
+                                text:valueAnswers.content,
+                                valid:value.valid,
+                                question:{
+                                    idUser:value.user["@id"], 
+                                    text:value.content,
+                                    name:value.user.username
+                                            },
+                                createdAt:new Date(valueAnswers.createdAt),
+                                idMessage:value["@id"] ,
+                                user:{
+                                      _id:valueAnswers.id,
+                                      name:"admin"
+                                  }
+    
 
                         })})
                         
@@ -291,7 +313,7 @@ import { object } from 'prop-types';
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
-         
+              console.log("la respose",response)
                 const dataMessage = response.data.messages.map((value)=>{
                       const id = value['@id'].split('/')
                     return {
@@ -299,6 +321,7 @@ import { object } from 'prop-types';
                         _id:id[3],
                         text:value.content,
                         createdAt: new Date(value.createdAt),
+                   
                         type:value["@type"],
                         user:{
                             _id:value.user.id,
@@ -306,7 +329,31 @@ import { object } from 'prop-types';
                         }
                     }
                 })
-                 store.dispatch(dataMessagesCategory(dataMessage))
+
+                // response.data.messages.map((value)=>{
+                //     if(value.answers.length){
+                //          value.answers.map((valueAnswers)=>{
+                //             dataMessage.push({
+                //             _id:valueAnswers.id,
+                //             text:valueAnswers.content,
+                //             answer:{
+                //                 text:value.content,
+                //                 name:value.user.username
+                //                         },
+                //             createdAt:new Date(valueAnswers.createdAt),
+                //             user:{
+                //                   _id:valueAnswers.id,
+                //                   name:"admin"
+                //               }
+                //         })})
+                        
+                //     }
+              
+                // })
+ 
+             
+                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                store.dispatch(dataMessagesCategory(allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("axios error message category", err.reponse)
                 
@@ -372,7 +419,7 @@ import { object } from 'prop-types';
              
                 console.log("requete message dans axios",response)
              const  dataMessage = response.data["hydra:member"].map( (value)=>{
-
+                                
                                     let  data = {
                                         _id:value.id,
                                         text:value.content,
@@ -409,8 +456,7 @@ import { object } from 'prop-types';
                     }
               
                 })
-    
-                                   
+                       
                 const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())   
 
           
@@ -424,18 +470,40 @@ import { object } from 'prop-types';
             })
             break;
         
-        case DATA_NOTIFICATION:
+        case ASK_PRECISION:
            next(action)
-           axios.get('url',{
-            
+           console.log(action)
+           axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
+           axios.post('accuracies',{
+            user:action.data.userQuestion,
+            answered:true,
+            message:action.data.message
+
         }).then((response)=>{
-            console.log(response)
-            store.dispatch(receiveDataNotification(response))
+            console.log("response pour precisison ",response)
+          
         }).catch((err)=>{
-            console.log(err)
+            console.log(err.response)
             
         })
          break;
+
+         case RECEIVE_PRECISION:
+            next(action)
+            axios.get('accuracies',{
+                headers:{
+                    'Authorization':"Bearer "+action.data.token
+                } 
+           }).then((response)=>{
+               console.log("axios totu els reponses,",response)
+            //    store.dispatch(receiveDataNotification(response))
+           }).catch((err)=>{
+               console.log(err)
+               
+           })
+            break;
+
+
 
          case SEND_DATA_FILTER_MESSAGE_MYQUESTION:
          next(action)
@@ -449,6 +517,8 @@ import { object } from 'prop-types';
             
         })
          break;
+
+     
     }
 
   };

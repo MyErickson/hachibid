@@ -5,6 +5,7 @@ import { Style } from './styleMessageCategory'
 import Filtrate from '../Filtrate/Filtrate'
 import Menu from '../Menu/Menu';
 import AsyncStorage from '@react-native-community/async-storage';
+import { dataProfileUsers } from '../../store/actionCreator/Profile';
 
 class MessageCategory extends Component {
   constructor(props) {
@@ -15,7 +16,8 @@ class MessageCategory extends Component {
         deleteTextSearchBar:undefined,
         _messageFilter:undefined,
         filter:undefined,
-        _textFilter:undefined
+        _textFilter:undefined,
+        idUser:undefined
         
     };
  
@@ -29,7 +31,10 @@ class MessageCategory extends Component {
         state.title = params.nameCategory
         state._messageFilter = props.filterMessagesCategory
         state._messages= props.dataMessagesCategory
-        
+        if(props.dataProfileUser){
+          state.idUser = props.dataProfileUser.data.id
+        }
+       
   
     }
 
@@ -70,12 +75,68 @@ class MessageCategory extends Component {
   
    }
    
+
+  //  renderBubble(props) {
+  //   const { type ,createdAt , question , text ,user } = props.currentMessage
+  //   console.log("answer dans le renderbubble",props.currentMessage)
+  //   var minutes = createdAt.getMinutes() 
+  //   if(createdAt.getMinutes() < 10){
+  //    minutes = `0`+createdAt.getMinutes()
+  //        }
+  //     if(type === "record"){
+    
+       
+  //       return (
+  //        <View style={Style.recorder}>    
+  //          <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
+  //          <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+         
+  //        </View>
+  //       )
+  //     }else{
+  //      if(question){
+  //        return(
+  //            <View style={Style.answer}> 
+  //                 <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
+  //                 <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{question.name}</Text>   
+  //                 <Text  style={{margin:5}}>{question.text}</Text>   
+  //                 </View>
+              
+  //                <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
+            
+  //              <View style={{flexDirection:"row"}}>
+  //                <Text  style={{fontSize:11, marginLeft:8}}>{`~${user.name}`}</Text>
+  //                <Text  style={{fontSize:11, marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+  //                <TouchableOpacity
+  //                  onPress={()=>this.alertPrecision(props.currentMessage)}
+  //                >
+  //                 <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginRight:20}}>plus de précision</Text>
+  //                </TouchableOpacity>
+  //              </View>
+  //            </View>
+  //        )
+  //      }else{
+  //        return (
+           
+  //            <Bubble
+               
+  //              {...props}
+             
+  //            />
+  //           );
+  //      }
+       
+      
+  //     }
+ 
+     
+  //  }
  
 
   render() {
-     const { _messages,title,deleteTextSearchBar,filter ,_messageFilter,_textFilter }=this.state
-   
+     const { _messages,title,deleteTextSearchBar,filter ,_messageFilter,_textFilter,idUser }=this.state
 
+     const { dataProfileUser } = this.props
     return (
              
         <View   style={Style.container}>
@@ -87,16 +148,17 @@ class MessageCategory extends Component {
                 scrollToBottom={true}
                 messages={filter?_messageFilter:_messages}
                 renderAvatar={null}
-                extraData={this.state._messages}
                 shouldUpdateMessage={()=>_messages}
                 minInputToolbarHeight={20}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
                 style={{background:'red'}}  
                 keyboardShouldPersistTaps={'never'}
+                // renderBubble={(props)=>this.renderBubble(props)}
                 renderUsernameOnMessage={true}
+                timeFormat='HH:mm'
                 user={{
-                  _id: 'Id user',
+                  _id: idUser && idUser,
                   
                 }}
               />

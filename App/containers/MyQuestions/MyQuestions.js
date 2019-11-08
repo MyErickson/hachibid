@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
 
 // Action Creators
-import { sendMessageUser ,receiveDataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
+import { sendMessageUser ,receiveDataMessagesMyQuestions, receivePrecision} from '../../store/actionCreator/MyQuestions'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -38,6 +38,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   receiveDataMessagesMyQuestions:(data)=>{
     dispatch(receiveDataMessagesMyQuestions(data))
+  },
+  receivePrecision:(data)=>{
+    dispatch(receivePrecision(data))
   }
 });
 

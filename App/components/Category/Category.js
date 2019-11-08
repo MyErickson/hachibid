@@ -61,7 +61,7 @@ class Category extends Component {
     return (
       <View style={{flex:1}}>
         <Menu nameMenu="Catégories" navigation={this.props.navigation}/>
-        <Filtrate searchBar={this.searchBar}/>
+        {/* <Filtrate searchBar={this.searchBar}/> */}
         <ScrollView
               bounces={true}
               style={Style.scrollview}

@@ -1,15 +1,17 @@
-import React, { Component} from 'react';
+import React, { Component, Fragment} from 'react';
 import { View, Text,  ScrollView } from 'react-native';
 import { Button , Avatar , Icon} from 'react-native-elements';
 import { Style }  from './styleProfile'
-import { Form, Item, Input  } from 'native-base';
+import { Form, Item, Input ,Card } from 'native-base';
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
 import AlertDialog from '../AlertDialog/AlertDialog';
 import ImagePicker from 'react-native-image-picker';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
 
 
 
@@ -43,7 +45,9 @@ class Profile extends Component {
         profileUser:undefined,
         avatarSource:undefined,
         token:undefined,
-        alertVisible:undefined
+        alertVisible:undefined,
+        alertConfirm:undefined,
+        style:undefined
 
     };
     this.picture=undefined
@@ -52,15 +56,15 @@ class Profile extends Component {
 
     
    async componentDidMount(){
-     try{
+    //  try{
 
-        const permissionPicture= await request(PERMISSIONS.ANDROID.CAMERA)
+    //     const permissionPicture= await request(PERMISSIONS.ANDROID.CAMERA)
 
-        this.picture=permissionPicture
+    //     this.picture=permissionPicture
        
-      }catch(err){
-          console.log("eroor permission picture====== >",err)
-      }
+    //   }catch(err){
+    //       console.log("eroor permission picture====== >",err)
+    //   }
    }
 
 
@@ -126,7 +130,7 @@ class Profile extends Component {
         
         const {id} =  this.props.dataProfileUser.data  
              
-      
+       console.log("le login vaut",login)
 
              var data = new Object ;
 
@@ -153,10 +157,14 @@ class Profile extends Component {
              await this.props.sendDataUpdateProfile(data)
 
              this.setState({
-                login:undefined , 
-                email:undefined  , 
-                password:undefined ,
-                changePassword:undefined ,
+                login:"", 
+                email:"" , 
+                password:"",
+                changePassword:"",
+                messageAlert:" Modifié",
+                alertConfirm:false,
+                style:true
+
         })
     
        
@@ -200,6 +208,20 @@ class Profile extends Component {
    }
 
    
+  closeAlert =()=>{
+      this.setState({
+        alertVisible:false,
+      })
+  }
+
+   register =()=>{
+    this.setState({
+        alertVisible:true,
+        messageAlert:"êtes vous sur de vouloir modifier vos informations ?",
+        alertConfirm:true,
+        style:false,
+      })
+   }
 
   render() {
     const { login , 
@@ -211,39 +233,34 @@ class Profile extends Component {
             errorLoginCharacter,
             errorPwdCharacter,
             profileUser,
-           
+            alertVisible,
+            alertConfirm,messageAlert,style
              } = this.state
 
-    const avatarDefault = { uri:
-                        'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-                    }
    
     return (
      
          
-        <AnimatedLinearGradient  customColors={presetColors.colorsProfile} speed={4000}> 
-    
+
+        <Fragment>
             <Menu nameMenu="Profil" navigation={this.props.navigation}/>
             <View style={Style.container}>
               <ScrollView
               
               style={Style.scrollview}
               showsVerticalScrollIndicator = {false}
-               keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="always"
               >
-                <View style={{flexDirection:"row",  marginTop:30,}}>
-                <Avatar
-                   onPress={this.goToRegisterPicture}
-                    containerStyle={Style.avatar}
-                    rounded
-                    size={120}
-                    source={profileUser && profileUser.image  ? {uri:profileUser.image} : avatarDefault}
-                />
-                <View style={{margin:35 }}>
-                    <Text style={{marginBottom:15,fontSize: 18}}>{profileUser && profileUser.username}</Text>
-                    <Text style={{fontSize: 18}} >{profileUser && profileUser.email}</Text>
-                </View>
-              </View>
+         
+       
+                <Card style={Style.cardInfo}>
+                <LinearGradient colors = {[ '#1285F0','#12EEF0']}style={Style.info}>
+                    <Text style={{marginBottom:15,fontSize: 18}}>Identifiant: {profileUser && profileUser.username}</Text>
+                    <Text style={{fontSize: 18}} >Mail: {profileUser && profileUser.email}</Text>
+                    </LinearGradient>
+                </Card>
+
+            
             <View style={Style.form}>
             {this.state.errorPwd && <Text style={{color:"red",textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
                         <Form >
@@ -309,7 +326,7 @@ class Profile extends Component {
                         <Button 
                         containerStyle={Style.button}
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
-                        onPress= {this.goToRegister}
+                        onPress= {this.register}
                         title= 'Modifier'
                        />
                         <Button 
@@ -323,13 +340,15 @@ class Profile extends Component {
                 </ScrollView>  
 
                 <AlertDialog 
-                    alertVisible={this.state.alertVisible}
-                    messageAlert={this.state.messageAlert}
+                    alertVisible={alertVisible}
+                    messageAlert={messageAlert}
                     closeAlert={this.closeAlert}
-                    style={this.state.style}
+                    style={style}
+                    alertConfirm={alertConfirm}
+                    yesConfirm={this.goToRegister}
                  />
             </View>
-            </AnimatedLinearGradient>
+            </Fragment>
  
     )}
 }

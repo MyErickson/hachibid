@@ -4,7 +4,7 @@ import Dialog from "react-native-dialog";
 import { Style } from './styleAlertDialog';
 
 
-const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm = false,sendPrecision}) => {
+const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm = false,yesConfirm}) => {
 
 
 
@@ -13,11 +13,11 @@ const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm = 
         <View>
         <Dialog.Container visible={alertVisible}>
           <Dialog.Description style={style? Style.succesRegister :Style.errorRegister }>
-            {messageAlert}
+            {messageAlert ?messageAlert:" " }
           </Dialog.Description>
           { alertConfirm ? 
           (<View style={{flexDirection:"row",justifyContent:"flex-end"}}>
-              <Dialog.Button label="Oui" onPress={sendPrecision} />
+              <Dialog.Button label="Oui" onPress={alertConfirm ? yesConfirm :()=>{} } />
               <Dialog.Button label="Annuler" onPress={closeAlert} />
           </View>)
           :

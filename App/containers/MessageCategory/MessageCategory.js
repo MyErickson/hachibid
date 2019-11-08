@@ -22,7 +22,8 @@ import { receiveDataMessagesCategory,sendDatafilterMessageCategory, dataFilterMe
 const mapStateToProps = (state, ownProps) => ({
    dataMessagesCategory: state.dataMessagesCategory,
    filterMessagesCategory:state.filterMessagesCategory,
-    receiveResponseConnection: state.receiveResponseConnection,
+   receiveResponseConnection: state.receiveResponseConnection,
+   dataProfileUser: state.dataProfileUser,
 });
 
 /* === Actions ===

@@ -29,7 +29,7 @@ class MyQuestions extends Component {
       play:false,
       isModalVisible:false,
       propsSounder:undefined,
-      dataProfileUser:undefined
+      ProfileUser:undefined
 
 
     };
@@ -44,13 +44,12 @@ class MyQuestions extends Component {
         const { dataProfileUser, receiveResponseConnection} = this.props
         const data = new Object
         data.token = receiveResponseConnection
-        data.id = dataProfileUser .data.id
-        if(dataProfileUser){
+        data.id = dataProfileUser && dataProfileUser.data.id
+   
           console.log("componentdidmount du dataprofile ===>",dataProfileUser)
            await this.props.receiveDataMessagesMyQuestions(data)
          
-        }
-     
+       
  
       try{
         const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
@@ -67,11 +66,17 @@ class MyQuestions extends Component {
   
 
 
-     static getDerivedStateFromProps(props, state){ 
-          console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
-          
-             state._messages = props.dataMessagesMyQuestions
-             state.ProfileUser = props.dataProfileUser
+     static async getDerivedStateFromProps(props, state){ 
+       
+            if(props.dataMessagesMyQuestions.length >0){
+              console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
+                 state._messages = props.dataMessagesMyQuestions
+            }
+            
+             if(props.dataProfileUser ){
+              state.ProfileUser = props.dataProfileUser.data
+             }
+       
 
      }
 
@@ -100,7 +105,7 @@ class MyQuestions extends Component {
       recordPosition} = messages[0]
     const data = new Object
     data.token = receiveResponseConnection
-    data.id = ProfileUser.data.id
+    data.id = ProfileUser.id
  
      const newMessage = [{
        _id,
@@ -113,10 +118,18 @@ class MyQuestions extends Component {
      }]
   
     this.setState(previousState =>({
-      ...this.state._messages,
-      _messages: GiftedChat.append(previousState.messages, newMessage),
+      _messages: GiftedChat.append(previousState._messages, newMessage),
     }))
-     await  this.props.sendMessageUser(newMessage)
+
+    if(ProfileUser.roleTitle !== "Administrateur" ){
+      console.log("je suis pas admin")
+      await  this.props.sendMessageUser(newMessage)
+      this.setState(previousState =>({
+        ...this.state._messages,
+        _messages: GiftedChat.append(previousState._messages, newMessage),
+      }))
+    }
+     
   
 
   }
@@ -197,7 +210,7 @@ class MyQuestions extends Component {
   renderActions=(props)=>{
  
     const { ProfileUser, stop  } = this.state
- if(ProfileUser.data.roles[0]=== "ROLE_ADMIN"){
+ if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
   if (stop){
     return (
       <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
@@ -261,7 +274,7 @@ class MyQuestions extends Component {
    
     this.setState(previousState=>({
       recordSecs: 0,
-      messages: GiftedChat.append(previousState.messages,  {
+      _messages: GiftedChat.append(previousState._messages,  {
         id:Date.now(),
         text: result,
         createdAt: new Date(),
@@ -275,14 +288,14 @@ class MyQuestions extends Component {
         valid: true
       },),
     }));
-    let formData = new FormData();
-     formData.append('file',{
-       uri: result,
-       name: Date.now(),
-       type: ".mp4"
-     })
+    // let formData = new FormData();
+    //  formData.append('file',{
+    //    uri: result,
+    //    name: Date.now(),
+    //    type: ".mp4"
+    //  })
 
-     console.log(formData)
+    //  console.log(formData)
 
   };
 
@@ -362,9 +375,13 @@ class MyQuestions extends Component {
 
   render() {
      const { ProfileUser,_messages } = this.state
-
-      const nameMenu = ProfileUser && ProfileUser.data.roleTitle === "Administrateur" ? "Chat Général":  "Mes questions" 
-  
+    console.log("le profile data ====",_messages)
+    var nameMenu = "";
+    if(ProfileUser !== undefined){
+      nameMenu = ProfileUser.roleTitle === "Administrateur" ? "Chat Général" :  "Mes questions" 
+    }
+      
+   
     return (
     
       <View  style={Style.container}>
@@ -380,12 +397,12 @@ class MyQuestions extends Component {
         currentPositionSec={this.state.currentPositionSec}
        />
         <View style={Style.messageContainer}>
-            <Filtrate searchBar={this.searchBar} />
+            {/* <Filtrate searchBar={this.searchBar} /> */}
               <GiftedChat
               inverted={true}
                 scrollToBottom={true}
                 messages={_messages}
-                extraData={_messages}
+      
                 shouldUpdateMessage={()=>_messages}
                 onSend={messages => this.onSend(messages)}
                 renderUsernameOnMessage={true}
@@ -401,7 +418,7 @@ class MyQuestions extends Component {
                 renderActions={this.renderActions}
                 timeFormat='HH:mm'
                 user={{
-                  _id: ProfileUser &&  ProfileUser.data.id,
+                  _id: ProfileUser ? ProfileUser.id : "user",
 
                   
                 }}

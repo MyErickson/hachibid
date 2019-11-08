@@ -23,7 +23,8 @@ class ChatHome extends Component {
       alertVisible:false,
       alertText :undefined,
       alertConfirm:undefined,
-      style:undefined
+      style:undefined,
+      currentMessageForPrecision:undefined
     }
   
     async componentDidMount() {
@@ -114,8 +115,8 @@ class ChatHome extends Component {
 
 
     renderBubble(props) {
-      const { type ,createdAt , answer , text ,user } = props.currentMessage
-      console.log("answer dans le renderbubble",answer,createdAt )
+      const { type ,createdAt , question , text ,user } = props.currentMessage
+      console.log("answer dans le renderbubble",props.currentMessage)
       var minutes = createdAt.getMinutes() 
       if(createdAt.getMinutes() < 10){
        minutes = `0`+createdAt.getMinutes()
@@ -131,12 +132,12 @@ class ChatHome extends Component {
            </View>
           )
         }else{
-         if(answer){
+         if(question){
            return(
                <View style={Style.answer}> 
                     <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
-                    <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{answer.name}</Text>   
-                    <Text  style={{margin:5}}>{answer.text}</Text>   
+                    <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{question.name}</Text>   
+                    <Text  style={{margin:5}}>{question.text}</Text>   
                     </View>
                 
                    <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
@@ -145,7 +146,7 @@ class ChatHome extends Component {
                    <Text  style={{fontSize:11, marginLeft:8}}>{`~${user.name}`}</Text>
                    <Text  style={{fontSize:11, marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
                    <TouchableOpacity
-                     onPress={()=>this.alertPrecision()}
+                     onPress={()=>this.alertPrecision(props.currentMessage)}
                    >
                     <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginRight:20}}>plus de précision</Text>
                    </TouchableOpacity>
@@ -169,28 +170,40 @@ class ChatHome extends Component {
        
      }
 
-  alertPrecision = ()=>{
+  alertPrecision = (currentMessageForPrecision)=>{
     this.setState({
       alertVisible:true,
       alertText:"êtes vous sur de vouloir faire une demande de plus de précision ?",
       alertConfirm:true,
-      style:false
-
+      style:false,
+      currentMessageForPrecision
     })
   }
 
   closeAlert=()=>{
     this.setState({
       alertVisible:false,
-   
+      currentMessageForPrecision:undefined
 
     })
   }
   sendPrecision=()=>{
+    const { currentMessageForPrecision } = this.state
+    console.log(" voici la precision ", currentMessageForPrecision)
+    // 
+    let data = new Object;
+
+    data.content = currentMessageForPrecision.text
+    data.message = currentMessageForPrecision.idMessage
+    data.userQuestion = currentMessageForPrecision.question.idUser
+    data.token = this.props.receiveResponseConnection
+
+    this.props.askPrecision(data)
     this.setState({
       alertText:"Une demande de precision à bien été envoyé",
       alertConfirm:false,
-      style:true
+      style:true,
+      currentMessageForPrecision:undefined
 
     })
   }
@@ -238,7 +251,7 @@ class ChatHome extends Component {
           messageAlert={alertText}
           closeAlert={this.closeAlert}
           alertConfirm={alertConfirm}
-          sendPrecision={this.sendPrecision}
+          yesConfirm={this.sendPrecision}
           style={style}
                  />
      
