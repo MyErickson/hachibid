@@ -100,8 +100,7 @@ class ChatHome extends Component {
   
 
     static  getDerivedStateFromProps(props,state){
-      console.log("je suis dans get derived ", props.dataFilterHome)
-      console.log("je suis dans get derived ", props.allDataMessagesHome)
+     
      if(props.dataFilterHome && state.filter){
       state._messageFilter = props.dataFilterHome
      
@@ -116,7 +115,7 @@ class ChatHome extends Component {
 
     renderBubble(props) {
       const { type ,createdAt , question , text ,user } = props.currentMessage
-      console.log("answer dans le renderbubble",props.currentMessage)
+   
       var minutes = createdAt.getMinutes() 
       if(createdAt.getMinutes() < 10){
        minutes = `0`+createdAt.getMinutes()
@@ -189,8 +188,8 @@ class ChatHome extends Component {
   }
   sendPrecision=()=>{
     const { currentMessageForPrecision } = this.state
-    console.log(" voici la precision ", currentMessageForPrecision)
-    // 
+  
+    
     let data = new Object;
 
     data.content = currentMessageForPrecision.text
@@ -217,7 +216,7 @@ class ChatHome extends Component {
     _textFilter,
     idUser ,
     alertVisible,alertText,alertConfirm ,style}=this.state
-    //  console.log("je suis dans le chathome",_messageFilter)
+  
     return (
        
         <View   style={Style.container}>

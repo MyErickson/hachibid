@@ -29,7 +29,10 @@ class MyQuestions extends Component {
       play:false,
       isModalVisible:false,
       propsSounder:undefined,
-      ProfileUser:undefined
+      ProfileUser:undefined,
+      filter:undefined,
+      _messageFilter:undefined,
+      deleteTextSearchBar:false
 
 
     };
@@ -41,41 +44,68 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-        const { dataProfileUser, receiveResponseConnection} = this.props
-        const data = new Object
-        data.token = receiveResponseConnection
-        data.id = dataProfileUser && dataProfileUser.data.id
-   
-          console.log("componentdidmount du dataprofile ===>",dataProfileUser)
-           await this.props.receiveDataMessagesMyQuestions(data)
-         
+        const { dataProfileUser} = this.props
        
- 
-      try{
-        const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
-        const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
-        this.permission = granted
-        this.writeExternalStorage = storage 
+          const data = this._dataInfo()
+        
+          
+
        
-      }catch(err){
-          console.log("eroor ====== >",err)
+      
+      
+      if(dataProfileUser && dataProfileUser.data.roleTitle !== "Utilisateur"){
+        await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+        try{
+          const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+          const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+          this.permission = granted
+          this.writeExternalStorage = storage 
+        
+        }catch(err){
+            console.log("eroor ====== >",err)
+        }
+      
+      }else{
+        await this.props.receiveDataMessagesMyQuestions(data)
       }
-    
+   
   
     }
   
 
 
      static async getDerivedStateFromProps(props, state){ 
-       
-            if(props.dataMessagesMyQuestions.length >0){
-              console.log("get derived My QUESTION ==>",props.dataMessagesMyQuestions)
-                 state._messages = props.dataMessagesMyQuestions
-            }
+  
             
+             if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
+           
+              state.ProfileUser = props.dataProfileUser.data
+                if(props.allDataMessagesHome){
+                     // console.log("je suis un user",props.)
+                  state._messages = props.allDataMessagesHome
+                  
+                }
+            
+             }else {
              if(props.dataProfileUser ){
               state.ProfileUser = props.dataProfileUser.data
              }
+              
+              if(props.dataMessagesMyQuestions){
+              state._messages = props.dataMessagesMyQuestions
+             }
+
+             if(props.dataFilterMyquestion && state.filter){
+              state._messageFilter =props.dataFilterMyquestion
+             }else{
+              state._messageFilter =undefined
+             }
+         
+            
+            }
+
+
+         
        
 
      }
@@ -85,27 +115,50 @@ class MyQuestions extends Component {
 
     searchBar= async (text)=>{
       //   await this.props.sendDatafilterMessage(text)
-      //   const _messages = await this.props.receiveDataFilter
-      // this.setState({
-      //     _messages
-      // })
-      console.log(text)
+      const {sendDatafilterMessageMyQuestion}=this.props
+     
+     
+      if(text && text.length > 2 ){
+      const data = this._dataInfo(text)
+      await sendDatafilterMessageMyQuestion(data)
+      this.setState({
+        filter:true,
+        deleteTextSearchBar:true,
+     })}else if (text){
+      this.setState({ deleteTextSearchBar:true})     
+    }else{
+        this.setState({
+          filter:false,
+          deleteTextSearchBar:false
+        
+       }) 
+      }
+
     }
 
+    _dataInfo=(text)=>{
+      const { ProfileUser } = this.state
+      console.log("ProfileUser",ProfileUser)
+      const {  receiveResponseConnection } = this.props
+      let data = new Object
+      data.token = receiveResponseConnection
+      data.idUser = ProfileUser && ProfileUser.id
+      data.text = text
+      return data 
+    }
 
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
     const { ProfileUser } = this.state
-    const {  receiveResponseConnection } = this.props
+  
     const {_id ,
       createdAt ,
       text ,
       user  ,
       recordDuration,
       recordPosition} = messages[0]
-    const data = new Object
-    data.token = receiveResponseConnection
-    data.id = ProfileUser.id
+
+
  
      const newMessage = [{
        _id,
@@ -122,7 +175,7 @@ class MyQuestions extends Component {
     }))
 
     if(ProfileUser.roleTitle !== "Administrateur" ){
-      console.log("je suis pas admin")
+    
       await  this.props.sendMessageUser(newMessage)
       this.setState(previousState =>({
         ...this.state._messages,
@@ -137,8 +190,8 @@ class MyQuestions extends Component {
 
 
   renderBubble(props) {
-   const { type ,createdAt , answer , text ,user } = props.currentMessage
-   console.log("answer dans le renderbubble",answer)
+   const { type ,createdAt ,question, text ,user } = props.currentMessage
+
    var minutes = createdAt.getMinutes() 
    if(createdAt.getMinutes() < 10){
     minutes = `0`+createdAt.getMinutes()
@@ -154,12 +207,12 @@ class MyQuestions extends Component {
         </View>
        )
      }else{
-      if(answer){
+      if(question){
         return(
             <View style={Style.answer}> 
                  <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
-                 <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{answer.name}</Text>   
-                 <Text  style={{margin:5}}>{answer.text}</Text>   
+                 <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{question.name}</Text>   
+                 <Text  style={{margin:5}}>{question.text}</Text>   
                  </View>
              
                 <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
@@ -374,8 +427,8 @@ class MyQuestions extends Component {
 
 
   render() {
-     const { ProfileUser,_messages } = this.state
-    console.log("le profile data ====",_messages)
+     const { ProfileUser,_messages,deleteTextSearchBar,filter,_messageFilter } = this.state
+  
     var nameMenu = "";
     if(ProfileUser !== undefined){
       nameMenu = ProfileUser.roleTitle === "Administrateur" ? "Chat Général" :  "Mes questions" 
@@ -397,12 +450,11 @@ class MyQuestions extends Component {
         currentPositionSec={this.state.currentPositionSec}
        />
         <View style={Style.messageContainer}>
-            {/* <Filtrate searchBar={this.searchBar} /> */}
+           <Filtrate searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
               inverted={true}
                 scrollToBottom={true}
-                messages={_messages}
-      
+                messages={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
                 onSend={messages => this.onSend(messages)}
                 renderUsernameOnMessage={true}

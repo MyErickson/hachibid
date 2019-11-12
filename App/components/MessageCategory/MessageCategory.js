@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text,TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { Style } from './styleMessageCategory'
 import Filtrate from '../Filtrate/Filtrate'
 import Menu from '../Menu/Menu';
 import AsyncStorage from '@react-native-community/async-storage';
-import { dataProfileUsers } from '../../store/actionCreator/Profile';
+import {  Bubble} from 'react-native-gifted-chat'
+import AlertDialog from '../AlertDialog/AlertDialog'
 
 class MessageCategory extends Component {
   constructor(props) {
@@ -17,7 +18,12 @@ class MessageCategory extends Component {
         _messageFilter:undefined,
         filter:undefined,
         _textFilter:undefined,
-        idUser:undefined
+        idUser:undefined,
+        alertVisible:false,
+        alertText :undefined,
+        alertConfirm:undefined,
+        style:undefined,
+        currentMessageForPrecision:undefined
         
     };
  
@@ -27,7 +33,6 @@ class MessageCategory extends Component {
     const { params } = props.navigation.state
     
         props.navigation.closeDrawer()
-        state._messages=undefined
         state.title = params.nameCategory
         state._messageFilter = props.filterMessagesCategory
         state._messages= props.dataMessagesCategory
@@ -76,67 +81,119 @@ class MessageCategory extends Component {
    }
    
 
-  //  renderBubble(props) {
-  //   const { type ,createdAt , question , text ,user } = props.currentMessage
-  //   console.log("answer dans le renderbubble",props.currentMessage)
-  //   var minutes = createdAt.getMinutes() 
-  //   if(createdAt.getMinutes() < 10){
-  //    minutes = `0`+createdAt.getMinutes()
-  //        }
-  //     if(type === "record"){
+   renderBubble(props) {
+    const { type ,createdAt , question , text ,user } = props.currentMessage
+    console.log("answer dans le renderbubble",props.currentMessage)
+    var minutes = createdAt.getMinutes() 
+    if(createdAt.getMinutes() < 10){
+     minutes = `0`+createdAt.getMinutes()
+         }
+      if(type === "record"){
     
        
-  //       return (
-  //        <View style={Style.recorder}>    
-  //          <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
-  //          <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+        return (
+         <View style={Style.recorder}>    
+           <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
+           <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
          
-  //        </View>
-  //       )
-  //     }else{
-  //      if(question){
-  //        return(
-  //            <View style={Style.answer}> 
-  //                 <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
-  //                 <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{question.name}</Text>   
-  //                 <Text  style={{margin:5}}>{question.text}</Text>   
-  //                 </View>
+         </View>
+        )
+      }else{
+       if(question){
+         return(
+             <View style={Style.answer}> 
+                  <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
+                  <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{question.name}</Text>   
+                  <Text  style={{margin:5}}>{question.text}</Text>   
+                  </View>
               
-  //                <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
+                 <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
             
-  //              <View style={{flexDirection:"row"}}>
-  //                <Text  style={{fontSize:11, marginLeft:8}}>{`~${user.name}`}</Text>
-  //                <Text  style={{fontSize:11, marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
-  //                <TouchableOpacity
-  //                  onPress={()=>this.alertPrecision(props.currentMessage)}
-  //                >
-  //                 <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginRight:20}}>plus de précision</Text>
-  //                </TouchableOpacity>
-  //              </View>
-  //            </View>
-  //        )
-  //      }else{
-  //        return (
+               <View style={{flexDirection:"row"}}>
+                 <Text  style={{fontSize:11, marginLeft:8}}>{`~${user.name}`}</Text>
+                 <Text  style={{fontSize:11, marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+                 <TouchableOpacity
+                   onPress={()=>this.alertPrecision(props.currentMessage)}
+                 >
+                  <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginRight:20}}>plus de précision</Text>
+                 </TouchableOpacity>
+               </View>
+             </View>
+         )
+       }else{
+         return (
            
-  //            <Bubble
+             <Bubble
                
-  //              {...props}
+               {...props}
              
-  //            />
-  //           );
-  //      }
+             />
+            );
+       }
        
       
-  //     }
+      }
  
      
-  //  }
+   }
  
 
-  render() {
-     const { _messages,title,deleteTextSearchBar,filter ,_messageFilter,_textFilter,idUser }=this.state
+   alertPrecision = (currentMessageForPrecision)=>{
+    this.setState({
+      alertVisible:true,
+      alertText:"êtes vous sur de vouloir faire une demande de plus de précision ?",
+      alertConfirm:true,
+      style:false,
+      currentMessageForPrecision
+    })
+  }
 
-     const { dataProfileUser } = this.props
+  closeAlert=()=>{
+    this.setState({
+      alertVisible:false,
+      currentMessageForPrecision:undefined
+
+    })
+  }
+  sendPrecision=()=>{
+    const { currentMessageForPrecision } = this.state
+  
+    
+    let data = new Object;
+
+    data.content = currentMessageForPrecision.text
+    data.message = currentMessageForPrecision.idMessage
+    data.userQuestion = currentMessageForPrecision.question.idUser
+    data.token = this.props.receiveResponseConnection
+
+    this.props.askPrecision(data)
+    this.setState({
+      alertText:"Une demande de precision à bien été envoyé",
+      alertConfirm:false,
+      style:true,
+      currentMessageForPrecision:undefined
+
+    })
+  }
+
+
+  render() {
+     const { _messages,
+      title,
+      deleteTextSearchBar,
+      filter ,
+      _messageFilter,
+      _textFilter,
+      idUser,
+      alertVisible,
+      alertText,
+      alertConfirm,
+      style
+
+     }=this.state
+
+ 
+
     return (
              
         <View   style={Style.container}>
@@ -154,7 +211,7 @@ class MessageCategory extends Component {
                 renderInputToolbar={()=>undefined}
                 style={{background:'red'}}  
                 keyboardShouldPersistTaps={'never'}
-                // renderBubble={(props)=>this.renderBubble(props)}
+                renderBubble={(props)=>this.renderBubble(props)}
                 renderUsernameOnMessage={true}
                 timeFormat='HH:mm'
                 user={{
@@ -164,7 +221,14 @@ class MessageCategory extends Component {
               />
     
         </View>
-       
+        <AlertDialog 
+          alertVisible={alertVisible}
+          messageAlert={alertText}
+          closeAlert={this.closeAlert}
+          alertConfirm={alertConfirm}
+          yesConfirm={this.sendPrecision}
+          style={style}
+                 />
 
       </View>
     );

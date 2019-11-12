@@ -69,10 +69,15 @@ export default class MenuDrawer extends React.Component{
 
     gotToNavLink=async (nav)=>{
          this.props.dataFilterMessagesCategory()
-        const { receiveResponseConnection } =this.state
+       
+        const { receiveResponseConnection , profileUser }=this.state
 
         await this.props.dataAllCategory(receiveResponseConnection)
+        var data = new Object
+        data.token = receiveResponseConnection
+        data.id = profileUser.id
 
+        await this.props.receiveDataMessagesMyQuestions(data)
         if(nav === 'Category'){
             this.props.navigation.navigate(nav,{
                 nameCategory:nav

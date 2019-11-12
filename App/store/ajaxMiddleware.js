@@ -10,7 +10,7 @@ import { receiveMessagesHome,receiveDataFilterMessagesHome } from './actionCreat
 import { receiveDataProfile} from './actionCreator/Profile';
 import { dataMessagesCategory,dataFilterMessagesCategory} from './actionCreator/MessageCategory';
 import {topDataCategory} from './actionCreator/MenuDrawer';
-import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from './actionCreator/MyQuestions';
+import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
 import { receiveDataNotification } from './actionCreator/Notification'
 
@@ -96,11 +96,11 @@ import { object } from 'prop-types';
                     'Authorization':"Bearer "+action.token
                 } 
             }).then((response)=>{
-                console.log("axios data message home",response)
+                console.log("axios data message home data",response)  
                   const dataMessage = response.data['hydra:member'].map((value)=>{
     
                     return{
-                        _id:value.id,
+                        _id:value["@id"],
                         text:value.content,
                         createdAt:new Date (value.createdAt),
                         type:value.type,
@@ -110,11 +110,6 @@ import { object } from 'prop-types';
                             name:value.user.username
                         }
                       }
-
-        
-                     
-                       
-                       
               
                   })
 
@@ -124,33 +119,29 @@ import { object } from 'prop-types';
                             value.answers.map((valueAnswers)=>{
    
                                dataMessage.push({
-                               _id:valueAnswers.id,
+                               _id:value["@id"]+Date.now(),
                                text:valueAnswers.content,
                                valid:value.valid,
                                question:{
-                                   idUser:value.user["@id"], 
+                                   id:value["@id"], 
                                    text:value.content,
                                    name:value.user.username
                                            },
                                createdAt:new Date(valueAnswers.createdAt),
-                               idMessage:value["@id"] ,
                                user:{
                                      _id:valueAnswers.id,
                                      name:"admin"
-                                 }
-   
-                           })})
-                           
+                               }
+                           })})   
                        }
                     }  
-                   
-              
                 })
 
           
                const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-             
-                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+              
+                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())
+                console.log("axios data message home",allDataMessageUser)  
                 store.dispatch(receiveMessagesHome( allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("error axios data message home",err.response)
@@ -220,48 +211,47 @@ import { object } from 'prop-types';
                 }).then((response)=>{
                     //ici un autre axios
                      console.log("je suis la reponse de filter home", response )
-                  const dataMessage= response.data['hydra:member'].map((value)=>{
-                    
-                    return{
-                        _id:value.id,
-                        text:value.content,
-                        createdAt:new Date(value.createdAt),
-                        type:value["@type"],
-                        valid:value.valid,
-                        user:{
-                            _id:value.user.id,
-                            name:value.user.username
-                        }
-                      }
-                })
-
-                response.data["hydra:member"].map((value)=>{
-                    if(value.answers.length){
-                         value.answers.map((valueAnswers)=>{
-
-                            dataMessage.push({
-                                _id:valueAnswers.id,
-                                text:valueAnswers.content,
-                                valid:value.valid,
-                                question:{
-                                    idUser:value.user["@id"], 
-                                    text:value.content,
-                                    name:value.user.username
-                                            },
-                                createdAt:new Date(valueAnswers.createdAt),
-                                idMessage:value["@id"] ,
-                                user:{
-                                      _id:valueAnswers.id,
-                                      name:"admin"
-                                  }
+                     const dataMessage = response.data['hydra:member'].map((value)=>{
     
-
-                        })})
-                        
-                    }
-              
-                })
-                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                        return{
+                            _id:value["@id"],
+                            text:value.content,
+                            createdAt:new Date (value.createdAt),
+                            type:value.type,
+                            valid:value.valid,
+                            user:{
+                                _id:value.user.id,
+                                name:value.user.username
+                            }
+                          }
+                  
+                      })
+    
+                      response.data["hydra:member"].map((value)=>{
+                        if(value.valid){
+                            if(value.answers.length){
+                                value.answers.map((valueAnswers)=>{
+       
+                                   dataMessage.push({
+                                   _id:value["@id"]+Date.now(),
+                                   text:valueAnswers.content,
+                                   valid:value.valid,
+                                   question:{
+                                       id:value["@id"], 
+                                       text:value.content,
+                                       name:value.user.username
+                                               },
+                                   createdAt:new Date(valueAnswers.createdAt),
+                                   user:{
+                                         _id:valueAnswers.id,
+                                         name:"admin"
+                                   }
+                               })})   
+                           }
+                        }  
+                    })
+                    const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
+                    const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
                      store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
                 }).catch((err)=>{
                     console.log("axios ",err.response)
@@ -269,7 +259,67 @@ import { object } from 'prop-types';
                 })
                 break;
 
+        
 
+                case SEND_DATA_FILTER_MESSAGE_MYQUESTION:
+                    next(action)
+               
+                    axios.get(`messages?user=${action.data.idUser}&content=${action.data.text}`,{
+                        headers:{
+                            'Authorization':"Bearer "+action.data.token
+                        } 
+                    }).then((response)=>{
+                        //ici un autre axios
+                         console.log("je suis la reponse de filter Myquestion", response )
+                         const dataMessage = response.data['hydra:member'].map((value)=>{
+    
+                            return{
+                                _id:value["@id"],
+                                text:value.content,
+                                createdAt:new Date (value.createdAt),
+                                type:value.type,
+                                valid:value.valid,
+                                user:{
+                                    _id:value.user.id,
+                                    name:value.user.username
+                                }
+                              }
+                      
+                          })
+        
+                          response.data["hydra:member"].map((value)=>{
+                            if(value.valid){
+                                if(value.answers.length){
+                                    value.answers.map((valueAnswers)=>{
+           
+                                       dataMessage.push({
+                                       _id:value["@id"]+Date.now(),
+                                       text:valueAnswers.content,
+                                       valid:value.valid,
+                                       question:{
+                                           id:value["@id"], 
+                                           text:value.content,
+                                           name:value.user.username
+                                                   },
+                                       createdAt:new Date(valueAnswers.createdAt),
+                                       user:{
+                                             _id:valueAnswers.id,
+                                             name:"admin"
+                                       }
+                                   })})   
+                               }
+                            }  
+                        })
+
+
+                        const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
+                        const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                         store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
+                    }).catch((err)=>{
+                        console.log("axios ",err.response)
+                        
+                    })
+                    break;
 
 
         case SEND_DATA_FILTER_MESSAGES_CATEGORY:
@@ -281,21 +331,50 @@ import { object } from 'prop-types';
                 } 
             }).then((response)=>{
                 
-                const data = response.data['hydra:member'].map((value)=>{
-                    
+                const dataMessage = response.data['hydra:member'].map((value)=>{
+    
                     return{
-                        _id:value.id,
+                        _id:value["@id"],
                         text:value.content,
-                        createdAt:new Date(value.createdAt),
-                        type:value["@type"],
+                        createdAt:new Date (value.createdAt),
+                        type:value.type,
+                        valid:value.valid,
                         user:{
                             _id:value.user.id,
                             name:value.user.username
                         }
                       }
+              
+                  })
+
+                  response.data["hydra:member"].map((value)=>{
+                    if(value.valid){
+                        if(value.answers.length){
+                            value.answers.map((valueAnswers)=>{
+   
+                               dataMessage.push({
+                               _id:value["@id"]+Date.now(),
+                               text:valueAnswers.content,
+                               valid:value.valid,
+                               question:{
+                                   id:value["@id"], 
+                                   text:value.content,
+                                   name:value.user.username
+                                           },
+                               createdAt:new Date(valueAnswers.createdAt),
+                               user:{
+                                     _id:valueAnswers.id,
+                                     name:"admin"
+                               }
+                           })})   
+                       }
+                    }  
                 })
+         
+                const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
+                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
     
-                store.dispatch(dataFilterMessagesCategory(data))
+                store.dispatch(dataFilterMessagesCategory(allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("ERRROR axios sans ke filtre message catefory ",err)
                 store.dispatch(dataFilterMessagesCategory(undefined))
@@ -308,51 +387,56 @@ import { object } from 'prop-types';
         case RECEIVE_DATA_MESSAGES_CATEGORY:
             next(action)
                 
-            axios.get(`categories/${action.data.id}`,{
+            axios.get(`messages?category=${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
               console.log("la respose",response)
-                const dataMessage = response.data.messages.map((value)=>{
-                      const id = value['@id'].split('/')
-                    return {
-                
-                        _id:id[3],
-                        text:value.content,
-                        createdAt: new Date(value.createdAt),
-                   
-                        type:value["@type"],
-                        user:{
-                            _id:value.user.id,
-                            name:value.user.username
-                        }
+                      
+              const dataMessage = response.data['hydra:member'].map((value)=>{
+    
+                return{
+                    _id:value["@id"],
+                    text:value.content,
+                    createdAt:new Date (value.createdAt),
+                    type:value.type,
+                    valid:value.valid,
+                    user:{
+                        _id:value.user.id,
+                        name:value.user.username
                     }
-                })
+                  }
+          
+              })
 
-                // response.data.messages.map((value)=>{
-                //     if(value.answers.length){
-                //          value.answers.map((valueAnswers)=>{
-                //             dataMessage.push({
-                //             _id:valueAnswers.id,
-                //             text:valueAnswers.content,
-                //             answer:{
-                //                 text:value.content,
-                //                 name:value.user.username
-                //                         },
-                //             createdAt:new Date(valueAnswers.createdAt),
-                //             user:{
-                //                   _id:valueAnswers.id,
-                //                   name:"admin"
-                //               }
-                //         })})
-                        
-                //     }
-              
-                // })
+              response.data["hydra:member"].map((value)=>{
+                if(value.valid){
+                    if(value.answers.length){
+                        value.answers.map((valueAnswers)=>{
+
+                           dataMessage.push({
+                           _id:value["@id"]+Date.now(),
+                           text:valueAnswers.content,
+                           valid:value.valid,
+                           question:{
+                               id:value["@id"], 
+                               text:value.content,
+                               name:value.user.username
+                                       },
+                           createdAt:new Date(valueAnswers.createdAt),
+                           user:{
+                                 _id:valueAnswers.id,
+                                 name:"admin"
+                           }
+                       })})   
+                   }
+                }  
+            })
  
              
-                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+            const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
+            const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
                 store.dispatch(dataMessagesCategory(allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("axios error message category", err.reponse)
@@ -417,50 +501,59 @@ import { object } from 'prop-types';
                 } 
             }).then(async (response)=>{
              
-                console.log("requete message dans axios",response)
-             const  dataMessage = response.data["hydra:member"].map( (value)=>{
-                                
-                                    let  data = {
-                                        _id:value.id,
-                                        text:value.content,
-                                        createdAt:new Date(value.createdAt),
-                                        user:{
-                                              _id:value.user.id,
-                                              name:value.user.username
-                                          }
-                                        }
-                                        return data
-                                     
-                            
-  
-                })
-
-
-                response.data["hydra:member"].map((value)=>{
-                    if(value.answers.length){
-                         value.answers.map((valueAnswers)=>{
-                            dataMessage.push({
-                            _id:valueAnswers.id,
-                            text:valueAnswers.content,
-                            answer:{
-                                text:value.content,
-                                name:value.user.username
-                                        },
-                            createdAt:new Date(valueAnswers.createdAt),
-                            user:{
-                                  _id:valueAnswers.id,
-                                  name:"admin"
-                              }
-                        })})
-                        
-                    }
+                
+                const dataMessage = response.data['hydra:member'].map((value)=>{
+    
+                    return{
+                        _id:value["@id"],
+                        text:value.content,
+                        createdAt:new Date (value.createdAt),
+                        type:value.type,
+                        valid:value.valid,
+                        user:{
+                            _id:value.user.id,
+                            name:value.user.username
+                        }
+                      }
               
+                  })
+
+                  response.data["hydra:member"].map((value)=>{
+                    if(value.valid){
+                        if(value.answers.length){
+                            value.answers.map((valueAnswers)=>{
+   
+                               dataMessage.push({
+                               _id:value["@id"]+Date.now(),
+                               text:valueAnswers.content,
+                               valid:value.valid,
+                               question:{
+                                   id:value["@id"], 
+                                   text:value.content,
+                                   name:value.user.username
+                                           },
+                               createdAt:new Date(valueAnswers.createdAt),
+                               user:{
+                                     _id:valueAnswers.id,
+                                     name:"admin"
+                               }
+                           })})   
+                       }
+                    }  
                 })
                        
-                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())   
+                const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
+                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
 
-          
-             store.dispatch(DataMessagesMyQuestions(allDataMessageUser.reverse()))
+             
+                if(allDataMessageUser.length <= 0 ){
+                  
+                    store.dispatch(DataMessagesMyQuestions(undefined))
+                }else {
+             
+                    store.dispatch(DataMessagesMyQuestions(allDataMessageUser.reverse()))
+                }
+             
           
                
                         
@@ -505,18 +598,6 @@ import { object } from 'prop-types';
 
 
 
-         case SEND_DATA_FILTER_MESSAGE_MYQUESTION:
-         next(action)
-         axios.get('url',{
-            
-        }).then((response)=>{
-            console.log(response)
-            store.dispatch(receiveDataNotification(response))
-        }).catch((err)=>{
-            console.log(err)
-            
-        })
-         break;
 
      
     }

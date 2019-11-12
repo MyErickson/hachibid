@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
  */
 // import Example from 'App/components/Example';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
-
+import { dataMessagesHome} from '../../store/actionCreator/ChatHome';
 // Action Creators
-import { sendMessageUser ,receiveDataMessagesMyQuestions, receivePrecision} from '../../store/actionCreator/MyQuestions'
+import { sendMessageUser ,receiveDataMessagesMyQuestions, receivePrecision, sendDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,9 +20,11 @@ import { sendMessageUser ,receiveDataMessagesMyQuestions, receivePrecision} from
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
+  allDataMessagesHome: state.allDataMessagesHome,
   dataMessagesMyQuestions: state.dataMessagesMyQuestions,
   dataProfileUser: state.dataProfileUser,
   receiveResponseConnection: state.receiveResponseConnection,
+  dataFilterMyquestion:state.dataFilterMyquestion
 } );
 
 /* === Actions ===
@@ -41,7 +43,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   receivePrecision:(data)=>{
     dispatch(receivePrecision(data))
-  }
+  },
+  sendDatafilterMessageMyQuestion:(data)=>{
+    dispatch(sendDatafilterMessageMyQuestion(data))
+  },
+  dataMessagesHome: (token) => {
+    dispatch(dataMessagesHome(token));
+  },
+ 
 });
 
 // Container

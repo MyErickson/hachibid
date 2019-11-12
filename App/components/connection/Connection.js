@@ -153,7 +153,7 @@ class Connection extends Component {
                          
                                 <Input 
                                
-                                 placeholder="Identitfiant *" 
+                                 placeholder="Mail *" 
                                  name="login"
                                  maxLength={255}
                                  value={login}

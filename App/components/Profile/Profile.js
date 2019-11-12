@@ -47,7 +47,8 @@ class Profile extends Component {
         token:undefined,
         alertVisible:undefined,
         alertConfirm:undefined,
-        style:undefined
+        style:undefined,
+        logOutOrRegister:undefined
 
     };
     this.picture=undefined
@@ -207,6 +208,15 @@ class Profile extends Component {
     this.props.navigation.navigate("Connection")
    }
 
+    yesConfirm=(logOutOrRegister)=>{
+       
+        if(logOutOrRegister === "register"){
+            console.log("yes confir vaut ",logOutOrRegister)
+            this.goToRegister()
+        }else{
+            this.logOut()
+        }
+    }
    
   closeAlert =()=>{
       this.setState({
@@ -214,12 +224,13 @@ class Profile extends Component {
       })
   }
 
-   register =()=>{
+   openModal =(text,logOutOrRegister)=>{
     this.setState({
         alertVisible:true,
-        messageAlert:"êtes vous sur de vouloir modifier vos informations ?",
-        alertConfirm:true,
+        messageAlert:text,
         style:false,
+        alertConfirm :true,
+        logOutOrRegister,
       })
    }
 
@@ -234,7 +245,8 @@ class Profile extends Component {
             errorPwdCharacter,
             profileUser,
             alertVisible,
-            alertConfirm,messageAlert,style
+            alertConfirm,messageAlert,style,
+            logOutOrRegister
              } = this.state
 
    
@@ -326,13 +338,13 @@ class Profile extends Component {
                         <Button 
                         containerStyle={Style.button}
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
-                        onPress= {this.register}
+                        onPress= {()=>this.openModal("êtes vous sur de vouloir modifier vos informations ?","register") }
                         title= 'Modifier'
                        />
                         <Button 
                         containerStyle={Style.button}
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(232,63,63,0.8)'}}
-                        onPress= {this.logOut}
+                        onPress= {()=>this.openModal("êtes vous sur de vouloir vous déconnecter ?","logOut") }
                         title= 'déconnexion'
                        />
                        
@@ -344,8 +356,9 @@ class Profile extends Component {
                     messageAlert={messageAlert}
                     closeAlert={this.closeAlert}
                     style={style}
-                    alertConfirm={alertConfirm}
-                    yesConfirm={this.goToRegister}
+                    logOutOrRegister={logOutOrRegister}
+                    alertConfirm={alertConfirm }
+                    yesConfirm={this.yesConfirm}
                  />
             </View>
             </Fragment>

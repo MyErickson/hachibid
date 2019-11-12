@@ -17,7 +17,8 @@ const initialState = {
   filterMessagesCategory:undefined,
   dataFilterCategory:undefined,
   topDataCategory:undefined,
-  dataNotification:undefined
+  dataNotification:undefined,
+  dataFilterMyquestion:undefined
   
 };
 
@@ -55,6 +56,7 @@ export const INITITALIZE_STATE= 'INITITALIZE_STATE';
 export const SEND_DATA_FILTER_MESSAGE_MYQUESTION = 'SEND_DATA_FILTER_MESSAGE_MYQUESTION';
 export const ASK_PRECISION = "ASK_PRECISION";
 export const RECEIVE_PRECISION ="RECEIVE_PRECISION";
+export const RECEIVE_DATA_FILTER_MESSAGE_MYQUESTION = "RECEIVE_DATA_FILTER_MESSAGE_MYQUESTION"
 /**
  * Traitements
  */
@@ -132,7 +134,7 @@ const reducer = (state = initialState, action = {}) => {
       };
     
     case DATA_MESSAGES_MYQUESTIONS:
-      console.log("je suis dans reducer",action.dataMessagesMyQuestions)
+  
       return {
         ...state,
         dataMessagesMyQuestions:action.dataMessagesMyQuestions
@@ -143,6 +145,12 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         dataNotification:action.dataNotification
       };
+    
+      case RECEIVE_DATA_FILTER_MESSAGE_MYQUESTION :
+        return {
+          ...state,
+          dataFilterMyquestion:action.dataFilterMyquestion
+        }
     case INITITALIZE_STATE:
     
       return {

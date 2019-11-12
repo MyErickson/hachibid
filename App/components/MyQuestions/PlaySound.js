@@ -29,7 +29,7 @@ const PlaySound = ({
 //   if(t >= 1){
 //       t=0
 //     }
-console.log("temps de la progression  ======>", currentPositionSec )
+
   var progress =propsSounder && currentPositionSec/propsSounder.currentMessage.recordDuration;
 
  if(progress > 1.1){

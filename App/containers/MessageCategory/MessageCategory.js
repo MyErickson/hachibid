@@ -11,7 +11,7 @@ import MessageCategory from '../../components/MessageCategory/MessageCategory'
 
 // Action Creators
 import { receiveDataMessagesCategory,sendDatafilterMessageCategory, dataFilterMessagesCategory } from '../../store/actionCreator/MessageCategory';
-
+import {askPrecision} from '../../store/actionCreator/ChatHome';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -42,6 +42,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   dataFilterMessagesCategory:()=>{
     dispatch(dataFilterMessagesCategory(undefined))
+  }, askPrecision:(data)=>{
+    dispatch(askPrecision(data))
   }
 
 });
