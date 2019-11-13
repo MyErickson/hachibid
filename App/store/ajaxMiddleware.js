@@ -103,11 +103,12 @@ import { object } from 'prop-types';
                         _id:value["@id"],
                         text:value.content,
                         createdAt:new Date (value.createdAt),
-                        type:value.type,
+                        idMessage:value["@id"],
                         valid:value.valid,
                         user:{
                             _id:value.user.id,
-                            name:value.user.username
+                            name:value.user.username,
+                            typeUser:"admin"
                         }
                       }
               
@@ -120,6 +121,7 @@ import { object } from 'prop-types';
    
                                dataMessage.push({
                                _id:value["@id"]+Date.now(),
+                               idMessage:value["@id"],
                                text:valueAnswers.content,
                                valid:value.valid,
                                question:{
@@ -130,7 +132,9 @@ import { object } from 'prop-types';
                                createdAt:new Date(valueAnswers.createdAt),
                                user:{
                                      _id:valueAnswers.id,
-                                     name:"admin"
+                                     name:"admin",
+                                     typeUser:"admin"
+                                     
                                }
                            })})   
                        }
@@ -276,12 +280,12 @@ import { object } from 'prop-types';
                             return{
                                 _id:value["@id"],
                                 text:value.content,
-                                createdAt:new Date (value.createdAt),
-                                type:value.type,
+                                createdAt:new Date(value.createdAt),
                                 valid:value.valid,
                                 user:{
                                     _id:value.user.id,
-                                    name:value.user.username
+                                    name:value.user.username,
+                                    typeUser:value.user["@type"]
                                 }
                               }
                       
@@ -304,19 +308,20 @@ import { object } from 'prop-types';
                                        createdAt:new Date(valueAnswers.createdAt),
                                        user:{
                                              _id:valueAnswers.id,
-                                             name:"admin"
+                                             name:"admin",
+                                             typeUser:value.user["@type"]
                                        }
                                    })})   
                                }
                             }  
                         })
+                        console.log("je suis la reponse ", response )
 
-
-                        const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-                        const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+            
+                        const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
                          store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
                     }).catch((err)=>{
-                        console.log("axios ",err.response)
+                        console.log("errr oro axios ",err.response)
                         
                     })
                     break;
@@ -492,7 +497,7 @@ import { object } from 'prop-types';
 // recupere les doonées (message) de l'utisateur , page my questions            
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
-            console.log("je suis dans receive data my questions", action)
+        
           
            
             axios.get(`messages?user=${action.data.id}`,{
@@ -501,18 +506,19 @@ import { object } from 'prop-types';
                 } 
             }).then(async (response)=>{
              
-                
+                console.log("je suis dans receive data my questions", response)
                 const dataMessage = response.data['hydra:member'].map((value)=>{
-    
+                        
                     return{
                         _id:value["@id"],
                         text:value.content,
                         createdAt:new Date (value.createdAt),
-                        type:value.type,
+                        idMessage:value["@id"],
                         valid:value.valid,
                         user:{
                             _id:value.user.id,
-                            name:value.user.username
+                            name:value.user.username,
+                            typeUser:value.user["@type"]
                         }
                       }
               
@@ -525,6 +531,7 @@ import { object } from 'prop-types';
    
                                dataMessage.push({
                                _id:value["@id"]+Date.now(),
+                               idMessage:value["@id"],
                                text:valueAnswers.content,
                                valid:value.valid,
                                question:{
@@ -535,15 +542,15 @@ import { object } from 'prop-types';
                                createdAt:new Date(valueAnswers.createdAt),
                                user:{
                                      _id:valueAnswers.id,
-                                     name:"admin"
+                                     name:"admin",
+                                     typeUser:value.user["@type"]
                                }
                            })})   
                        }
                     }  
                 })
-                       
-                const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                
+                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
 
              
                 if(allDataMessageUser.length <= 0 ){
@@ -596,7 +603,20 @@ import { object } from 'prop-types';
            })
             break;
 
-
+                case RECEIVE_PRECISION:
+            next(action)
+            axios.get('accuracies',{
+                headers:{
+                    'Authorization':"Bearer "+action.data.token
+                } 
+           }).then((response)=>{
+               console.log("axios totu els reponses,",response)
+            //    store.dispatch(receiveDataNotification(response))
+           }).catch((err)=>{
+               console.log(err)
+               
+           })
+            break;
 
 
      

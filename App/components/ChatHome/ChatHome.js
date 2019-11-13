@@ -142,12 +142,15 @@ class ChatHome extends Component {
                    <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
               
                  <View style={{flexDirection:"row"}}>
-                   <Text  style={{fontSize:11, marginLeft:8}}>{`~${user.name}`}</Text>
-                   <Text  style={{fontSize:11, marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
+                 <Text  style={{fontSize:11, textAlign:"right",marginLeft:8,marginTop:3}}>{`~${user.name}`}</Text>
+                <Text  style={{fontSize:11, textAlign:"right",marginLeft:20,marginTop:3}}>{`${createdAt.getHours()}:${minutes}`}</Text>
                    <TouchableOpacity
                      onPress={()=>this.alertPrecision(props.currentMessage)}
+                     style={{flexDirection:"row"}}
                    >
-                    <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginRight:20}}>plus de précision</Text>
+                    <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginTop:3}}>plus de précision</Text>
+                    <Text style={{fontSize:15, color:"green",fontWeight:"bold",marginRight:20}}> + </Text>
+            
                    </TouchableOpacity>
                  </View>
                </View>

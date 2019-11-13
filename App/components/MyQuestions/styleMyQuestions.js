@@ -94,6 +94,25 @@ export const Style = StyleSheet.create({
         borderRadius:30, 
         height:30,
         width:30
+    },
+    renderComposer:{
+        backgroundColor:"#DEF",
+        paddingTop:0
+    },
+    textRenderComposer:{
+        flexDirection:"row",
+        backgroundColor:'#AEECDD',
+        marginRight:20,
+        marginLeft:20,
+        marginBottom:10,
+        borderRadius:10,
+        padding:10
+    },
+    closeTextRenderComposer:{
+        fontSize:15,
+        textAlign:'right',
+        marginRight:13,
+        top:6
     }
  
 })

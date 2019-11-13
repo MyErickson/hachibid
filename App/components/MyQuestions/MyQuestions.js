@@ -9,6 +9,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
+import ViewBubble from './ViewBubble';
 
 
 
@@ -32,8 +33,10 @@ class MyQuestions extends Component {
       ProfileUser:undefined,
       filter:undefined,
       _messageFilter:undefined,
-      deleteTextSearchBar:false
-
+      deleteTextSearchBar:false,
+      showAboveInput:false,
+      answerCurrent:"",
+      idMessage:undefined
 
     };
   
@@ -104,10 +107,6 @@ class MyQuestions extends Component {
             
             }
 
-
-         
-       
-
      }
 
 
@@ -138,18 +137,21 @@ class MyQuestions extends Component {
 
     _dataInfo=(text)=>{
       const { ProfileUser } = this.state
-      console.log("ProfileUser",ProfileUser)
+
       const {  receiveResponseConnection } = this.props
+
       let data = new Object
       data.token = receiveResponseConnection
       data.idUser = ProfileUser && ProfileUser.id
       data.text = text
+ 
+
       return data 
     }
 
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
-    const { ProfileUser } = this.state
+    const { ProfileUser , answerCurrent , idMessage } = this.state
   
     const {_id ,
       createdAt ,
@@ -158,7 +160,7 @@ class MyQuestions extends Component {
       recordDuration,
       recordPosition} = messages[0]
 
-
+     const {receiveResponseConnection } = this.props
  
      const newMessage = [{
        _id,
@@ -170,10 +172,11 @@ class MyQuestions extends Component {
        token: receiveResponseConnection
      }]
   
-    this.setState(previousState =>({
-      _messages: GiftedChat.append(previousState._messages, newMessage),
-    }))
+     let data = this._dataInfo(answerCurrent)
+     data.idMessage = idMessage
 
+     console.log("je suis dans onsend data vaut ", data)
+  
     if(ProfileUser.roleTitle !== "Administrateur" ){
     
       await  this.props.sendMessageUser(newMessage)
@@ -181,6 +184,11 @@ class MyQuestions extends Component {
         ...this.state._messages,
         _messages: GiftedChat.append(previousState._messages, newMessage),
       }))
+    }else{
+      this.setState(previousState =>({
+        _messages: GiftedChat.append(previousState._messages, newMessage),
+      }))
+  
     }
      
   
@@ -190,9 +198,12 @@ class MyQuestions extends Component {
 
 
   renderBubble(props) {
-   const { type ,createdAt ,question, text ,user } = props.currentMessage
+   const { type ,createdAt ,question, text ,user ,idMessage} = props.currentMessage
 
+      console.log(props.currentMessage)
    var minutes = createdAt.getMinutes() 
+
+
    if(createdAt.getMinutes() < 10){
     minutes = `0`+createdAt.getMinutes()
         }
@@ -203,27 +214,26 @@ class MyQuestions extends Component {
         <View style={Style.recorder}>    
           <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
           <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
-        
+          
         </View>
        )
      }else{
-      if(question){
+      if(question ||user.typeUser !== "User" && user.typeUser !== undefined ){
         return(
-            <View style={Style.answer}> 
-                 <View style={{backgroundColor:"#AEECDD",borderRadius:5}}>
-                 <Text  style={{marginLeft:5,marginTop:5,fontWeight:"bold"}}>{question.name}</Text>   
-                 <Text  style={{margin:5}}>{question.text}</Text>   
-                 </View>
-             
-                <Text  style={{margin:5,marginBottom:10,marginTop:10}}>{text}</Text>
-           
-              <View style={{flexDirection:"row"}}>
-                <Text  style={{fontSize:11, textAlign:"right",marginLeft:8}}>{`~${user.name}`}</Text>
-                <Text  style={{fontSize:11, textAlign:"right",marginLeft:20}}>{`${createdAt.getHours()}:${minutes}`}</Text>
-              </View>
-            </View>
+            <ViewBubble
+            text={text}
+            question={question}
+            createdAt={createdAt}
+            user={user}
+            minutes={minutes}
+            showMessage={()=>this.setState({
+              answerCurrent:text,
+              showAboveInput:true,
+              idMessage:idMessage
+            })}
+            />
         )
-      }else{
+      }else if(user.typeUser === "User"){
         return (
           
             <Bubble
@@ -249,16 +259,43 @@ class MyQuestions extends Component {
   }
  
   renderInputToolbar(props) {
-  
+
     return(
       <InputToolbar
-      containerStyle={{paddingTop:10}}
-      
+      containerStyle={{paddingTop:16}}
+      // style={{paddingTop:10}}
       {...props}
       />
     ); 
-
   }
+ 
+renderComposer=()=> {
+  const { showAboveInput , answerCurrent} = this.state
+ if(showAboveInput){
+   return(
+     
+     <View style={Style.renderComposer}>
+        <Text style={Style.closeTextRenderComposer}
+        onPress={()=>this.setState({
+          answerCurrent:"",
+          showAboveInput:false,
+          idMessage:undefined
+        })}
+        >x</Text>
+        <View style={Style.textRenderComposer}>
+          <Text >
+            {answerCurrent} 
+          </Text>
+          
+        </View>
+       
+     </View>
+    
+   )
+ }
+}
+
+  
 
   renderActions=(props)=>{
  
@@ -433,6 +470,8 @@ class MyQuestions extends Component {
     if(ProfileUser !== undefined){
       nameMenu = ProfileUser.roleTitle === "Administrateur" ? "Chat Général" :  "Mes questions" 
     }
+
+    console.log("message ===",_messages)
       
    
     return (
@@ -452,7 +491,7 @@ class MyQuestions extends Component {
         <View style={Style.messageContainer}>
            <Filtrate searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
-              inverted={true}
+                inverted={true}
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
@@ -468,6 +507,7 @@ class MyQuestions extends Component {
                 renderSend={this.renderSend}
                 renderInputToolbar={this.renderInputToolbar}
                 renderActions={this.renderActions}
+                renderChatFooter={this.renderComposer}
                 timeFormat='HH:mm'
                 user={{
                   _id: ProfileUser ? ProfileUser.id : "user",
