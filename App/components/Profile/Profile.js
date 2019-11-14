@@ -12,7 +12,7 @@ import ImagePicker from 'react-native-image-picker';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
-
+import axios from 'axios';
 
 
 const options = {
@@ -36,10 +36,8 @@ class Profile extends Component {
         login:"",
         email:"",
         password:"",
-        changePassword:"",
         errorLoginCharacter:undefined,
         errorEmailCharacter:undefined,
-        errorChangePwdCharacter:undefined,
         errorPwdCharacter:undefined,
         errorPwd:undefined,
         profileUser:undefined,
@@ -48,26 +46,13 @@ class Profile extends Component {
         alertVisible:undefined,
         alertConfirm:undefined,
         style:undefined,
-        logOutOrRegister:undefined
+        logOutOrRegister:undefined,
+        messageAlertPWd:undefined
 
     };
     this.picture=undefined
   }
     
-
-    
-   async componentDidMount(){
-    //  try{
-
-    //     const permissionPicture= await request(PERMISSIONS.ANDROID.CAMERA)
-
-    //     this.picture=permissionPicture
-       
-    //   }catch(err){
-    //       console.log("eroor permission picture====== >",err)
-    //   }
-   }
-
 
 
    static async getDerivedStateFromProps(props, state){
@@ -119,86 +104,78 @@ class Profile extends Component {
     }
 
     
-    goToRegister=async()=>{
+    goToRegister=()=>{
 
-        
         const { login , 
             email , 
             password,
-            changePassword,
             token,
              } = this.state
         
         const {id} =  this.props.dataProfileUser.data  
              
-       console.log("le login vaut",login)
+        var data = new Object ;
 
-             var data = new Object ;
+        data.id= id ;
+        data.token=token ;
 
-             data.id= id ;
-             data.token=token ;
 
-             if(login){
-                 data.login = login
-             }
+            if(password.trim())  {
+            data.password=password
+            this.setState({errorPwd:false})
+                 
+            }
 
-             if(email){
-                 data.email =email
-             }
+            if(login.trim()){
+                data.login = login
+              
+            }
 
-             if(password.trim() && password === changePassword)  {
-               
-                    data.password=password
-                    this.setState({errorPwd:false})
-                    
-             }else if (password.trim() && password !== changePassword){
-                this.setState({errorPwd:true})
-             }
+            if(email.trim()){
+                data.email =email
             
-             await this.props.sendDataUpdateProfile(data)
-
-             this.setState({
-                login:"", 
-                email:"" , 
-                password:"",
-                changePassword:"",
-                messageAlert:" Modifié",
-                alertConfirm:false,
-                style:true
-
-        })
-    
+            }
+       
+            axios.defaults.headers['Authorization']= "Bearer "+data.token;
+            axios.put(`users/${data.id}`,{
+                
+                    email:data.email,
+                    username:data.login,
+                    password:data.password,
+                }).then((response)=>{
+                console.log("axios update profile ",response)
+            
+                    this.setState({
+                        login:"", 
+                        email:"" , 
+                        password:"",
+                        changePassword:"",
+                        messageAlert:data.password&&"Modifié",
+                        alertConfirm:false,
+                        style:data.password?true:false,
+                        messageAlertPWd:undefined
+        
+                        })
+                    store.dispatch(receiveDataProfile(response))
+                
+            
+                }).catch((err)=>{
+                    console.log("axios error update profile ",err.response.data["hydra:description"])
+                    this.setState({
+                        login:"", 
+                        email:"" , 
+                        password:"",
+                        changePassword:"",
+                        messageAlert:err.response.data["hydra:description"],
+                        alertConfirm:false,
+                        style:false,
+                        messageAlertPWd:undefined
+        
+                    })
+                })  
        
     }
 
-
-   goToRegisterPicture= ()=>{
-    const { token  } = this.state
-    const {id} =  this.props.dataProfileUser.data  
-    var data = new Object ;
-         ImagePicker.showImagePicker(options, async(response) => {
-            console.log('Response = ', response);
-
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-                } else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
-                } else if (response.customButton) {
-                    console.log('User tapped custom button: ', response.customButton);
-                } else {
-                    const source = { uri: response.uri };
-                        console.log("data uri de la picture",response.uri)
-                        data.id= id
-                        data.token = token
-                        data.image = response.uri
-                    // You can also display the image using data:
-                    // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-                await this.props.sendDataUpdateProfile(data)
-            }
-        });     
-
-   }
 
    logOut =()=>{
  
@@ -238,8 +215,6 @@ class Profile extends Component {
     const { login , 
             email , 
             password,
-            changePassword,
-            errorChangePwdCharacter,
             errorEmailCharacter,
             errorLoginCharacter,
             errorPwdCharacter,
@@ -317,21 +292,7 @@ class Profile extends Component {
                          onChange={this.collectDataForUpdate}/>
                      </Item>
                      {errorPwdCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
-                    
-
-                    
-                    
-                     <Item last style={Style.containerInput}>
-                     <Icon  active name='lock'/> 
-                         <Input 
-                         placeholder='Confirmation du mot de passe *'
-                         name="changePassword"
-                         secureTextEntry={true}
-                         maxLength={255}
-                         value={changePassword}
-                         onChange={this.collectDataForUpdate}/>
-                     </Item>
-                     {errorChangePwdCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
+                
                         </Form>
                  
                

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Profile from '../../components/Profile/Profile';
 
 // Action Creators
-import { sendDataUpdateProfile ,dataProfileUsers ,initializeState} from '../../store/actionCreator/Profile';
+import { sendDataUpdateProfile ,dataProfileUsers ,initializeState,receiveDataProfile} from '../../store/actionCreator/Profile';
 import {responseConnection} from '../../store/actionCreator/Connection';
 
 /* === State (données) ===
@@ -44,6 +44,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   initializeState:()=>{
     dispatch(initializeState())
+  },
+  receiveDataProfile:(data)=>{
+    dispatch(receiveDataProfile(data))
   }
  
 });

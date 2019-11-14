@@ -108,7 +108,7 @@ import { object } from 'prop-types';
                         user:{
                             _id:value.user.id,
                             name:value.user.username,
-                            typeUser:"admin"
+                            typeUser:value.user["@type"]
                         }
                       }
               
@@ -118,25 +118,26 @@ import { object } from 'prop-types';
                     if(value.valid){
                         if(value.answers.length){
                             value.answers.map((valueAnswers)=>{
-   
-                               dataMessage.push({
-                               _id:value["@id"]+Date.now(),
-                               idMessage:value["@id"],
-                               text:valueAnswers.content,
-                               valid:value.valid,
-                               question:{
-                                   id:value["@id"], 
-                                   text:value.content,
-                                   name:value.user.username
-                                           },
-                               createdAt:new Date(valueAnswers.createdAt),
-                               user:{
-                                     _id:valueAnswers.id,
-                                     name:"admin",
-                                     typeUser:"admin"
-                                     
-                               }
-                           })})   
+                            if(valueAnswers.answered){
+                                dataMessage.push({
+                                    _id:value["@id"]+Date.now(),
+                                    idMessage:value["@id"],
+                                    text:valueAnswers.content,
+                                    valid:value.valid,
+                                    question:{
+                                        id:value["@id"], 
+                                        text:value.content,
+                                        name:value.user.username
+                                                },
+                                    createdAt:new Date(valueAnswers.createdAt),
+                                    user:{
+                                          _id:valueAnswers.id,
+                                          name:"admin",
+                                          typeUser:value.user["@type"]
+                                    }
+                                })
+                            }
+                             })   
                        }
                     }  
                 })
@@ -192,12 +193,12 @@ import { object } from 'prop-types';
                     password:action.data.password,
                     image:action.data.image
                }).then((response)=>{
-                
+                console.log("axios update profile ",response)
                   
                    store.dispatch(receiveDataProfile(response))
                }).catch((err)=>{
-                   console.log("axios error update profile ",err.response)
-                   
+                   console.log("axios error update profile ",err.response.data["hydra:description"])
+                //    store.dispatch(errorUpdateProfile(undefined))
                })
             break;
 
@@ -221,11 +222,12 @@ import { object } from 'prop-types';
                             _id:value["@id"],
                             text:value.content,
                             createdAt:new Date (value.createdAt),
-                            type:value.type,
+                            idMessage:value["@id"],
                             valid:value.valid,
                             user:{
                                 _id:value.user.id,
-                                name:value.user.username
+                                name:value.user.username,
+                                typeUser:value.user["@type"]
                             }
                           }
                   
@@ -235,25 +237,30 @@ import { object } from 'prop-types';
                         if(value.valid){
                             if(value.answers.length){
                                 value.answers.map((valueAnswers)=>{
-       
-                                   dataMessage.push({
-                                   _id:value["@id"]+Date.now(),
-                                   text:valueAnswers.content,
-                                   valid:value.valid,
-                                   question:{
-                                       id:value["@id"], 
-                                       text:value.content,
-                                       name:value.user.username
-                                               },
-                                   createdAt:new Date(valueAnswers.createdAt),
-                                   user:{
-                                         _id:valueAnswers.id,
-                                         name:"admin"
-                                   }
-                               })})   
+                                if(valueAnswers.answered){
+                                    dataMessage.push({
+                                        _id:value["@id"]+Date.now(),
+                                        idMessage:value["@id"],
+                                        text:valueAnswers.content,
+                                        valid:value.valid,
+                                        question:{
+                                            id:value["@id"], 
+                                            text:value.content,
+                                            name:value.user.username
+                                                    },
+                                        createdAt:new Date(valueAnswers.createdAt),
+                                        user:{
+                                              _id:valueAnswers.id,
+                                              name:"admin",
+                                              typeUser:value.user["@type"]
+                                        }
+                                    })
+                                }
+                                 })   
                            }
                         }  
                     })
+    
                     const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
                     const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
                      store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
@@ -280,7 +287,8 @@ import { object } from 'prop-types';
                             return{
                                 _id:value["@id"],
                                 text:value.content,
-                                createdAt:new Date(value.createdAt),
+                                createdAt:new Date (value.createdAt),
+                                idMessage:value["@id"],
                                 valid:value.valid,
                                 user:{
                                     _id:value.user.id,
@@ -295,23 +303,26 @@ import { object } from 'prop-types';
                             if(value.valid){
                                 if(value.answers.length){
                                     value.answers.map((valueAnswers)=>{
-           
-                                       dataMessage.push({
-                                       _id:value["@id"]+Date.now(),
-                                       text:valueAnswers.content,
-                                       valid:value.valid,
-                                       question:{
-                                           id:value["@id"], 
-                                           text:value.content,
-                                           name:value.user.username
-                                                   },
-                                       createdAt:new Date(valueAnswers.createdAt),
-                                       user:{
-                                             _id:valueAnswers.id,
-                                             name:"admin",
-                                             typeUser:value.user["@type"]
-                                       }
-                                   })})   
+                                    if(valueAnswers.answered){
+                                        dataMessage.push({
+                                            _id:value["@id"]+Date.now(),
+                                            idMessage:value["@id"],
+                                            text:valueAnswers.content,
+                                            valid:value.valid,
+                                            question:{
+                                                id:value["@id"], 
+                                                text:value.content,
+                                                name:value.user.username
+                                                        },
+                                            createdAt:new Date(valueAnswers.createdAt),
+                                            user:{
+                                                  _id:valueAnswers.id,
+                                                  name:"admin",
+                                                  typeUser:value.user["@type"]
+                                            }
+                                        })
+                                    }
+                                     })   
                                }
                             }  
                         })
@@ -342,11 +353,12 @@ import { object } from 'prop-types';
                         _id:value["@id"],
                         text:value.content,
                         createdAt:new Date (value.createdAt),
-                        type:value.type,
+                        idMessage:value["@id"],
                         valid:value.valid,
                         user:{
                             _id:value.user.id,
-                            name:value.user.username
+                            name:value.user.username,
+                            typeUser:value.user["@type"]
                         }
                       }
               
@@ -356,25 +368,30 @@ import { object } from 'prop-types';
                     if(value.valid){
                         if(value.answers.length){
                             value.answers.map((valueAnswers)=>{
-   
-                               dataMessage.push({
-                               _id:value["@id"]+Date.now(),
-                               text:valueAnswers.content,
-                               valid:value.valid,
-                               question:{
-                                   id:value["@id"], 
-                                   text:value.content,
-                                   name:value.user.username
-                                           },
-                               createdAt:new Date(valueAnswers.createdAt),
-                               user:{
-                                     _id:valueAnswers.id,
-                                     name:"admin"
-                               }
-                           })})   
+                            if(valueAnswers.answered){
+                                dataMessage.push({
+                                    _id:value["@id"]+Date.now(),
+                                    idMessage:value["@id"],
+                                    text:valueAnswers.content,
+                                    valid:value.valid,
+                                    question:{
+                                        id:value["@id"], 
+                                        text:value.content,
+                                        name:value.user.username
+                                                },
+                                    createdAt:new Date(valueAnswers.createdAt),
+                                    user:{
+                                          _id:valueAnswers.id,
+                                          name:"admin",
+                                          typeUser:value.user["@type"]
+                                    }
+                                })
+                            }
+                             })   
                        }
                     }  
                 })
+
          
                 const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
                 const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
@@ -405,11 +422,12 @@ import { object } from 'prop-types';
                     _id:value["@id"],
                     text:value.content,
                     createdAt:new Date (value.createdAt),
-                    type:value.type,
+                    idMessage:value["@id"],
                     valid:value.valid,
                     user:{
                         _id:value.user.id,
-                        name:value.user.username
+                        name:value.user.username,
+                        typeUser:value.user["@type"]
                     }
                   }
           
@@ -419,22 +437,26 @@ import { object } from 'prop-types';
                 if(value.valid){
                     if(value.answers.length){
                         value.answers.map((valueAnswers)=>{
-
-                           dataMessage.push({
-                           _id:value["@id"]+Date.now(),
-                           text:valueAnswers.content,
-                           valid:value.valid,
-                           question:{
-                               id:value["@id"], 
-                               text:value.content,
-                               name:value.user.username
-                                       },
-                           createdAt:new Date(valueAnswers.createdAt),
-                           user:{
-                                 _id:valueAnswers.id,
-                                 name:"admin"
-                           }
-                       })})   
+                        if(valueAnswers.answered){
+                            dataMessage.push({
+                                _id:value["@id"]+Date.now(),
+                                idMessage:value["@id"],
+                                text:valueAnswers.content,
+                                valid:value.valid,
+                                question:{
+                                    id:value["@id"], 
+                                    text:value.content,
+                                    name:value.user.username
+                                            },
+                                createdAt:new Date(valueAnswers.createdAt),
+                                user:{
+                                      _id:valueAnswers.id,
+                                      name:"admin",
+                                      typeUser:value.user["@type"]
+                                }
+                            })
+                        }
+                         })   
                    }
                 }  
             })
@@ -528,24 +550,26 @@ import { object } from 'prop-types';
                     if(value.valid){
                         if(value.answers.length){
                             value.answers.map((valueAnswers)=>{
-   
-                               dataMessage.push({
-                               _id:value["@id"]+Date.now(),
-                               idMessage:value["@id"],
-                               text:valueAnswers.content,
-                               valid:value.valid,
-                               question:{
-                                   id:value["@id"], 
-                                   text:value.content,
-                                   name:value.user.username
-                                           },
-                               createdAt:new Date(valueAnswers.createdAt),
-                               user:{
-                                     _id:valueAnswers.id,
-                                     name:"admin",
-                                     typeUser:value.user["@type"]
-                               }
-                           })})   
+                            if(valueAnswers.answered){
+                                dataMessage.push({
+                                    _id:value["@id"]+Date.now(),
+                                    idMessage:value["@id"],
+                                    text:valueAnswers.content,
+                                    valid:value.valid,
+                                    question:{
+                                        id:value["@id"], 
+                                        text:value.content,
+                                        name:value.user.username
+                                                },
+                                    createdAt:new Date(valueAnswers.createdAt),
+                                    user:{
+                                          _id:valueAnswers.id,
+                                          name:"admin",
+                                          typeUser:value.user["@type"]
+                                    }
+                                })
+                            }
+                             })   
                        }
                     }  
                 })

@@ -10,7 +10,7 @@ export const Style = StyleSheet.create({
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        top:hp('15%'),
+        top:hp('8%'),
 
     },
     
@@ -22,7 +22,7 @@ export const Style = StyleSheet.create({
     },
     form:{
         width:wp('85%'),
-        height:wp('60%'),
+        height:hp('60%'),
         marginTop:marginTop,
         
     },
@@ -33,7 +33,6 @@ export const Style = StyleSheet.create({
     },
     
     textRegister:{
-        flexDirection:'row',
         alignItems:"center",
         backgroundColor:'white',
         justifyContent:"center",

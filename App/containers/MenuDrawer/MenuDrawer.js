@@ -15,7 +15,7 @@ import { receiveTopDataCategory } from '../../store/actionCreator/MenuDrawer'
 import { dataAllCategory } from '../../store/actionCreator/Category';
 import {dataProfileUsers } from '../../store/actionCreator/Profile';
 import { receiveDataMessagesCategory,dataFilterMessagesCategory, dataMessagesCategory} from '../../store/actionCreator/MessageCategory';
-import { receiveDataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
+import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -58,6 +58,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       receiveDataMessagesMyQuestions:(data)=>{
         dispatch(receiveDataMessagesMyQuestions(data))
       },
+      DataMessagesMyQuestions:()=>{
+          dispatch(DataMessagesMyQuestions(undefined))
+      }
     
   
 });

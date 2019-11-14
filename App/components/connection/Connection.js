@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
+import { underline } from 'ansi-colors';
 
 var jwtDecode = require('jwt-decode');
 
@@ -121,11 +122,14 @@ class Connection extends Component {
        this.state.connection && storageConnection && this.props.navigation.navigate("Home")
       
         return (
-            <Fragment>
+            <View
+            style={{flex:1}}
+            >
                <ScrollView
                  
                    showsVerticalScrollIndicator={false}
                   keyboardShouldPersistTaps="always"
+                  style={{flex:1}}
                  >
                 <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
              
@@ -146,7 +150,7 @@ class Connection extends Component {
                 <ScrollView
                      keyboardShouldPersistTaps="always"
                      showsVerticalScrollIndicator={false}
-             
+                     style={{flex:1}}
                  >
                         <Form >
                             <Item last  regular style={Style.containerInput}>
@@ -184,16 +188,7 @@ class Connection extends Component {
                         </Form>
                         </ScrollView>
                 </View> 
-                <View style={{alignItems:"flex-end",marginTop:7
-            
-            
-            }}>
-                            <TouchableOpacity
-                            onPress={this.toggleModal} 
-                            >
-                            <Text>Mot de passe oublié ?</Text>
-                            </TouchableOpacity>
-                        </View>            
+               
             </Content>
 
             <ResetPassword 
@@ -213,10 +208,11 @@ class Connection extends Component {
                         ]}
                         animated={true}
                     />
-           
+
                   
             </View >
                     <View  style={ Style.textRegister}>
+                        <View style={ { flexDirection:"row",}}>
                          <Text> 
                             Vous n'avez pas de compte ?
                         </Text>
@@ -227,18 +223,27 @@ class Connection extends Component {
                             <Text style={{ 
                             color:'blue',
                              fontSize:15,
-                             
                              marginLeft:5,
                              fontWeight:'bold',
-                             zIndex:1}}> 
+                             }}> 
                                  inscrivez-vous  
                             </Text>
                        
                         </TouchableOpacity>
-                        
+                        </View>
+
+                        <View style={{alignItems:"flex-end",marginTop:15 }}>
+                            <TouchableOpacity
+                            onPress={this.toggleModal} 
+                            >
+                            <Text>Mot de passe oublié ?</Text>
+                            </TouchableOpacity>
+                        </View>    
                     </View>
+
+                    
                     </ScrollView>      
-        </Fragment>
+        </View>
         );
     }
 }
