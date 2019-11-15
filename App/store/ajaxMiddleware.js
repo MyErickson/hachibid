@@ -1,22 +1,21 @@
 import axios from 'axios';
 
 import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
-     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_PRECISION,
-        RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,
+     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_PRECISION,SEND_PRECISION_FOR_QUESTION,
+        RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,SEND_ANSWERS_FOR_QUESTION,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,ASK_PRECISION  } from './reducer'
 
 
-import { receiveMessagesHome,receiveDataFilterMessagesHome } from './actionCreator/ChatHome';
+import { receiveMessagesHome,receiveDataFilterMessagesHome ,dataMessagesHome} from './actionCreator/ChatHome';
 import { receiveDataProfile} from './actionCreator/Profile';
 import { dataMessagesCategory,dataFilterMessagesCategory} from './actionCreator/MessageCategory';
 import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
 import { receiveDataNotification } from './actionCreator/Notification'
+import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "./actionRequetes/actionRequetes"
 
 
-import AsyncStorage from '@react-native-community/async-storage';
-import { object } from 'prop-types';
 
 
 
@@ -37,7 +36,7 @@ import { object } from 'prop-types';
             
         case SEND_MESSAGE_USER:
             next(action)
-            console.log("axios envoyer un message ====>",action)
+
             axios.defaults.headers['Authorization']= "Bearer "+action.message[0].token;
             axios.post('messages',{
                 content:action.message[0].text,
@@ -45,8 +44,7 @@ import { object } from 'prop-types';
                 valid:false,
               
             }).then((response)=>{
-                //ici un autre axios pour recevoir tout les messages
-                // console.log("response axios send message user ===>",response)
+
                 const data = new Object
                 data.id = action.message[0].user._id
                 data.token = action.message[0].token
@@ -96,57 +94,14 @@ import { object } from 'prop-types';
                     'Authorization':"Bearer "+action.token
                 } 
             }).then((response)=>{
-                console.log("axios data message home data",response)  
-                  const dataMessage = response.data['hydra:member'].map((value)=>{
-    
-                    return{
-                        _id:value["@id"],
-                        text:value.content,
-                        createdAt:new Date (value.createdAt),
-                        idMessage:value["@id"],
-                        valid:value.valid,
-                        user:{
-                            _id:value.user.id,
-                            name:value.user.username,
-                            typeUser:value.user["@type"]
-                        }
-                      }
-              
-                  })
+                store.dispatch(receiveMessagesHome( undefined))
+                console.log("axio data messahge home ",response)
+                const dataMessage= actionRequeteDataMessage(response) 
+ 
+                const filterDataMessage = actionRequeteFilter(dataMessage)
+             
+                const allDataMessageUser = actionRequeteSort(filterDataMessage)  
 
-                  response.data["hydra:member"].map((value)=>{
-                    if(value.valid){
-                        if(value.answers.length){
-                            value.answers.map((valueAnswers)=>{
-                            if(valueAnswers.answered){
-                                dataMessage.push({
-                                    _id:value["@id"]+Date.now(),
-                                    idMessage:value["@id"],
-                                    text:valueAnswers.content,
-                                    valid:value.valid,
-                                    question:{
-                                        id:value["@id"], 
-                                        text:value.content,
-                                        name:value.user.username
-                                                },
-                                    createdAt:new Date(valueAnswers.createdAt),
-                                    user:{
-                                          _id:valueAnswers.id,
-                                          name:"admin",
-                                          typeUser:value.user["@type"]
-                                    }
-                                })
-                            }
-                             })   
-                       }
-                    }  
-                })
-
-          
-               const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-              
-                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())
-                console.log("axios data message home",allDataMessageUser)  
                 store.dispatch(receiveMessagesHome( allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("error axios data message home",err.response)
@@ -168,8 +123,7 @@ import { object } from 'prop-types';
                    'Authorization':"Bearer "+action.idUser.token
                } 
             }).then((response)=>{
-                //ici un autre axios
-               console.log('ajax profile user',response)
+
                store.dispatch(receiveDataProfile(response))
             }).catch((err)=>{
                 console.log("erroor ajax profil user ",err.response)
@@ -184,7 +138,7 @@ import { object } from 'prop-types';
  // envoye les données a modifier pour un utilisateur            
         case SEND_DATA_UPDATE_PROFILE:
             next(action)
-            console.log("axios update profile pour action",action)
+       
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.put(`users/${action.data.id}`,{
              
@@ -193,12 +147,11 @@ import { object } from 'prop-types';
                     password:action.data.password,
                     image:action.data.image
                }).then((response)=>{
-                console.log("axios update profile ",response)
                   
                    store.dispatch(receiveDataProfile(response))
                }).catch((err)=>{
                    console.log("axios error update profile ",err.response.data["hydra:description"])
-                //    store.dispatch(errorUpdateProfile(undefined))
+   
                })
             break;
 
@@ -214,55 +167,12 @@ import { object } from 'prop-types';
                         'Authorization':"Bearer "+action.data.token
                     } 
                 }).then((response)=>{
-                    //ici un autre axios
-                     console.log("je suis la reponse de filter home", response )
-                     const dataMessage = response.data['hydra:member'].map((value)=>{
+
+                    const dataMessage= actionRequeteDataMessage(response) 
     
-                        return{
-                            _id:value["@id"],
-                            text:value.content,
-                            createdAt:new Date (value.createdAt),
-                            idMessage:value["@id"],
-                            valid:value.valid,
-                            user:{
-                                _id:value.user.id,
-                                name:value.user.username,
-                                typeUser:value.user["@type"]
-                            }
-                          }
-                  
-                      })
-    
-                      response.data["hydra:member"].map((value)=>{
-                        if(value.valid){
-                            if(value.answers.length){
-                                value.answers.map((valueAnswers)=>{
-                                if(valueAnswers.answered){
-                                    dataMessage.push({
-                                        _id:value["@id"]+Date.now(),
-                                        idMessage:value["@id"],
-                                        text:valueAnswers.content,
-                                        valid:value.valid,
-                                        question:{
-                                            id:value["@id"], 
-                                            text:value.content,
-                                            name:value.user.username
-                                                    },
-                                        createdAt:new Date(valueAnswers.createdAt),
-                                        user:{
-                                              _id:valueAnswers.id,
-                                              name:"admin",
-                                              typeUser:value.user["@type"]
-                                        }
-                                    })
-                                }
-                                 })   
-                           }
-                        }  
-                    })
-    
-                    const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-                    const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                    const filterDataMessage = actionRequeteFilter(dataMessage)
+                    const allDataMessageUser = actionRequeteSort(filterDataMessage)  
+
                      store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
                 }).catch((err)=>{
                     console.log("axios ",err.response)
@@ -280,56 +190,11 @@ import { object } from 'prop-types';
                             'Authorization':"Bearer "+action.data.token
                         } 
                     }).then((response)=>{
-                        //ici un autre axios
-                         console.log("je suis la reponse de filter Myquestion", response )
-                         const dataMessage = response.data['hydra:member'].map((value)=>{
-    
-                            return{
-                                _id:value["@id"],
-                                text:value.content,
-                                createdAt:new Date (value.createdAt),
-                                idMessage:value["@id"],
-                                valid:value.valid,
-                                user:{
-                                    _id:value.user.id,
-                                    name:value.user.username,
-                                    typeUser:value.user["@type"]
-                                }
-                              }
-                      
-                          })
-        
-                          response.data["hydra:member"].map((value)=>{
-                            if(value.valid){
-                                if(value.answers.length){
-                                    value.answers.map((valueAnswers)=>{
-                                    if(valueAnswers.answered){
-                                        dataMessage.push({
-                                            _id:value["@id"]+Date.now(),
-                                            idMessage:value["@id"],
-                                            text:valueAnswers.content,
-                                            valid:value.valid,
-                                            question:{
-                                                id:value["@id"], 
-                                                text:value.content,
-                                                name:value.user.username
-                                                        },
-                                            createdAt:new Date(valueAnswers.createdAt),
-                                            user:{
-                                                  _id:valueAnswers.id,
-                                                  name:"admin",
-                                                  typeUser:value.user["@type"]
-                                            }
-                                        })
-                                    }
-                                     })   
-                               }
-                            }  
-                        })
-                        console.log("je suis la reponse ", response )
 
-            
-                        const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                        const dataMessage= actionRequeteDataMessage(response) 
+
+                        const allDataMessageUser = actionRequeteSort(dataMessage)
+
                          store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
                     }).catch((err)=>{
                         console.log("errr oro axios ",err.response)
@@ -346,55 +211,12 @@ import { object } from 'prop-types';
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
-                
-                const dataMessage = response.data['hydra:member'].map((value)=>{
-    
-                    return{
-                        _id:value["@id"],
-                        text:value.content,
-                        createdAt:new Date (value.createdAt),
-                        idMessage:value["@id"],
-                        valid:value.valid,
-                        user:{
-                            _id:value.user.id,
-                            name:value.user.username,
-                            typeUser:value.user["@type"]
-                        }
-                      }
-              
-                  })
 
-                  response.data["hydra:member"].map((value)=>{
-                    if(value.valid){
-                        if(value.answers.length){
-                            value.answers.map((valueAnswers)=>{
-                            if(valueAnswers.answered){
-                                dataMessage.push({
-                                    _id:value["@id"]+Date.now(),
-                                    idMessage:value["@id"],
-                                    text:valueAnswers.content,
-                                    valid:value.valid,
-                                    question:{
-                                        id:value["@id"], 
-                                        text:value.content,
-                                        name:value.user.username
-                                                },
-                                    createdAt:new Date(valueAnswers.createdAt),
-                                    user:{
-                                          _id:valueAnswers.id,
-                                          name:"admin",
-                                          typeUser:value.user["@type"]
-                                    }
-                                })
-                            }
-                             })   
-                       }
-                    }  
-                })
+                const dataMessage= actionRequeteDataMessage(response) 
 
-         
-                const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-                const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                const filterDataMessage = actionRequeteFilter(dataMessage)
+
+                const allDataMessageUser = actionRequeteSort(filterDataMessage)   
     
                 store.dispatch(dataFilterMessagesCategory(allDataMessageUser.reverse()))
             }).catch((err)=>{
@@ -414,56 +236,11 @@ import { object } from 'prop-types';
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then((response)=>{
-              console.log("la respose",response)
-                      
-              const dataMessage = response.data['hydra:member'].map((value)=>{
-    
-                return{
-                    _id:value["@id"],
-                    text:value.content,
-                    createdAt:new Date (value.createdAt),
-                    idMessage:value["@id"],
-                    valid:value.valid,
-                    user:{
-                        _id:value.user.id,
-                        name:value.user.username,
-                        typeUser:value.user["@type"]
-                    }
-                  }
-          
-              })
+                const dataMessage= actionRequeteDataMessage(response) 
+                
+                const filterDataMessage = actionRequeteFilter(dataMessage)
 
-              response.data["hydra:member"].map((value)=>{
-                if(value.valid){
-                    if(value.answers.length){
-                        value.answers.map((valueAnswers)=>{
-                        if(valueAnswers.answered){
-                            dataMessage.push({
-                                _id:value["@id"]+Date.now(),
-                                idMessage:value["@id"],
-                                text:valueAnswers.content,
-                                valid:value.valid,
-                                question:{
-                                    id:value["@id"], 
-                                    text:value.content,
-                                    name:value.user.username
-                                            },
-                                createdAt:new Date(valueAnswers.createdAt),
-                                user:{
-                                      _id:valueAnswers.id,
-                                      name:"admin",
-                                      typeUser:value.user["@type"]
-                                }
-                            })
-                        }
-                         })   
-                   }
-                }  
-            })
- 
-             
-            const filterDataMessage = dataMessage.filter((value)=> value.valid === true)
-            const allDataMessageUser = filterDataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                const allDataMessageUser = actionRequeteSort(filterDataMessage)  
                 store.dispatch(dataMessagesCategory(allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("axios error message category", err.reponse)
@@ -519,62 +296,17 @@ import { object } from 'prop-types';
 // recupere les doonées (message) de l'utisateur , page my questions            
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
-        
-          
-           
+
             axios.get(`messages?user=${action.data.id}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then(async (response)=>{
-             
-                console.log("je suis dans receive data my questions", response)
-                const dataMessage = response.data['hydra:member'].map((value)=>{
-                        
-                    return{
-                        _id:value["@id"],
-                        text:value.content,
-                        createdAt:new Date (value.createdAt),
-                        idMessage:value["@id"],
-                        valid:value.valid,
-                        user:{
-                            _id:value.user.id,
-                            name:value.user.username,
-                            typeUser:value.user["@type"]
-                        }
-                      }
-              
-                  })
+                console.log("axio data my question ",response)
 
-                  response.data["hydra:member"].map((value)=>{
-                    if(value.valid){
-                        if(value.answers.length){
-                            value.answers.map((valueAnswers)=>{
-                            if(valueAnswers.answered){
-                                dataMessage.push({
-                                    _id:value["@id"]+Date.now(),
-                                    idMessage:value["@id"],
-                                    text:valueAnswers.content,
-                                    valid:value.valid,
-                                    question:{
-                                        id:value["@id"], 
-                                        text:value.content,
-                                        name:value.user.username
-                                                },
-                                    createdAt:new Date(valueAnswers.createdAt),
-                                    user:{
-                                          _id:valueAnswers.id,
-                                          name:"admin",
-                                          typeUser:value.user["@type"]
-                                    }
-                                })
-                            }
-                             })   
-                       }
-                    }  
-                })
-                
-                const allDataMessageUser = dataMessage.sort((a,b)=>  a.createdAt.getTime() - b.createdAt.getTime())  
+                const dataMessage= actionRequeteDataMessage(response) 
+
+                const allDataMessageUser = actionRequeteSort(dataMessage)  
 
              
                 if(allDataMessageUser.length <= 0 ){
@@ -584,9 +316,7 @@ import { object } from 'prop-types';
              
                     store.dispatch(DataMessagesMyQuestions(allDataMessageUser.reverse()))
                 }
-             
-          
-               
+
                         
             }).catch((err)=>{
                 console.log("erroorr dans messages myquestion",err)
@@ -612,30 +342,39 @@ import { object } from 'prop-types';
         })
          break;
 
-         case RECEIVE_PRECISION:
+         case SEND_PRECISION_FOR_QUESTION:
             next(action)
-            axios.get('accuracies',{
-                headers:{
-                    'Authorization':"Bearer "+action.data.token
-                } 
+            console.log(action )
+            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
+            axios.put(`answers/${action.data.idAnwsersUser}`,{
+                content: action.data.text, 
+                message: action.data.idMessage,
+                answerer:action.data.idUser,
+                answered:true,
+   
            }).then((response)=>{
                console.log("axios totu els reponses,",response)
-            //    store.dispatch(receiveDataNotification(response))
+         
+            store.dispatch(dataMessagesHome(action.data.token))
            }).catch((err)=>{
                console.log(err)
                
            })
             break;
 
-                case RECEIVE_PRECISION:
+        case SEND_ANSWERS_FOR_QUESTION:
             next(action)
-            axios.get('accuracies',{
-                headers:{
-                    'Authorization':"Bearer "+action.data.token
-                } 
+       
+            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
+            axios.post(`answers`,{
+             content: action.data.text, 
+             message: action.data.idMessage,
+             answerer:action.data.idUser,
+             answered:true,
+
            }).then((response)=>{
-               console.log("axios totu els reponses,",response)
-            //    store.dispatch(receiveDataNotification(response))
+               console.log("axios tout les reponses,",response)
+                store.dispatch(dataMessagesHome(action.data.token))
            }).catch((err)=>{
                console.log(err)
                

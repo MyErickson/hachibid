@@ -9,7 +9,7 @@ const viewBubble = ({
     createdAt,
     question,
     showMessage,
-    minutes
+    minutes,profileUser
 }) => {
 
     console.log("user vaut ",user)
@@ -28,11 +28,11 @@ const viewBubble = ({
         <View style={{flexDirection:"row"}}>
         <Text  style={{fontSize:11, textAlign:"right",marginLeft:8,marginTop:3}}>{`~${user.name}`}</Text>
         <Text  style={{fontSize:11, textAlign:"right",marginLeft:20,marginTop:3}}>{`${createdAt.getHours()}:${minutes}`}</Text>
-        {user.typeUser !== "User" && (     <TouchableOpacity
-                onPress={showMessage}
+        {profileUser === "Administrateur" && (     <TouchableOpacity
+                onPress={question ? ()=>showMessage(true) :()=>showMessage(false)}
                 style={{flexDirection:"row"}}
             >
-            <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginTop:3}}>répondre </Text>
+            <Text  style={{fontSize:11, marginLeft:100,color:"green",fontWeight:"bold",marginTop:3}}>{question ? "précision" : "répondre"}</Text>
             
                 <Text style={{fontSize:15, color:"green",fontWeight:"bold"}}> + </Text>
     

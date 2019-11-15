@@ -24,3 +24,8 @@ export const receiveDataUpdateProfile=(ProfileUser)=>({
   export const initializeState =()=>({
     type:INITITALIZE_STATE
   })
+
+  export const errorUpdateProfile=(error)=>({
+    type: ERROR_UPDATE_PROFILE,
+    error
+  })

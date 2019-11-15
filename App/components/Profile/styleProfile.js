@@ -21,7 +21,7 @@ export const Style = StyleSheet.create({
     },
     form:{
         width:wp("85%"),
-        marginTop:marginTop,
+        marginTop:40,
         marginLeft:wp("2%"),
         
     },
@@ -42,10 +42,6 @@ export const Style = StyleSheet.create({
         paddingBottom:25,
       
     },
-    avatar:{
-      
-        marginLeft:10
-    },
     scrollview:{
         marginHorizontal: 0,
         backgroundColor:'white',
@@ -60,16 +56,17 @@ export const Style = StyleSheet.create({
      
     },
     cardInfo:{
-    shadowColor: "#000",
-    borderRadius:10,
-    shadowOffset: {
-        width: 0,
-        height: 3,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.00,
-    
-    elevation: 10,
+        marginTop:20,
+        shadowColor: "#000",
+        borderRadius:10,
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,
+        
+        elevation: 10,
   
 }
 

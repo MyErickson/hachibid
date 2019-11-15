@@ -1,17 +1,12 @@
 import React, { Component, Fragment} from 'react';
 import { View, Text,  ScrollView } from 'react-native';
-import { Button , Avatar , Icon} from 'react-native-elements';
+import { Button , Icon} from 'react-native-elements';
 import { Style }  from './styleProfile'
 import { Form, Item, Input ,Card } from 'native-base';
-import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import LinearGradient from 'react-native-linear-gradient';
-import { presetColors} from '../../data/dataCasual'
 import Menu from '../Menu/Menu'
 import AlertDialog from '../AlertDialog/AlertDialog';
-import ImagePicker from 'react-native-image-picker';
-import {request, PERMISSIONS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
 import axios from 'axios';
 
 

@@ -36,7 +36,8 @@ class MyQuestions extends Component {
       deleteTextSearchBar:false,
       showAboveInput:false,
       answerCurrent:"",
-      idMessage:undefined
+      dataMessageCurrent:undefined,
+      isQuestion:undefined,
 
     };
   
@@ -51,11 +52,6 @@ class MyQuestions extends Component {
        
           const data = this._dataInfo()
         
-          
-
-       
-      
-      
       if(dataProfileUser && dataProfileUser.data.roleTitle !== "Utilisateur"){
         await this.props.dataMessagesHome(this.props.receiveResponseConnection)
         try{
@@ -79,7 +75,7 @@ class MyQuestions extends Component {
 
      static async getDerivedStateFromProps(props, state){ 
   
-            
+      console.log("message ===",props.dataMessagesMyQuestions)
              if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
            
               state.ProfileUser = props.dataProfileUser.data
@@ -142,7 +138,7 @@ class MyQuestions extends Component {
 
       let data = new Object
       data.token = receiveResponseConnection
-      data.idUser = ProfileUser && ProfileUser.id
+      data.idUser = ProfileUser && ProfileUser["@id"]
       data.text = text
  
 
@@ -151,7 +147,7 @@ class MyQuestions extends Component {
 
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
-    const { ProfileUser , answerCurrent , idMessage } = this.state
+    const { ProfileUser , dataMessageCurrent,isQuestion } = this.state
   
     const {_id ,
       createdAt ,
@@ -172,24 +168,31 @@ class MyQuestions extends Component {
        token: receiveResponseConnection
      }]
   
-     let data = this._dataInfo(answerCurrent)
-     data.idMessage = idMessage
-
-     console.log("je suis dans onsend data vaut ", data)
   
     if(ProfileUser.roleTitle !== "Administrateur" ){
-    
-      await  this.props.sendMessageUser(newMessage)
-      this.setState(previousState =>({
-        ...this.state._messages,
-        _messages: GiftedChat.append(previousState._messages, newMessage),
-      }))
-    }else{
-      this.setState(previousState =>({
-        _messages: GiftedChat.append(previousState._messages, newMessage),
-      }))
+      
+      this.props.sendMessageUser(newMessage)
+
+
+    }else {
+      if(isQuestion){
+        let data = this._dataInfo(text)
+        data.idMessage = dataMessageCurrent.idMessage
+        data.idAnwsersUser = dataMessageCurrent.idAnwsersUser 
+        this.props.sendPrecisionForQuestion(data) 
+   
+      }else{
+        let data = this._dataInfo(text)
+        data.idMessage = dataMessageCurrent.idMessage
+        this.props.sendAnswersForQuestion(data) 
+      }
+      this.setState({
+        answerCurrent:undefined,
+        showAboveInput:false,
+        dataMessageCurrent:undefined
+      })
   
-    }
+    }          
      
   
 
@@ -198,12 +201,15 @@ class MyQuestions extends Component {
 
 
   renderBubble(props) {
-   const { type ,createdAt ,question, text ,user ,idMessage} = props.currentMessage
-
-      console.log(props.currentMessage)
+   const { type ,createdAt ,question, text ,user ,idMessage,_id} = props.currentMessage
+   const { ProfileUser } = this.state
+  
    var minutes = createdAt.getMinutes() 
+   const dataMessageCurrent = new Object
+   dataMessageCurrent.idAnwsersUser = user._id
+   dataMessageCurrent.idMessage= idMessage
 
-
+ console.log(question , props.currentMessage)
    if(createdAt.getMinutes() < 10){
     minutes = `0`+createdAt.getMinutes()
         }
@@ -217,37 +223,37 @@ class MyQuestions extends Component {
           
         </View>
        )
-     }else{
-      if(question ||user.typeUser !== "User" && user.typeUser !== undefined ){
-        return(
-            <ViewBubble
-            text={text}
-            question={question}
-            createdAt={createdAt}
-            user={user}
-            minutes={minutes}
-            showMessage={()=>this.setState({
-              answerCurrent:text,
-              showAboveInput:true,
-              idMessage:idMessage
-            })}
-            />
-        )
-      }else if(user.typeUser === "User"){
-        return (
-          
-            <Bubble
-              
-              {...props}
-            
-            />
-           );
-      }
-      
-     
-     }
+     }else if( question || ProfileUser && ProfileUser.roleTitle === "Administrateur"){
 
-    
+        return (
+          <ViewBubble
+          text={text}
+          question={question}
+          createdAt={createdAt}
+          user={user}
+          profileUser={ProfileUser.roleTitle}
+          minutes={minutes}
+          showMessage={(res)=>this.setState({
+            answerCurrent:text,
+            showAboveInput:true,
+            dataMessageCurrent:dataMessageCurrent,
+            isQuestion:res
+          })}
+          />
+           );
+      }else {  
+        return(
+          <Bubble
+              
+          {...props}
+        
+        />
+        ) 
+      
+      }
+
+     
+ 
   }
 
   renderSend(props) {
@@ -279,7 +285,7 @@ renderComposer=()=> {
         onPress={()=>this.setState({
           answerCurrent:"",
           showAboveInput:false,
-          idMessage:undefined
+          dataMessageCurrent:undefined
         })}
         >x</Text>
         <View style={Style.textRenderComposer}>

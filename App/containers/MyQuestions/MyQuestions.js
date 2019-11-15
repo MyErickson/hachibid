@@ -10,7 +10,12 @@ import { connect } from 'react-redux';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
 import { dataMessagesHome} from '../../store/actionCreator/ChatHome';
 // Action Creators
-import { sendMessageUser ,receiveDataMessagesMyQuestions, receivePrecision, sendDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
+import { sendMessageUser ,
+        receiveDataMessagesMyQuestions,
+        receivePrecision,
+        sendDatafilterMessageMyQuestion,
+        sendAnswersForQuestion,
+        sendPrecisionForQuestion } from '../../store/actionCreator/MyQuestions'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -50,7 +55,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   dataMessagesHome: (token) => {
     dispatch(dataMessagesHome(token));
   },
- 
+  sendAnswersForQuestion :(data)=>{
+    dispatch(sendAnswersForQuestion (data))
+  },
+  sendPrecisionForQuestion:(data)=>{
+    dispatch(sendPrecisionForQuestion(data))
+  }
+
 });
 
 // Container
