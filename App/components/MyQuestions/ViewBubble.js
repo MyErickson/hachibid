@@ -32,7 +32,7 @@ const viewBubble = ({
                 onPress={question ? ()=>showMessage(true) :()=>showMessage(false)}
                 style={{flexDirection:"row"}}
             >
-            <Text  style={{fontSize:11, marginLeft:100,color:"green",fontWeight:"bold",marginTop:3}}>{question ? "précision" : "répondre"}</Text>
+            <Text  style={{fontSize:11, marginLeft:50,color:"green",fontWeight:"bold",marginTop:3}}>{question ? "précision" : "répondre"}</Text>
             
                 <Text style={{fontSize:15, color:"green",fontWeight:"bold"}}> + </Text>
     

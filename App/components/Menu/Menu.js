@@ -34,7 +34,7 @@ class Menu extends Component {
             </Left>
         
           <Body style={{flex:1}} >
-            <Title  style={{ alignSelf: 'center'}}>{this.props.nameMenu}</Title>
+            <Title  style={{ alignSelf: 'center', color:"white"}}>{this.props.nameMenu}</Title>
           </Body>
    
           <Right style={{flex:1}}>

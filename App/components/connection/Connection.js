@@ -1,21 +1,18 @@
-import React, { Component, Fragment } from 'react';
-import { View , Text , TouchableOpacity, Animated,ScrollView} from 'react-native';
+import React, { Component  } from 'react';
+import { View , Text , TouchableOpacity, Animated,ScrollView , Dimensions} from 'react-native';
 import { Button } from 'react-native-elements';
 import { Style }  from './styleConnection'
 import {  Content, Form, Item, Input } from 'native-base';
 import ResetPassword from "../ResetPassword/ResetPassword"
-import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
-import { presetColors } from '../../data/dataCasual'
 import Wave from 'react-native-waveview'
 import AsyncStorage from '@react-native-community/async-storage';
-
 import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
-import { underline } from 'ansi-colors';
-
+import LinearGradient from 'react-native-linear-gradient';
 var jwtDecode = require('jwt-decode');
 
 
+const HEIGHT= Dimensions.get('window').height;
 
 
 class Connection extends Component {
@@ -34,7 +31,7 @@ class Connection extends Component {
     }
     async   componentDidMount (){
         AsyncStorage.removeItem('sessionJWT')
-
+         console.log(HEIGHT)
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,
@@ -51,6 +48,7 @@ class Connection extends Component {
 
         const { name }  = evt._targetInst.pendingProps;
         const { text } = evt.nativeEvent;
+
         this.setState({[name]:text})
     }
 
@@ -123,17 +121,16 @@ class Connection extends Component {
       
         return (
             <View
-            style={{flex:1}}
+            style={{flex:1,height:500}}
             >
                <ScrollView
                  
-                   showsVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                   keyboardShouldPersistTaps="always"
-                  style={{flex:1}}
+            
                  >
-                <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
-             
-   
+             <LinearGradient colors = {[ '#1285F0','#12EEF0']}>
+      
             <View style={Style.container}>
             <Text style={Style.textConnexion}>
                 Connexion</Text>
@@ -178,12 +175,12 @@ class Connection extends Component {
                             </Item>
                             
                             <Button rounded info 
-                        containerStyle={Style.button}
-                        buttonStyle={{borderRadius:20,height:45,backgroundColor:'rgba(41,113,232,0.8)'}}
-                        onPress= {this.sendInformation}
-                        title= 'se connecter'
-                     
-                    />
+                            containerStyle={Style.button}
+                            buttonStyle={{borderRadius:20,height:45,backgroundColor:'rgba(41,113,232,0.8)'}}
+                            onPress= {this.sendInformation}
+                            title= 'se connecter'
+                        
+                        />
                     
                         </Form>
                         </ScrollView>
@@ -196,11 +193,12 @@ class Connection extends Component {
             isModalVisible={this.state.isModalVisible}/>
            
             </View>
-            </AnimatedLinearGradient>
-            <View style={Style.waveContainer} >
+            
+            </LinearGradient>
+            <View style={Style.waveContainer} > 
                     <Wave
                         style={Style.wave}
-                        H={25}
+                        H={28}
                         waveParams={[
                             {A:45, T:700, fill: '#ffffff'},
                             

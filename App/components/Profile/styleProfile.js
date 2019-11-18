@@ -26,7 +26,7 @@ export const Style = StyleSheet.create({
         
     },
     button:{
-        width:300,
+        width:wp("85%"),
        marginTop:30,
         justifyContent:"center",
         borderRadius:30

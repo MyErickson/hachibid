@@ -8,8 +8,9 @@ export const Style = StyleSheet.create({
         fontSize:20
     },
     errorRegister:{
-        color:"red",textAlign:'center'
-
+        color:"red",
+        textAlign:'center',
+        fontSize:20
     }
 
 

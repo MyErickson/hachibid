@@ -1,13 +1,24 @@
-import {StyleSheet } from 'react-native';
+import {StyleSheet ,Dimensions} from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
   } from "react-native-responsive-screen";
 
+  const HEIGHT= Dimensions.get('window').height;
+var menuHeight;
+
+if(HEIGHT > 650 ){
+   menuHeight= hp('65%')
+
+}else  {
+    
+    menuHeight= hp('90%')
+ 
+}
 
 export const Styles = StyleSheet.create({
     container:{
-        height:hp("80%"),
+        height:menuHeight,
         borderRadius:20,
         
        
@@ -53,7 +64,7 @@ export const Styles = StyleSheet.create({
     iconList:{
         color:"white",
         padding:6,
-        paddingLeft:60,
+        paddingLeft:40,
         fontSize:25,
         margin:4,
     },

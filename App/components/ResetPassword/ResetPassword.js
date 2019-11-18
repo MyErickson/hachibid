@@ -79,7 +79,6 @@ export class ResetPassword extends Component {
           <Item last regular style={Style.containerInput}>
                   
               <Input 
-              style={Style.input} 
               placeholder="email *" 
               name="email"
               maxLength={255}
@@ -106,12 +105,7 @@ export class ResetPassword extends Component {
                      buttonStyle={{borderRadius:30}}
                      onPress= {this.sendInformationForReset}
                      title= 'Envoyer'
-                     ViewComponent={LinearGradient}
-                     linearGradientProps={{
-                        colors: [ 'rgb(14, 65, 144)','rgb(160, 190, 235)'],
-                        start: { x: 0, y: 0.5 },
-                        end: { x: 1, y: 0.5 },
-                      }}
+                     
                  />
                 </View>
                </Content>

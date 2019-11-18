@@ -10,7 +10,10 @@ import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-cha
 import PlaySound from './PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
 import ViewBubble from './ViewBubble';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 
 
@@ -268,7 +271,7 @@ class MyQuestions extends Component {
 
     return(
       <InputToolbar
-      containerStyle={{paddingTop:16}}
+      containerStyle={{paddingTop:5}}
       // style={{paddingTop:10}}
       {...props}
       />
@@ -506,7 +509,7 @@ renderComposer=()=> {
                 renderAvatar={null}
                 isAnimated= {true}
                 minInputToolbarHeight={60}
-                placeholder="Entrer un message..."
+                placeholder="Poser une question..."
                 style={{background:'red'}}  
                 keyboardShouldPersistTaps={'never'}
                 renderBubble={(props)=>this.renderBubble(props)}

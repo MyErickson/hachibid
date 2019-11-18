@@ -20,6 +20,7 @@ const input = React.createRef();
     return (
       <View>
         <Input ref={input}
+        placeholderTextColor={"#76797C"}
          placeholder='Recherche Questions'
          value={textFilter}
          onChangeText={(text)=> searchBar(text)} 

@@ -1,30 +1,46 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet , Dimensions} from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
   } from "react-native-responsive-screen";
 const marginTop = 20 ; 
-
+const HEIGHT= Dimensions.get('window').height;
+var waveHeight;
+var paddingTop;
+var top; 
+if(HEIGHT > 700 ){
+   waveHeight= hp('65%')
+   paddingTop=150
+   top =hp('18%')
+}else {
+    
+    waveHeight= hp('72%')
+    paddingTop=40
+    top =hp('8%')
+}
 export const Style = StyleSheet.create({
     container:{
         flex:1,
         alignItems:'center',
         justifyContent:"space-between",
-        top:hp('8%'),
+        top:top,
+        height:waveHeight ,
+       
+        
 
     },
     
     containerInput:{
         borderRadius:30,
         margin:10,
-        backgroundColor:'white'
-        
+        backgroundColor:'white',
+       
     },
     form:{
         width:wp('85%'),
         height:hp('60%'),
         marginTop:marginTop,
-        
+       
     },
     button:{
         width:wp('83%'),
@@ -34,12 +50,10 @@ export const Style = StyleSheet.create({
     
     textRegister:{
         alignItems:"center",
-        backgroundColor:'white',
         justifyContent:"center",
-        paddingTop:60,
-        paddingBottom:40
-        
-      
+        paddingTop:paddingTop,
+        paddingBottom:40,
+
     },
 
 
@@ -48,17 +62,11 @@ export const Style = StyleSheet.create({
         fontSize:25,
         fontWeight:'bold',
         marginBottom: 10,
- 
     },
-    waveContainer:{
- 
-        height:hp('70%')
-      
-    },
+  
     wave: {
         minWidth: wp('100%'),
-     
-        height:hp('70%')
+  
     },
    
     

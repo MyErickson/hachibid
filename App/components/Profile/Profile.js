@@ -51,6 +51,7 @@ class Profile extends Component {
 
 
    static async getDerivedStateFromProps(props, state){
+       console.log(props.dataProfileUser)
     const profileUser =props.dataProfileUser
     state.token = props.receiveResponseConnection
     
@@ -108,7 +109,8 @@ class Profile extends Component {
              } = this.state
         
         const {id} =  this.props.dataProfileUser.data  
-             
+         var messageErr = false;
+
         var data = new Object ;
 
         data.id= id ;
@@ -117,6 +119,7 @@ class Profile extends Component {
 
             if(password.trim())  {
             data.password=password
+           
             this.setState({errorPwd:false})
                  
             }
@@ -130,7 +133,15 @@ class Profile extends Component {
                 data.email =email
             
             }
+            if(login.trim().length < 0){
+                console.log( "loool",login.trim())
+            }
        
+         if(login.trim()  &&  email.trim()  && password.trim() ){
+            messageErr = false;
+         }else{
+            messageErr = true;
+         }
             axios.defaults.headers['Authorization']= "Bearer "+data.token;
             axios.put(`users/${data.id}`,{
                 
@@ -138,21 +149,22 @@ class Profile extends Component {
                     username:data.login,
                     password:data.password,
                 }).then((response)=>{
-                console.log("axios update profile ",response)
+                console.log("axios update profile ",response.data)
             
                     this.setState({
                         login:"", 
                         email:"" , 
                         password:"",
                         changePassword:"",
-                        messageAlert:data.password&&"Modifié",
+                        messageAlert:messageErr?"Aucun champs a été remplis":"Modifié",
                         alertConfirm:false,
-                        style:data.password?true:false,
+                        style:messageErr?false:true,
                         messageAlertPWd:undefined
         
                         })
-                    store.dispatch(receiveDataProfile(response))
-                
+                        console.log("axios update profile 22222",response.data)
+                   this.props.receiveDataProfile(response)
+                    console.log("axios update profile 33333",response)
             
                 }).catch((err)=>{
                     console.log("axios error update profile ",err.response.data["hydra:description"])

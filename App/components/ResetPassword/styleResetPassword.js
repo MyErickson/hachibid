@@ -1,4 +1,8 @@
 import { StyleSheet } from 'react-native';
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp
+  } from "react-native-responsive-screen";
 
 const marginTop = 20 ; 
 
@@ -15,17 +19,18 @@ export const Style = StyleSheet.create({
     },
     
     containerInput:{
+        width:wp("80%"),
         borderRadius:10,
         margin:10,
         
     },
     form:{
-        width:300,
+        width:wp("90%"),
         marginTop:marginTop
         
     },
     button:{
-        width:80,
+        width:90,
         marginTop:40,
         margin:10,
         justifyContent:"center",
@@ -46,7 +51,8 @@ export const Style = StyleSheet.create({
     },
     text:{
         fontSize:20,
-    }
+    },
+
     
 
 

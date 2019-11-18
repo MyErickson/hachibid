@@ -116,7 +116,7 @@ class MessageCategory extends Component {
                      onPress={()=>this.alertPrecision(props.currentMessage)}
                      style={{flexDirection:"row"}}
                    >
-                    <Text  style={{fontSize:11, marginLeft:80,color:"green",fontWeight:"bold",marginTop:3}}>plus de précision</Text>
+                    <Text  style={{fontSize:11, marginLeft:50,color:"green",fontWeight:"bold",marginTop:3}}>plus de précision</Text>
                     <Text style={{fontSize:15, color:"green",fontWeight:"bold",marginRight:20}}> + </Text>
             
                    </TouchableOpacity>
