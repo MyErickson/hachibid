@@ -17,10 +17,7 @@ export const sendDataFilterHomeMessage=(data)=>({
     data
    })
    
-// export const receiveDataMessagesHome=(dataMessagesHome)=>({
-//      type:RECEIVE_DATA_MESSAGES_HOME,
-//      dataMessagesHome
-//    })
+
 export const receiveDataFilterMessagesHome=(dataFilterMessage)=>({
     type:RECEIVE_DATA_FILTER_MESSAGES_HOME,
     dataFilterMessage

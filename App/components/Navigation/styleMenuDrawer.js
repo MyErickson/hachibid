@@ -8,7 +8,7 @@ import {
 var menuHeight;
 
 if(HEIGHT > 650 ){
-   menuHeight= hp('65%')
+   menuHeight= hp('70%')
 
 }else  {
     

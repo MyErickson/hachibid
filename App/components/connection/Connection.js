@@ -12,7 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 var jwtDecode = require('jwt-decode');
 
 
-const HEIGHT= Dimensions.get('window').height;
+
 
 
 class Connection extends Component {
@@ -31,7 +31,7 @@ class Connection extends Component {
     }
     async   componentDidMount (){
         AsyncStorage.removeItem('sessionJWT')
-         console.log(HEIGHT)
+      
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,

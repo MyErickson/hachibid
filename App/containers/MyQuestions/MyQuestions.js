@@ -8,14 +8,14 @@ import { connect } from 'react-redux';
  */
 // import Example from 'App/components/Example';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
-import { dataMessagesHome} from '../../store/actionCreator/ChatHome';
+import { dataMessagesHome,sendDataFilterHomeMessage,receiveMessagesHome} from '../../store/actionCreator/ChatHome';
 // Action Creators
 import { sendMessageUser ,
         receiveDataMessagesMyQuestions,
         receivePrecision,
         sendDatafilterMessageMyQuestion,
         sendAnswersForQuestion,
-        sendPrecisionForQuestion } from '../../store/actionCreator/MyQuestions'
+        sendPrecisionForQuestion,DataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -60,7 +60,15 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   sendPrecisionForQuestion:(data)=>{
     dispatch(sendPrecisionForQuestion(data))
-  }
+  },  sendDataFilterHomeMessage:(data)=>{
+    dispatch(sendDataFilterHomeMessage(data));
+},
+receiveMessagesHome:()=>{
+  dispatch(receiveMessagesHome(undefined))
+},
+DataMessagesMyQuestions:()=>{
+  dispatch(DataMessagesMyQuestions(undefined))
+}
 
 });
 

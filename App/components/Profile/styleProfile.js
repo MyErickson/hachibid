@@ -61,10 +61,10 @@ export const Style = StyleSheet.create({
         borderRadius:10,
         shadowOffset: {
             width: 0,
-            height: 3,
+            height: 7,
         },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
+        shadowOpacity: 0.34,
+        shadowRadius: 6.37,
         
         elevation: 10,
   

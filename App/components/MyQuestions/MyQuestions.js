@@ -10,14 +10,13 @@ import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-cha
 import PlaySound from './PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
 import ViewBubble from './ViewBubble';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
-
+import NetInfo from "@react-native-community/netinfo";
+var jwtDecode = require('jwt-decode');
 
 
 var timer;
+var timerMessage;
+
 class MyQuestions extends Component {
   constructor(props){
     super(props);
@@ -43,7 +42,7 @@ class MyQuestions extends Component {
       isQuestion:undefined,
 
     };
-  
+
     this.permission = undefined;
     this.writeExternalStorage = undefined ;
     this.audioRecorderPlayer = new AudioRecorderPlayer();
@@ -52,23 +51,52 @@ class MyQuestions extends Component {
     
     async componentDidMount() {
         const { dataProfileUser} = this.props
+        var isInternetReachable ;
+        var isConnected;
+        let decode = jwtDecode(this.props.receiveResponseConnection)
+        
+        const data = this._dataInfo()
+ 
+        await NetInfo.fetch().then(state => {
+            isInternetReachable = state.isInternetReachable
+            isConnected  = state.isConnected 
        
-          const data = this._dataInfo()
-        
-      if(dataProfileUser && dataProfileUser.data.roleTitle !== "Utilisateur"){
-        await this.props.dataMessagesHome(this.props.receiveResponseConnection)
-        try{
-          const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
-          const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
-          this.permission = granted
-          this.writeExternalStorage = storage 
-        
-        }catch(err){
-            console.log("eroor ====== >",err)
-        }
+          });
+    
+       
+      if(decode.roles[0] === "ROLE_ADMIN"){
+       
+            timerMessage = setInterval(()=>{
       
+              if(isConnected && isInternetReachable){
+                this.props.receiveMessagesHome()
+                this.props.dataMessagesHome(this.props.receiveResponseConnection)
+              }
+              
+            },3000)
+
+        // try{
+          // const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+          // const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+          // this.permission = granted
+          // this.writeExternalStorage = storage 
+       
+        // }catch(err){
+        //     console.log("eroor ====== >",err)
+        // }
+      
+     
+
       }else{
-        await this.props.receiveDataMessagesMyQuestions(data)
+        timerMessage = setInterval(()=>{
+      
+          if(isConnected && isInternetReachable){
+            this.props.DataMessagesMyQuestions()
+            this.props.receiveDataMessagesMyQuestions(data)
+          }
+          
+        },3000)
+       
       }
    
   
@@ -76,14 +104,21 @@ class MyQuestions extends Component {
   
 
 
-     static async getDerivedStateFromProps(props, state){ 
+    componentWillUnmount(){
+      console.log("quitter")
+      clearInterval(timerMessage)
+     
+    }
+
+
+    static async getDerivedStateFromProps(props, state){ 
   
-      console.log("message ===",props.dataMessagesMyQuestions)
+      console.log("message ===",props.dataFilterMyquestion )
              if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
-           
+              console.log("message ===",props.dataFilterMyquestion )
               state.ProfileUser = props.dataProfileUser.data
                 if(props.allDataMessagesHome){
-                     // console.log("je suis un user",props.)
+                  
                   state._messages = props.allDataMessagesHome
                   
                 }
@@ -92,38 +127,49 @@ class MyQuestions extends Component {
              if(props.dataProfileUser ){
               state.ProfileUser = props.dataProfileUser.data
              }
-              
-              if(props.dataMessagesMyQuestions){
+             if(props.dataMessagesMyQuestions){
               state._messages = props.dataMessagesMyQuestions
              }
+            }
+
+        
 
              if(props.dataFilterMyquestion && state.filter){
               state._messageFilter =props.dataFilterMyquestion
              }else{
               state._messageFilter =undefined
              }
-         
-            
-            }
 
      }
 
 
 
-
     searchBar= async (text)=>{
-      //   await this.props.sendDatafilterMessage(text)
-      const {sendDatafilterMessageMyQuestion}=this.props
-     
+  
+      const {sendDatafilterMessageMyQuestion,sendDataFilterHomeMessage}=this.props
+      
      
       if(text && text.length > 2 ){
+
       const data = this._dataInfo(text)
-      await sendDatafilterMessageMyQuestion(data)
+        
+      let decode = jwtDecode(this.props.receiveResponseConnection)
+          data.role = decode.roles[0]
+
+       if(decode && decode.roles[0] === "ROLE_ADMIN"){
+        sendDataFilterHomeMessage(data)
+       }else{
+        sendDatafilterMessageMyQuestion(data)
+       }
+
       this.setState({
         filter:true,
         deleteTextSearchBar:true,
-     })}else if (text){
-      this.setState({ deleteTextSearchBar:true})     
+     })
+    
+    }else if (text){
+      this.setState({ deleteTextSearchBar:true})   
+
     }else{
         this.setState({
           filter:false,
@@ -138,10 +184,10 @@ class MyQuestions extends Component {
       const { ProfileUser } = this.state
 
       const {  receiveResponseConnection } = this.props
-
+      console.log("prifluser =",ProfileUser)
       let data = new Object
       data.token = receiveResponseConnection
-      data.idUser = ProfileUser && ProfileUser["@id"]
+      data.idUser = ProfileUser && ProfileUser.id
       data.text = text
  
 
@@ -170,7 +216,7 @@ class MyQuestions extends Component {
        recordPosition,
        token: receiveResponseConnection
      }]
-  
+   console.log("profiluser dans on send ",ProfileUser)
   
     if(ProfileUser.roleTitle !== "Administrateur" ){
       
@@ -212,7 +258,7 @@ class MyQuestions extends Component {
    dataMessageCurrent.idAnwsersUser = user._id
    dataMessageCurrent.idMessage= idMessage
 
- console.log(question , props.currentMessage)
+
    if(createdAt.getMinutes() < 10){
     minutes = `0`+createdAt.getMinutes()
         }
@@ -309,21 +355,21 @@ renderComposer=()=> {
   renderActions=(props)=>{
  
     const { ProfileUser, stop  } = this.state
- if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
-  if (stop){
-    return (
-      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-      <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
-      </TouchableOpacity>
-    )
-   }else{
-    return (
-      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-      <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
-      </TouchableOpacity>
-    )
-   }
- }
+//  if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
+//   if (stop){
+//     return (
+//       <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+//       <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
+//       </TouchableOpacity>
+//     )
+//    }else{
+//     return (
+//       <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+//       <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
+//       </TouchableOpacity>
+//     )
+//    }
+//  }
     
     
     
@@ -408,8 +454,9 @@ renderComposer=()=> {
     })
 
     const msg = await this.audioRecorderPlayer.startPlayer(currentPath[1]);
-    console.log("msg ==>",msg,this.path);
-     timer=setInterval(()=>{
+    // console.log("msg ==>",msg,this.path);
+
+     timer = setInterval(()=>{
        console.log("dans le timer 2");
        this.setState({
          currentPositionSec: 100 + this.state.currentPositionSec
@@ -480,8 +527,7 @@ renderComposer=()=> {
       nameMenu = ProfileUser.roleTitle === "Administrateur" ? "Chat Général" :  "Mes questions" 
     }
 
-    console.log("message ===",_messages)
-      
+
    
     return (
     

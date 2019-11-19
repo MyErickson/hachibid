@@ -40,17 +40,7 @@ class ChatHome extends Component {
         await this.props.dataProfileUsers( data )
         await this.props.dataMessagesHome(this.props.receiveResponseConnection)
       
-        // axios.get('https://rabbin-dev.digitalcube.fr/api/messages/15',{
-        //   headers:{
-        //     'Authorization':"Bearer "+this.props.receiveResponseConnection
-        // } 
-        // }).then((response)=>{
-        //     console.log("response pour le filte message ",response)
-        
-        // }).catch((err)=>{
-        //     console.log(err)
-            
-        // })
+     
         this.setState({
           idUser:decode.id
         })

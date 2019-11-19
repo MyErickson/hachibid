@@ -23,12 +23,15 @@ export const actionRequeteDataMessage = (response)=>{
           })
 
           response.data["hydra:member"].map((value)=>{
+         
             if(value.valid){
                 if(value.answers.length){
+                    var date = 0 ;
                     value.answers.map((valueAnswers)=>{
+                        
                     if(valueAnswers.answered){
                         dataMessage.push({
-                            _id:value["@id"]+Date.now(),
+                            _id:value["@id"]+ date,
                             idMessage:value["@id"],
                             text:valueAnswers.content,
                             valid:value.valid,
@@ -46,11 +49,12 @@ export const actionRequeteDataMessage = (response)=>{
                             }
                         })
                     }
+                    date++
                      })   
                }
             }  
         })
- 
+  console.log("je suis dans action requete",dataMessage)
         return dataMessage
         
    

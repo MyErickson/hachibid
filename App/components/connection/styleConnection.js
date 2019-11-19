@@ -3,11 +3,16 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
   } from "react-native-responsive-screen";
+
+
+
 const marginTop = 20 ; 
 const HEIGHT= Dimensions.get('window').height;
 var waveHeight;
 var paddingTop;
 var top; 
+
+
 if(HEIGHT > 700 ){
    waveHeight= hp('65%')
    paddingTop=150
@@ -18,6 +23,9 @@ if(HEIGHT > 700 ){
     paddingTop=40
     top =hp('8%')
 }
+
+
+
 export const Style = StyleSheet.create({
     container:{
         flex:1,

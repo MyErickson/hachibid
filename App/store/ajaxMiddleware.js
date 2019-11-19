@@ -12,7 +12,6 @@ import { dataMessagesCategory,dataFilterMessagesCategory} from './actionCreator/
 import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
-import { receiveDataNotification } from './actionCreator/Notification'
 import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "./actionRequetes/actionRequetes"
 
 
@@ -161,7 +160,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 
         case SEND_DATA_FILTER_HOME_MESSAGE:
                 next(action)
-           
+             console.log("action dans le filter messge home ", action )
                 axios.get(`messages?content=${action.data.text}`,{
                     headers:{
                         'Authorization':"Bearer "+action.data.token
@@ -171,9 +170,14 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
                     const dataMessage= actionRequeteDataMessage(response) 
     
                     const filterDataMessage = actionRequeteFilter(dataMessage)
-                    const allDataMessageUser = actionRequeteSort(filterDataMessage)  
+                    const allDataMessageUser = actionRequeteSort(filterDataMessage)
 
-                     store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
+                    if(action.data.role === "ROLE_ADMIN"){
+                        store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
+                    }else{
+                        store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
+                    }
+                    
                 }).catch((err)=>{
                     console.log("axios ",err.response)
                     
@@ -182,7 +186,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 
         
 
-                case SEND_DATA_FILTER_MESSAGE_MYQUESTION:
+          case SEND_DATA_FILTER_MESSAGE_MYQUESTION:
                     next(action)
                
                     axios.get(`messages?user=${action.data.idUser}&content=${action.data.text}`,{
@@ -190,7 +194,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
                             'Authorization':"Bearer "+action.data.token
                         } 
                     }).then((response)=>{
-
+                        console.log("good oro axios ",response)
                         const dataMessage= actionRequeteDataMessage(response) 
 
                         const allDataMessageUser = actionRequeteSort(dataMessage)
@@ -296,8 +300,8 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 // recupere les doonées (message) de l'utisateur , page my questions            
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
-
-            axios.get(`messages?user=${action.data.id}`,{
+                console.log("action vaut",action)
+            axios.get(`messages?user=${action.data.idUser}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
@@ -349,7 +353,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
             axios.put(`answers/${action.data.idAnwsersUser}`,{
                 content: action.data.text, 
                 message: action.data.idMessage,
-                answerer:action.data.idUser,
+                answerer:`api/users/${action.data.idUser}`,
                 answered:true,
    
            }).then((response)=>{
@@ -364,19 +368,20 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 
         case SEND_ANSWERS_FOR_QUESTION:
             next(action)
-       
+            console.log(action )
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.post(`answers`,{
              content: action.data.text, 
              message: action.data.idMessage,
-             answerer:action.data.idUser,
+             answerer:`api/users/${action.data.idUser}`,
              answered:true,
 
            }).then((response)=>{
-               console.log("axios tout les reponses,",response)
+            console.log("axios tout les reponses11111",response)
                 store.dispatch(dataMessagesHome(action.data.token))
+                console.log("axios tout les reponses,22222",response)
            }).catch((err)=>{
-               console.log(err)
+               console.log("33333",err.response)
                
            })
             break;

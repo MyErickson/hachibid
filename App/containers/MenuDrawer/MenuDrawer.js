@@ -52,13 +52,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dataFilterMessagesCategory:()=>{
         dispatch(dataFilterMessagesCategory(undefined))
       },
-      dataMessagesCategory:()=>{
+    dataMessagesCategory:()=>{
           dispatch(dataMessagesCategory(undefined))
       },
-      receiveDataMessagesMyQuestions:(data)=>{
+    receiveDataMessagesMyQuestions:(data)=>{
         dispatch(receiveDataMessagesMyQuestions(data))
       },
-      DataMessagesMyQuestions:()=>{
+    DataMessagesMyQuestions:()=>{
           dispatch(DataMessagesMyQuestions(undefined))
       }
     

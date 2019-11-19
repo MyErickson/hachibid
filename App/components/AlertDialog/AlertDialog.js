@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Platform} from 'react-native'
 import Dialog from "react-native-dialog";
 import { Style } from './styleAlertDialog';
 import {
@@ -13,22 +13,38 @@ const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm =f
 
     return (
   
-        <View >
-        <Dialog.Container visible={alertVisible} headerStyle={{height:hp("8%") }} contentStyle={{width:wp("90%")}} >
+     
+        <Dialog.Container 
+        visible={alertVisible}
+        headerStyle={{height:hp("7%"),borderRadius:30 }}
+        contentStyle={{width:wp("90%"),borderRadius:14}}
+        buttonSeparatorStyle={{color:"black"}} >
           <Dialog.Description style={style? Style.succesRegister :Style.errorRegister }>
             {messageAlert ?messageAlert:" " }
           </Dialog.Description>
           { alertConfirm ? 
-          (<View style={{flexDirection:"row",justifyContent:"flex-end",marginTop:15,marginBottom:15}}>
-              <Dialog.Button bold={true} style={{fontSize:15,margin:10}} label="Oui" onPress={()=> yesConfirm(logOutOrRegister)} />
-              <Dialog.Button bold={true}  style={{fontSize:15,margin:10}} label="Annuler" onPress={closeAlert} />
+          (<View style={Platform.OS === "ios" ? Style.containerButtonIos :Style.containerButtonAndroid}>
+           
+              <Dialog.Button 
+              bold={true} 
+              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroid} 
+              color="white"
+              label="Oui" 
+              onPress={()=> yesConfirm(logOutOrRegister)} />
+         
+              <Dialog.Button 
+              bold={true}  
+              color="white"
+              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroid} 
+              label="Annuler" 
+              onPress={closeAlert} />
           </View>)
           :
           <Dialog.Button label="ok,j'ai compris" onPress={closeAlert} />
           }
          
         </Dialog.Container>
-      </View>
+     
     )
 }
 

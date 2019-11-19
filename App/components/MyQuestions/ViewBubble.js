@@ -12,7 +12,7 @@ const viewBubble = ({
     minutes,profileUser
 }) => {
 
-    console.log("user vaut ",user)
+  
     return (
     <View style={Style.answer}> 
     { question && (
