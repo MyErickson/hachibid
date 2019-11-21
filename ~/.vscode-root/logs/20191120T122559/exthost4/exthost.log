@@ -1,0 +1,20 @@
+[2019-11-20 14:53:30.777] [exthost] [info] extension host started
+[2019-11-20 14:53:30.793] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch {"startup":true,"extensionId":{"value":"vscode.debug-auto-launch","_lower":"vscode.debug-auto-launch"},"activationEvent":"*"}
+[2019-11-20 14:53:30.793] [exthost] [info] ExtensionService#loadCommonJSModule file:///private/var/folders/88/63ztgpg15qv9ds_j2z0prq4h0000gn/T/AppTranslocation/DFFE2AF5-2B5D-4275-B47F-D90DC25A55C4/d/Visual Studio Code.app/Contents/Resources/app/extensions/debug-auto-launch/dist/extension
+[2019-11-20 14:53:30.796] [exthost] [info] ExtensionService#_doActivateExtension vscode.emmet {"startup":true,"extensionId":{"value":"vscode.emmet","_lower":"vscode.emmet"},"activationEvent":"*"}
+[2019-11-20 14:53:30.796] [exthost] [info] ExtensionService#loadCommonJSModule file:///private/var/folders/88/63ztgpg15qv9ds_j2z0prq4h0000gn/T/AppTranslocation/DFFE2AF5-2B5D-4275-B47F-D90DC25A55C4/d/Visual Studio Code.app/Contents/Resources/app/extensions/emmet/dist/extension
+[2019-11-20 14:53:30.809] [exthost] [info] ExtensionService#_doActivateExtension vscode.git {"startup":true,"extensionId":{"value":"vscode.git","_lower":"vscode.git"},"activationEvent":"*"}
+[2019-11-20 14:53:30.809] [exthost] [info] ExtensionService#loadCommonJSModule file:///private/var/folders/88/63ztgpg15qv9ds_j2z0prq4h0000gn/T/AppTranslocation/DFFE2AF5-2B5D-4275-B47F-D90DC25A55C4/d/Visual Studio Code.app/Contents/Resources/app/extensions/git/dist/main
+[2019-11-20 14:53:30.826] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict {"startup":true,"extensionId":{"value":"vscode.merge-conflict","_lower":"vscode.merge-conflict"},"activationEvent":"*"}
+[2019-11-20 14:53:30.826] [exthost] [info] ExtensionService#loadCommonJSModule file:///private/var/folders/88/63ztgpg15qv9ds_j2z0prq4h0000gn/T/AppTranslocation/DFFE2AF5-2B5D-4275-B47F-D90DC25A55C4/d/Visual Studio Code.app/Contents/Resources/app/extensions/merge-conflict/dist/extension
+[2019-11-20 14:53:30.828] [exthost] [info] ExtensionService#_doActivateExtension CoenraadS.bracket-pair-colorizer {"startup":true,"extensionId":{"value":"CoenraadS.bracket-pair-colorizer","_lower":"coenraads.bracket-pair-colorizer"},"activationEvent":"*"}
+[2019-11-20 14:53:30.829] [exthost] [info] ExtensionService#loadCommonJSModule file:///Users/erickson/.vscode/extensions/coenraads.bracket-pair-colorizer-1.0.61/out/src/extension
+[2019-11-20 14:53:30.849] [exthost] [info] ExtensionService#_doActivateExtension EditorConfig.EditorConfig {"startup":true,"extensionId":{"value":"EditorConfig.EditorConfig","_lower":"editorconfig.editorconfig"},"activationEvent":"*"}
+[2019-11-20 14:53:30.849] [exthost] [info] ExtensionService#loadCommonJSModule file:///Users/erickson/.vscode/extensions/editorconfig.editorconfig-0.14.2/out/editorConfigMain.js
+[2019-11-20 14:53:30.872] [exthost] [info] ExtensionService#_doActivateExtension HookyQR.beautify {"startup":true,"extensionId":{"value":"HookyQR.beautify","_lower":"hookyqr.beautify"},"activationEvent":"*"}
+[2019-11-20 14:53:30.872] [exthost] [info] ExtensionService#loadCommonJSModule file:///Users/erickson/.vscode/extensions/hookyqr.beautify-1.5.0/extension
+[2019-11-20 14:53:30.912] [exthost] [info] ExtensionService#_doActivateExtension naumovs.color-highlight {"startup":true,"extensionId":{"value":"naumovs.color-highlight","_lower":"naumovs.color-highlight"},"activationEvent":"*"}
+[2019-11-20 14:53:30.912] [exthost] [info] ExtensionService#loadCommonJSModule file:///Users/erickson/.vscode/extensions/naumovs.color-highlight-2.3.0/dist/extension
+[2019-11-20 14:53:30.921] [exthost] [info] ExtensionService#_doActivateExtension PKief.material-icon-theme {"startup":true,"extensionId":{"value":"PKief.material-icon-theme","_lower":"pkief.material-icon-theme"},"activationEvent":"*"}
+[2019-11-20 14:53:30.921] [exthost] [info] ExtensionService#loadCommonJSModule file:///Users/erickson/.vscode/extensions/pkief.material-icon-theme-3.9.1/dist/extension
+[2019-11-20 14:53:30.928] [exthost] [info] eager extensions activated

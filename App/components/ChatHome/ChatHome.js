@@ -9,8 +9,8 @@ import { GiftedChat ,Bubble } from 'react-native-gifted-chat';
 import axios from 'axios';
 import AlertDialog  from '../AlertDialog/AlertDialog'
 var jwtDecode = require('jwt-decode');
-
-
+import NetInfo from "@react-native-community/netinfo";
+var timerMessage;
 class ChatHome extends Component {
  
     state = {
@@ -30,7 +30,9 @@ class ChatHome extends Component {
     async componentDidMount() {
        let data = new Object 
        const sessionId = await AsyncStorage.getItem('sessionJWT')
-
+       var isInternetReachable 
+        var isConnected  
+     
       console.log("ASYNCSTORAGE avant le decode ===>",this.props.receiveResponseConnection)
   
         var decode = jwtDecode(this.props.receiveResponseConnection)
@@ -38,8 +40,22 @@ class ChatHome extends Component {
         data.id = decode.id 
         data.token = this.props.receiveResponseConnection
         await this.props.dataProfileUsers( data )
-        await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+      //  await this.props.dataMessagesHome(this.props.receiveResponseConnection)
       
+        await NetInfo.fetch().then(state => {
+          isInternetReachable = state.isInternetReachable
+          isConnected  = state.isConnected 
+     
+        });
+        
+        timerMessage = setInterval(()=>{
+      
+          if(isConnected && isInternetReachable){
+    
+            this.props.dataMessagesHome(this.props.receiveResponseConnection)
+          }
+          
+        },3000)
      
         this.setState({
           idUser:decode.id
@@ -162,6 +178,10 @@ class ChatHome extends Component {
        
      }
 
+     componentWillUnmount(){
+
+      clearInterval(timerMessage)
+     }
   alertPrecision = (currentMessageForPrecision)=>{
     this.setState({
       alertVisible:true,
