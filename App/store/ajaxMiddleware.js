@@ -94,7 +94,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
                 } 
             }).then((response)=>{
                 store.dispatch(receiveMessagesHome( undefined))
-                console.log("axio data messahge home ",response)
+           
                 const dataMessage= actionRequeteDataMessage(response) 
  
                 const filterDataMessage = actionRequeteFilter(dataMessage)
@@ -160,7 +160,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 
         case SEND_DATA_FILTER_HOME_MESSAGE:
                 next(action)
-             console.log("action dans le filter messge home ", action )
+      
                 axios.get(`messages?content=${action.data.text}`,{
                     headers:{
                         'Authorization':"Bearer "+action.data.token
@@ -300,13 +300,13 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 // recupere les doonées (message) de l'utisateur , page my questions            
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
-                console.log("action vaut",action)
+                
             axios.get(`messages?user=${action.data.idUser}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
             }).then(async (response)=>{
-                console.log("axio data my question ",response)
+         
 
                 const dataMessage= actionRequeteDataMessage(response) 
 
@@ -330,7 +330,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
         
         case ASK_PRECISION:
            next(action)
-           console.log(action)
+      
            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
            axios.post('accuracies',{
             user:action.data.userQuestion,

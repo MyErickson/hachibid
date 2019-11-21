@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-native-gesture-handler';
 import { Platform , Dimensions } from 'react-native';
 import {  createAppContainer } from 'react-navigation';
 import {createDrawerNavigator } from 'react-navigation-drawer'

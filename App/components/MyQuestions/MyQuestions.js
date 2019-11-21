@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ViewBubble from './ViewBubble';
 import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
-
+import AlertDialog  from '../AlertDialog/AlertDialog'
 
 var timer;
 var timerMessage;
@@ -40,6 +40,10 @@ class MyQuestions extends Component {
       answerCurrent:"",
       dataMessageCurrent:undefined,
       isQuestion:undefined,
+      alertVisible:undefined,
+      alertText:undefined,
+      alertConfirm:undefined,
+      style:undefined
 
     };
 
@@ -324,61 +328,57 @@ class MyQuestions extends Component {
     ); 
   }
  
-renderComposer=()=> {
-  const { showAboveInput , answerCurrent} = this.state
- if(showAboveInput){
-   return(
-     
-     <View style={Style.renderComposer}>
-        <Text style={Style.closeTextRenderComposer}
-        onPress={()=>this.setState({
-          answerCurrent:"",
-          showAboveInput:false,
-          dataMessageCurrent:undefined
-        })}
-        >x</Text>
-        <View style={Style.textRenderComposer}>
-          <Text >
-            {answerCurrent} 
-          </Text>
-          
-        </View>
-       
-     </View>
-    
-   )
- }
-}
-
-  
+  renderComposer=()=> {
+    const { showAboveInput , answerCurrent} = this.state
+  if(showAboveInput){
+    return(
+      
+      <View style={Style.renderComposer}>
+          <Text style={Style.closeTextRenderComposer}
+          onPress={()=>this.setState({
+            answerCurrent:"",
+            showAboveInput:false,
+            dataMessageCurrent:undefined
+          })}
+          >x</Text>
+          <View style={Style.textRenderComposer}>
+            <Text >
+              {answerCurrent} 
+            </Text>
+            
+          </View>
+        
+      </View>
+      
+    )
+  }
+  }
 
   renderActions=(props)=>{
  
     const { ProfileUser, stop  } = this.state
-//  if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
-//   if (stop){
-//     return (
-//       <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-//       <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
-//       </TouchableOpacity>
-//     )
-//    }else{
-//     return (
-//       <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-//       <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
-//       </TouchableOpacity>
-//     )
-//    }
-//  }
-    
-    
+ if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
+  if (stop){
+    return (
+      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+      <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
+      </TouchableOpacity>
+    )
+   }else{
+    return (
+      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+      <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
+      </TouchableOpacity>
+    )
+   }
+ }
     
  }
 
 
 // ******************************* Methode Soundrecorder *******************************
 
-
+ 
 
   onStartRecord = async () => {
     const { stop } =this.state
@@ -444,7 +444,6 @@ renderComposer=()=> {
 
   };
 
-
   onStartPlay = async (propsSounder) => {
      const currentPath = propsSounder.currentMessage.text.split('//')
     console.log('onStartPlay',currentPath);
@@ -479,15 +478,15 @@ renderComposer=()=> {
     
   }
 
- onStopPlay=(propsSounder)=>{
-  const currentPath = propsSounder.currentMessage.text.split('//')
-  clearInterval(timer)  
-   this.setState({
-     play:false ,
-     currentPositionSec:0
-    })
-    this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
- }
+  onStopPlay=(propsSounder)=>{
+    const currentPath = propsSounder.currentMessage.text.split('//')
+    clearInterval(timer)  
+    this.setState({
+      play:false ,
+      currentPositionSec:0
+      })
+      this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
+  }
 
 
   onPausePlay =  (propsSounder,currentPositionSec) => {
@@ -515,12 +514,36 @@ renderComposer=()=> {
   })
  }
 
-
-
+ showAlertDialog = ()=>{
+   this.setState({
+    alertVisible:true,
+    alertText:"Etes sur de vouloir enregistrer un message vocal ?",
+    alertConfirm:true,
+    style:true
+   })
+ }
+ 
+ closeAlert=()=>{
+  this.setState({
+    alertVisible:false,
+    alertText:"",
+    alertConfirm:false,
+    style:false
+   })
+ }
 
 
   render() {
-     const { ProfileUser,_messages,deleteTextSearchBar,filter,_messageFilter } = this.state
+     const { ProfileUser,
+      _messages,
+      deleteTextSearchBar,
+      filter,
+      _messageFilter,
+      alertConfirm,
+      alertText,
+      style,
+      alertVisible
+     } = this.state
   
     var nameMenu = "";
     if(ProfileUser !== undefined){
@@ -556,7 +579,6 @@ renderComposer=()=> {
                 isAnimated= {true}
                 minInputToolbarHeight={60}
                 placeholder="Poser une question..."
-                style={{background:'red'}}  
                 keyboardShouldPersistTaps={'never'}
                 renderBubble={(props)=>this.renderBubble(props)}
                 renderSend={this.renderSend}
@@ -572,7 +594,14 @@ renderComposer=()=> {
               />
     
         </View>
-       
+        <AlertDialog 
+          alertVisible={alertVisible}
+          messageAlert={alertText}
+          closeAlert={this.closeAlert}
+          alertConfirm={alertConfirm}
+          yesConfirm={this.onStartRecord}
+          style={style}
+                 />
 
       </View>
     );

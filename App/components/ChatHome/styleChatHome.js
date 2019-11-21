@@ -30,9 +30,10 @@ export const Style = StyleSheet.create({
        
     },
    
-    containerIcon :{
+    containerButton :{
         flexDirection:"row",
-        justifyContent:"center"
+        justifyContent:"center",
+        borderRadius:20
     },
        recorder:{
         padding:5,

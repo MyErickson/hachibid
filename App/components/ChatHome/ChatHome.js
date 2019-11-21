@@ -51,7 +51,7 @@ class ChatHome extends Component {
         timerMessage = setInterval(()=>{
       
           if(isConnected && isInternetReachable){
-    
+          
             this.props.dataMessagesHome(this.props.receiveResponseConnection)
           }
           
@@ -63,13 +63,12 @@ class ChatHome extends Component {
   
         }
 
-   actualize= async ()=>{
+    goToMyQuestion= async ()=>{
         this.setState({
       
         filter:undefined
       })
-    await this.props.receiveMessagesHome()
-     await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+      this.props.navigation.navigate("MyQuestions")
         // const allMessages =  this.state._messages
         // console.log("je suis dans chat home pour alllmessages ",allMessages)
       
@@ -107,13 +106,17 @@ class ChatHome extends Component {
 
     static  getDerivedStateFromProps(props,state){
      
+     
+     if(props.allDataMessagesHome){
+      state._messages = props.allDataMessagesHome
+     }
      if(props.dataFilterHome && state.filter){
       state._messageFilter = props.dataFilterHome
      
      }else{
       state._messageFilter =undefined
      }
-     state._messages = props.allDataMessagesHome
+ 
      
     }
  
@@ -182,6 +185,8 @@ class ChatHome extends Component {
 
       clearInterval(timerMessage)
      }
+
+
   alertPrecision = (currentMessageForPrecision)=>{
     this.setState({
       alertVisible:true,
@@ -199,6 +204,8 @@ class ChatHome extends Component {
 
     })
   }
+
+
   sendPrecision=()=>{
     const { currentMessageForPrecision } = this.state
   
@@ -238,11 +245,13 @@ class ChatHome extends Component {
         <View style={Style.messageContainer}>
           <Filtrate  searchBar={this.searchBar} textFilter={_textFilter} deleteTextSearchBar={deleteTextSearchBar} />
               <GiftedChat
+               
                 scrollToBottom={true}
+                shouldUpdateMessage={()=>_messages}
                 messages={filter?_messageFilter :_messages}
                 renderAvatar={null}
-                isAnimated= {false}
-                minInputToolbarHeight={1}
+                isAnimated= {true}
+                minInputToolbarHeight={10}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
                 renderUsernameOnMessage={true}
@@ -254,8 +263,11 @@ class ChatHome extends Component {
                   
                 }}
               />
-             <View style={Style.containerIcon } >
-               <Icon containerStyle={{width:40}} onPress={this.actualize} name="refresh" />
+             <View style={Style. containerButton} >
+               <Button  
+               title="Poser une question" 
+               buttonStyle={{ borderRadius:20,padding:10}} 
+               onPress={this.goToMyQuestion} />
               </View>
         </View>
         <AlertDialog 

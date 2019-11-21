@@ -27,7 +27,7 @@ const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm =f
            
               <Dialog.Button 
               bold={true} 
-              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroid} 
+              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroidYes} 
               color="white"
               label="Oui" 
               onPress={()=> yesConfirm(logOutOrRegister)} />
@@ -35,7 +35,7 @@ const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm =f
               <Dialog.Button 
               bold={true}  
               color="white"
-              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroid} 
+              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroidNo} 
               label="Annuler" 
               onPress={closeAlert} />
           </View>)

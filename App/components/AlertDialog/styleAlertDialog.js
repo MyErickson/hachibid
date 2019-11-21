@@ -33,14 +33,25 @@ export const Style = StyleSheet.create({
         marginTop:20,
      
     },
-    buttonAndroid:{
+    buttonAndroidYes:{
         fontSize:15,
-        width:wp("27%"),
-        paddingVertical: 10,
+        width:wp("26%"),
+        paddingVertical: 6,
         margin:10,
         marginBottom:0,
-        marginTop:0,
+        marginTop:15,
         backgroundColor:"#0B6ACA",
+        borderRadius:30
+        
+    },
+    buttonAndroidNo:{
+        fontSize:15,
+        width:wp("26%"),
+        paddingVertical: 6,
+        margin:10,
+        marginBottom:0,
+        marginTop:15,
+        backgroundColor:"gray",
         borderRadius:30
         
     }
