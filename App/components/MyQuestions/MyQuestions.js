@@ -13,6 +13,8 @@ import ViewBubble from './ViewBubble';
 import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 import AlertDialog  from '../AlertDialog/AlertDialog'
+import axios from 'axios';
+
 
 var timer;
 var timerMessage;
@@ -43,7 +45,8 @@ class MyQuestions extends Component {
       alertVisible:undefined,
       alertText:undefined,
       alertConfirm:undefined,
-      style:undefined
+      style:undefined,
+      textIpnut:undefined
 
     };
 
@@ -54,13 +57,21 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
+      axios.get("http://192.168.1.88:80/audio",{
+        "Content-Type": "application/x-www-form-urlencoded",
+  Accept: "application/json"
+      }).then((res)=>{
+        console.log(res)
+      }).catch((err)=>{
+        console.log("eroor",err)
+      })
         const { dataProfileUser} = this.props
         var isInternetReachable ;
         var isConnected;
         let decode = jwtDecode(this.props.receiveResponseConnection)
         
         const data = this._dataInfo()
- 
+
         await NetInfo.fetch().then(state => {
             isInternetReachable = state.isInternetReachable
             isConnected  = state.isConnected 
@@ -69,7 +80,7 @@ class MyQuestions extends Component {
     
        
       if(decode.roles[0] === "ROLE_ADMIN"){
-       
+        this.props.dataMessagesHome(this.props.receiveResponseConnection)
             timerMessage = setInterval(()=>{
       
               if(isConnected && isInternetReachable){
@@ -92,6 +103,7 @@ class MyQuestions extends Component {
      
 
       }else{
+        this.props.receiveDataMessagesMyQuestions(data)
         timerMessage = setInterval(()=>{
       
           if(isConnected && isInternetReachable){
@@ -117,9 +129,9 @@ class MyQuestions extends Component {
 
     static async getDerivedStateFromProps(props, state){ 
   
-      console.log("message ===",props.dataFilterMyquestion )
+      // console.log("message ===",props.dataFilterMyquestion )
              if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
-              console.log("message ===",props.dataFilterMyquestion )
+              // console.log("message ===",props.dataFilterMyquestion )
               state.ProfileUser = props.dataProfileUser.data
                 if(props.allDataMessagesHome){
                   
@@ -322,7 +334,6 @@ class MyQuestions extends Component {
     return(
       <InputToolbar
       containerStyle={{paddingTop:5}}
-      // style={{paddingTop:10}}
       {...props}
       />
     ); 
@@ -357,23 +368,23 @@ class MyQuestions extends Component {
   renderActions=(props)=>{
  
     const { ProfileUser, stop  } = this.state
- if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
-  if (stop){
-    return (
-      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-      <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
-      </TouchableOpacity>
-    )
-   }else{
-    return (
-      <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-      <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
-      </TouchableOpacity>
-    )
-   }
- }
+    if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
+      if (stop){
+        return (
+          <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+          <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
+          </TouchableOpacity>
+        )
+      }else{
+        return (
+          <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
+          <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
+          </TouchableOpacity>
+        )
+      }
+    }
     
- }
+  }
 
 
 // ******************************* Methode Soundrecorder *******************************
@@ -383,11 +394,12 @@ class MyQuestions extends Component {
   onStartRecord = async () => {
     const { stop } =this.state
     this.setState({
-      stop:!stop
+      stop:!stop,
+      textIpnut:"go"
     })
     this.path = Platform.select({
       ios: 'hello.m4a',
-      android: `sdcard/Music/${Date.now()}.mp4`
+      android: `sdcard/Music/${Date.now()}.aac`
     })
      await this.audioRecorderPlayer.startRecorder(this.path);
    
@@ -433,14 +445,21 @@ class MyQuestions extends Component {
         valid: true
       },),
     }));
-    // let formData = new FormData();
-    //  formData.append('file',{
-    //    uri: result,
-    //    name: Date.now(),
-    //    type: ".mp4"
-    //  })
+    const formData = new FormData();
+    console.log(formData)
+    formData.append("audio",{
+       uri: result,
+       name: Date.now(),
+       type: ".aac"
+     })
 
-    //  console.log(formData)
+     axios.post("http://192.168.1.88:80/audio",{
+       data:formData
+     }).then((res)=>{
+      console.log(res)
+    }).catch((err)=>{
+      console.log("eroor",err)
+    })
 
   };
 
@@ -574,10 +593,11 @@ class MyQuestions extends Component {
                 messages={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
                 onSend={messages => this.onSend(messages)}
+                // maxInputLength={0}
                 renderUsernameOnMessage={true}
                 renderAvatar={null}
                 isAnimated= {true}
-                minInputToolbarHeight={60}
+                minInputToolbarHeight={49}
                 placeholder="Poser une question..."
                 keyboardShouldPersistTaps={'never'}
                 renderBubble={(props)=>this.renderBubble(props)}
@@ -589,7 +609,6 @@ class MyQuestions extends Component {
                 user={{
                   _id: ProfileUser ? ProfileUser.id : "user",
 
-                  
                 }}
               />
     

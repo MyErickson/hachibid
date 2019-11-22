@@ -209,7 +209,7 @@ class MessageCategory extends Component {
                 messages={filter?_messageFilter:_messages}
                 renderAvatar={null}
                 shouldUpdateMessage={()=>_messages}
-                minInputToolbarHeight={20}
+                minInputToolbarHeight={0}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
                 style={{background:'red'}}  

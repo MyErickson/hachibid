@@ -54,7 +54,7 @@ export const actionRequeteDataMessage = (response)=>{
                }
             }  
         })
-  console.log("je suis dans action requete",dataMessage)
+
         return dataMessage
         
    

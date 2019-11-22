@@ -194,7 +194,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
                             'Authorization':"Bearer "+action.data.token
                         } 
                     }).then((response)=>{
-                        console.log("good oro axios ",response)
+                      
                         const dataMessage= actionRequeteDataMessage(response) 
 
                         const allDataMessageUser = actionRequeteSort(dataMessage)
@@ -377,7 +377,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
              answered:true,
 
            }).then((response)=>{
-            console.log("axios tout les reponses11111",response)
+          
                 store.dispatch(dataMessagesHome(action.data.token))
                 console.log("axios tout les reponses,22222",response)
            }).catch((err)=>{

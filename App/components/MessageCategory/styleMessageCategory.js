@@ -15,9 +15,7 @@ export const Style = StyleSheet.create({
   
     messageContainer:{
         flex:1,
-
         paddingTop: 10,
-        paddingBottom: 15,
         borderRadius: 20,
 
     },
@@ -27,14 +25,6 @@ export const Style = StyleSheet.create({
         paddingTop: 5,
    
        
-    },
-    recorder:{
-        padding:5,
-        backgroundColor:"gray",
-        borderRadius:10,
-        paddingBottom:10,
-        paddingTop:10 ,
-     
     },
     answer:{
         maxWidth:wp("81%"),

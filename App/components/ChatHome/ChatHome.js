@@ -39,8 +39,8 @@ class ChatHome extends Component {
         console.log(decode)
         data.id = decode.id 
         data.token = this.props.receiveResponseConnection
-        await this.props.dataProfileUsers( data )
-      //  await this.props.dataMessagesHome(this.props.receiveResponseConnection)
+         this.props.dataProfileUsers( data )
+        this.props.dataMessagesHome(this.props.receiveResponseConnection)
       
         await NetInfo.fetch().then(state => {
           isInternetReachable = state.isInternetReachable
@@ -227,6 +227,7 @@ class ChatHome extends Component {
     })
   }
 
+
   render() {
  
    const { _messages,
@@ -251,7 +252,7 @@ class ChatHome extends Component {
                 messages={filter?_messageFilter :_messages}
                 renderAvatar={null}
                 isAnimated= {true}
-                minInputToolbarHeight={10}
+                minInputToolbarHeight={0}
                 placeholder="Entrer un message..."
                 renderInputToolbar={()=>undefined}
                 renderUsernameOnMessage={true}
@@ -263,13 +264,13 @@ class ChatHome extends Component {
                   
                 }}
               />
-             <View style={Style. containerButton} >
-               <Button  
-               title="Poser une question" 
-               buttonStyle={{ borderRadius:20,padding:10}} 
-               onPress={this.goToMyQuestion} />
-              </View>
-        </View>
+       </View>
+       <View style={Style.containerButton} >
+        <Button  
+        title="Poser une question" 
+        buttonStyle={{ borderRadius:20,padding:10}} 
+        onPress={this.goToMyQuestion} />
+      </View>
         <AlertDialog 
           alertVisible={alertVisible}
           messageAlert={alertText}

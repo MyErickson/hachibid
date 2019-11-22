@@ -9,31 +9,28 @@ export const Style = StyleSheet.create({
     container:{
         flex:1,
         justifyContent:"center",
-        
+     
 
     },
     messageContainer:{
         flex:1,
         // paddingHorizontal: 15,
         paddingTop: 10,
-        paddingBottom: 20,
-  
-       
- 
-      
+
+        
     },
     
     message:{
 
         paddingTop: 5,
-     
+
        
     },
    
     containerButton :{
         flexDirection:"row",
         justifyContent:"center",
-        borderRadius:20
+        padding:10
     },
        recorder:{
         padding:5,
