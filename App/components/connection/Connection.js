@@ -1,7 +1,6 @@
 import React, { Component  } from 'react';
 import { View , Text , TouchableOpacity, Animated,ScrollView , Dimensions} from 'react-native';
 import { Button } from 'react-native-elements';
-import { Style }  from './styleConnection'
 import {  Content, Form, Item, Input } from 'native-base';
 import ResetPassword from "../ResetPassword/ResetPassword"
 import Wave from 'react-native-waveview'
@@ -9,6 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
 import LinearGradient from 'react-native-linear-gradient';
+import { Style } from './styleConnection'
 var jwtDecode = require('jwt-decode');
 
 

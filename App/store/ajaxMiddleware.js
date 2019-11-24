@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,
-     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,RECEIVE_PRECISION,SEND_PRECISION_FOR_QUESTION,
+import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,ALL_PRECISION,
+     RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,SEND_PRECISION_FOR_QUESTION,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,SEND_ANSWERS_FOR_QUESTION,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,ASK_PRECISION  } from './reducer'
 
@@ -328,6 +328,9 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
             })
             break;
         
+
+
+
         case ASK_PRECISION:
            next(action)
       
@@ -345,6 +348,9 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
             
         })
          break;
+
+
+
 
          case SEND_PRECISION_FOR_QUESTION:
             next(action)
@@ -366,6 +372,8 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
            })
             break;
 
+
+
         case SEND_ANSWERS_FOR_QUESTION:
             next(action)
             console.log(action )
@@ -386,6 +394,21 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
            })
             break;
 
+        case ALL_PRECISION:
+            next(action)
+            console.log(action )
+            axios.defaults.headers['Authorization']= "Bearer "+action.data;
+            axios.get(`accuracies`).then((response)=>{
+                    console.log("axios tout les reponses pour acuuracy",response)
+            }).catch((err)=>{
+                console.log("33333",err.response)
+                
+            })
+        break;
+
+
+
+  
 
      
     }

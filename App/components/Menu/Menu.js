@@ -38,9 +38,9 @@ class Menu extends Component {
           </Body>
    
           <Right style={{flex:1}}>
-            {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate("Notification")}> */}
+            <TouchableOpacity onPress={()=>this.props.navigation.navigate("Notification")}>
               <Icon style={Style.icon} name='notifications' />
-            {/* </TouchableOpacity> */}
+            </TouchableOpacity>
           </Right>
         </Header>
    

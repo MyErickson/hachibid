@@ -57,14 +57,15 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-      axios.get("http://192.168.1.88:80/audio",{
-        "Content-Type": "application/x-www-form-urlencoded",
-  Accept: "application/json"
-      }).then((res)=>{
-        console.log(res)
-      }).catch((err)=>{
-        console.log("eroor",err)
-      })
+      // axios.get("http://192.168.1.88:80/audio",{
+      //   "Content-Type": "application/x-www-form-urlencoded",
+      //     Accept: "application/json"
+      //         }).then((res)=>{
+      //           console.log(res)
+      //         }).catch((err)=>{
+      //           console.log("eroor",err)
+      //         })
+      
         const { dataProfileUser} = this.props
         var isInternetReachable ;
         var isConnected;
@@ -128,8 +129,8 @@ class MyQuestions extends Component {
 
 
     static async getDerivedStateFromProps(props, state){ 
-  
-      // console.log("message ===",props.dataFilterMyquestion )
+              
+   
              if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
               // console.log("message ===",props.dataFilterMyquestion )
               state.ProfileUser = props.dataProfileUser.data
@@ -154,7 +155,7 @@ class MyQuestions extends Component {
               state._messageFilter =props.dataFilterMyquestion
              }else{
               state._messageFilter =undefined
-             }
+             } 
 
      }
 
@@ -213,7 +214,7 @@ class MyQuestions extends Component {
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
     const { ProfileUser , dataMessageCurrent,isQuestion } = this.state
-  
+   
     const {_id ,
       createdAt ,
       text ,
@@ -232,7 +233,7 @@ class MyQuestions extends Component {
        recordPosition,
        token: receiveResponseConnection
      }]
-   console.log("profiluser dans on send ",ProfileUser)
+   console.log("profiluser dans on send ",dataMessageCurrent)
   
     if(ProfileUser.roleTitle !== "Administrateur" ){
       
@@ -340,8 +341,12 @@ class MyQuestions extends Component {
   }
  
   renderComposer=()=> {
+    const {params} = this.props.navigation.state
     const { showAboveInput , answerCurrent} = this.state
+  
+   
   if(showAboveInput){
+    
     return(
       
       <View style={Style.renderComposer}>
@@ -354,7 +359,7 @@ class MyQuestions extends Component {
           >x</Text>
           <View style={Style.textRenderComposer}>
             <Text >
-              {answerCurrent} 
+              { answerCurrent } 
             </Text>
             
           </View>
@@ -363,6 +368,8 @@ class MyQuestions extends Component {
       
     )
   }
+ 
+ 
   }
 
   renderActions=(props)=>{

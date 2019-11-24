@@ -18,7 +18,8 @@ const initialState = {
   dataFilterCategory:undefined,
   topDataCategory:undefined,
   dataNotification:undefined,
-  dataFilterMyquestion:undefined
+  dataFilterMyquestion:undefined,
+  allPrecision:undefined
   
 };
 
@@ -59,6 +60,8 @@ export const RECEIVE_PRECISION ="RECEIVE_PRECISION";
 export const RECEIVE_DATA_FILTER_MESSAGE_MYQUESTION = "RECEIVE_DATA_FILTER_MESSAGE_MYQUESTION";
 export const SEND_ANSWERS_FOR_QUESTION = "SEND_ANSWERS_FOR_QUESTION";
 export const SEND_PRECISION_FOR_QUESTION = "SEND_PRECISION_FOR_QUESTION";
+export const ALL_PRECISION ="ALL_PRECISION";
+export const RECEIVE_ALL_PRECISION ="RECEIVE_ALL_PRECISION"
 /**
  * Traitements
  */
@@ -153,6 +156,15 @@ const reducer = (state = initialState, action = {}) => {
           ...state,
           dataFilterMyquestion:action.dataFilterMyquestion
         }
+
+
+    case RECEIVE_ALL_PRECISION:
+      return {
+        ...state,
+        allPrecision:action.allPrecision
+      }
+
+
     case INITITALIZE_STATE:
     
       return {

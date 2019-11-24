@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Notification from '../../components/Notification/Notification'
 
 // Action Creators
-import { dataAllCategory,sendDataFilterCategory } from '../../store/actionCreator/Category';
+import {notificationPrecision} from '../../store/actionCreator/Notification'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -20,8 +20,9 @@ import { dataAllCategory,sendDataFilterCategory } from '../../store/actionCreato
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    dataMessagesHome: state.dataMessagesHome,
-    dataStateAllCategory:state.dataAllCategory
+    notificationQuestions: state.allDataMessagesHome,
+    dataStateAllCategory:state.dataAllCategory,
+    receiveResponseConnection: state.receiveResponseConnection,
 });
 
 /* === Actions ===
@@ -32,11 +33,11 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  dataAllCategory: () => {
-    dispatch(dataAllCategory());
+  notificationQuestion: (data) => {
+    dispatch(notificationQuestion(data));
   },
-  sendDataFilterCategory:(text)=>{
-      dispatch(sendDataFilterCategory(text));
+  notificationPrecision:(data)=>{
+      dispatch(notificationPrecision(data));
   }
 });
 

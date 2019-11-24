@@ -1,13 +1,19 @@
-import { DATA_NOTIFICATION, RECEIVE_DATA_NOTIFICATION } from "../reducer";
+import {  DATA_MESSAGES_HOME, ALL_PRECISION,RECEIVE_ALL_PRECISION } from "../reducer";
 
 
-export const DataNotification=()=>({
-    type:DATA_NOTIFICATION,
+export const notificationPrecision=(data)=>({
+    type: ALL_PRECISION,
+    data
   
 })
 
-export const receiveDataNotification=(dataNotification)=>({
-    type:RECEIVE_DATA_NOTIFICATION,
-    dataNotification
+export const receiveAllPrecision =(allPrecision) =>({
+    type:RECEIVE_ALL_PRECISION,
+    allPrecision
+})
+
+export const notificationQuestion=(data)=>({
+    type:DATA_MESSAGES_HOME ,
+    data
 
 })

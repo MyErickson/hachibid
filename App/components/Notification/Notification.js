@@ -1,20 +1,30 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
+import { View,  Text } from 'react-native';
+import { Tab, Tabs, TabHeading, Icon,} from 'native-base';
+import ViewListNotification from './ViewListNotification/ViewListNotification'
 import Menu from '../Menu/Menu';
 import { Style } from './styleNotification';
-import  { casualList } from '../../data/dataCasual'
 
 class Notification extends Component {
 
     state = {
-        allCategory:undefined
+      notificationQuestions :undefined
     }
   
     async componentDidMount(){
-      await this.props.dataAllCategory()
+       const { notificationPrecision , receiveResponseConnection} = this.props
+      notificationPrecision(receiveResponseConnection)
     }
-
+  static getDerivedStateFromProps(props,state){ 
+    
+      const { notificationQuestions } = props
+      if(notificationQuestions){
+        const notif = notificationQuestions.filter((value) => value.question === undefined)
+       
+        state.notificationQuestions = notif
+      }
+   
+  }
     searchBar= async (text)=>{
           console.log(text)
       //   await this.props.sendDataFilterCategory(text)
@@ -33,43 +43,56 @@ class Notification extends Component {
 //   }
 
   goToCategoryPage=(value)=>{
-    this.props.navigation.navigate('MessageCategory',{
-        nameCategory:value,
-        navigation:this.props.navigation
+    const dataMessageCurrent = new Object
+    dataMessageCurrent.idAnwsersUser = value.user._id
+    dataMessageCurrent.idMessage= value.idMessage
+
+    this.props.navigation.navigate('MyQuestions',{
+        answerCurrent:value.text,
+        navigation:this.props.navigation,
+        showAboveInput:true,
+        dataMessageCurrent
     })
  }
 
   render() {
-     const { allCategory } =this.state
+     const { notificationQuestions } =this.state
    
     return (
       <View style={{flex:1}}>
         <Menu nameMenu="Notification" navigation={this.props.navigation} />
-     
-        <ScrollView
-              bounces={true}
-              style={Style.scrollview}
-              showsVerticalScrollIndicator={false}
-             
-              >
-        <Card containerStyle={{padding: 0}} >
-        {
-            casualList.map((item, i) => {
-            return (
-                <ListItem
-                key={i}
-                roundAvatar
-                title={item.name}
-                leftIcon={{ name: 'notifications' }}
-                bottomDivider
-                chevron
-                onPress={()=>this.goToCategoryPage(item.name)}
-                />
-            );
-            })
-        }
-    </Card>
-    </ScrollView>  
+        <Tabs
+         textStyle={{coloe:"white"}}
+        >
+            <Tab 
+             heading={ 
+             <TabHeading style={{backgroundColor:"#34A1DC"}} >
+               <Text style={{color:"white"}}>Questions</Text>
+              </TabHeading>
+             }> 
+
+               <ViewListNotification 
+               notificationQuestions={notificationQuestions}
+               goToCategoryPage={this.goToCategoryPage}
+               />
+
+            </Tab>
+
+            <Tab heading={ 
+              <TabHeading style={{backgroundColor:"#34A1DC"}} >
+                <Text style={{color:"white"}}>Précisions</Text>
+              </TabHeading>
+             }>
+
+                <ViewListNotification 
+                  notificationQuestions={notificationQuestions}
+                  goToCategoryPage={this.goToCategoryPage}
+                  />
+
+            </Tab>
+           
+        </Tabs>
+    
       </View>
     );
   }
