@@ -167,18 +167,22 @@ class Profile extends Component {
                     console.log("axios update profile 33333",response)
             
                 }).catch((err)=>{
-                    console.log("axios error update profile ",err.response.data["hydra:description"])
-                    this.setState({
-                        login:"", 
-                        email:"" , 
-                        password:"",
-                        changePassword:"",
-                        messageAlert:err.response.data["hydra:description"],
-                        alertConfirm:false,
-                        style:false,
-                        messageAlertPWd:undefined
-        
+                    console.log("axios error update profile ",err.response.data.violations)
+                    err.response.data.violations.map((value)=>{
+                        this.setState({
+                            login:"", 
+                            email:"" , 
+                            password:"",
+                            changePassword:"",
+                            messageAlert:value.message,
+                            alertConfirm:false,
+                            style:false,
+                            messageAlertPWd:undefined
+            
+                        })
+
                     })
+                
                 })  
        
     }

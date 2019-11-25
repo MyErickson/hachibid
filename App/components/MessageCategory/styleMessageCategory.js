@@ -23,8 +23,7 @@ export const Style = StyleSheet.create({
     message:{
 
         paddingTop: 5,
-   
-       
+
     },
     answer:{
         maxWidth:wp("81%"),

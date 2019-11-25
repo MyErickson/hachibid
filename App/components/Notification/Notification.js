@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { View,  Text } from 'react-native';
 import { Tab, Tabs, TabHeading, Icon,} from 'native-base';
 import ViewListNotification from './ViewListNotification/ViewListNotification'
@@ -8,7 +8,8 @@ import { Style } from './styleNotification';
 class Notification extends Component {
 
     state = {
-      notificationQuestions :undefined
+      notificationQuestions :undefined,
+      profileUser:undefined
     }
   
     async componentDidMount(){
@@ -17,11 +18,15 @@ class Notification extends Component {
     }
   static getDerivedStateFromProps(props,state){ 
     
-      const { notificationQuestions } = props
+      const { notificationQuestions ,dataProfileUser } = props
       if(notificationQuestions){
         const notif = notificationQuestions.filter((value) => value.question === undefined)
        
         state.notificationQuestions = notif
+      }
+
+      if(dataProfileUser ){
+        state.profileUser = dataProfileUser.data
       }
    
   }
@@ -47,7 +52,7 @@ class Notification extends Component {
     dataMessageCurrent.idAnwsersUser = value.user._id
     dataMessageCurrent.idMessage= value.idMessage
 
-    this.props.navigation.navigate('MyQuestions',{
+    this.props.navigation.navigate('MessageCategory',{
         answerCurrent:value.text,
         navigation:this.props.navigation,
         showAboveInput:true,
@@ -56,42 +61,61 @@ class Notification extends Component {
  }
 
   render() {
-     const { notificationQuestions } =this.state
+     const { notificationQuestions ,profileUser } =this.state
    
     return (
       <View style={{flex:1}}>
         <Menu nameMenu="Notification" navigation={this.props.navigation} />
+        { profileUser  && profileUser .roles[0] !== "ROLE_USER" ?
         <Tabs
          textStyle={{coloe:"white"}}
         >
-            <Tab 
-             heading={ 
-             <TabHeading style={{backgroundColor:"#34A1DC"}} >
-               <Text style={{color:"white"}}>Questions</Text>
-              </TabHeading>
-             }> 
-
-               <ViewListNotification 
-               notificationQuestions={notificationQuestions}
-               goToCategoryPage={this.goToCategoryPage}
-               />
-
-            </Tab>
-
-            <Tab heading={ 
+              <Tab 
+              heading={ 
               <TabHeading style={{backgroundColor:"#34A1DC"}} >
-                <Text style={{color:"white"}}>Précisions</Text>
-              </TabHeading>
-             }>
+                <Text style={{color:"white"}}>Questions</Text>
+                </TabHeading>
+              }> 
 
                 <ViewListNotification 
-                  notificationQuestions={notificationQuestions}
-                  goToCategoryPage={this.goToCategoryPage}
-                  />
+                notificationQuestions={notificationQuestions}
+                goToCategoryPage={this.goToCategoryPage}
+                />
 
-            </Tab>
-           
+              </Tab>
+      
+              <Tab heading={ 
+                <TabHeading style={{backgroundColor:"#34A1DC"}} >
+                  <Text style={{color:"white"}}>Précisions</Text>
+                </TabHeading>
+              }>
+
+                  <ViewListNotification 
+                    notificationQuestions={notificationQuestions}
+                    goToCategoryPage={this.goToCategoryPage}
+                    />
+
+          </Tab>
+          </Tabs>
+       :  
+       <Tabs
+       textStyle={{coloe:"white"}}
+      >
+          <Tab heading={ 
+          <TabHeading style={{backgroundColor:"#34A1DC"}} >
+            <Text style={{color:"white"}}>Mes réponses</Text>
+          </TabHeading>
+        }>
+        <ViewListNotification 
+          notificationQuestions={notificationQuestions}
+          goToCategoryPage={this.goToCategoryPage}
+          />
+          </Tab>
+          
         </Tabs>
+        }    
+
+
     
       </View>
     );
