@@ -215,5 +215,10 @@ android {
         }
     }
 }
+afterEvaluate{
+    android.applicationVariants.all { variant ->
+        variant.ext.bundleJsAndAssets.enabled = false
+     }
+   }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
