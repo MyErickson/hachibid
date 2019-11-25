@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { View,  Text } from 'react-native';
 import { Tab, Tabs, TabHeading, Icon,} from 'native-base';
 import ViewListNotification from './ViewListNotification/ViewListNotification'
-import Menu from '../Menu/Menu';
+import Menu from '../../containers/Menu/Menu'
 import { Style } from './styleNotification';
 
 class Notification extends Component {
@@ -17,12 +17,13 @@ class Notification extends Component {
       notificationPrecision(receiveResponseConnection)
     }
   static getDerivedStateFromProps(props,state){ 
-    
+     
       const { notificationQuestions ,dataProfileUser } = props
       if(notificationQuestions){
         const notif = notificationQuestions.filter((value) => value.question === undefined)
-       
+      
         state.notificationQuestions = notif
+       
       }
 
       if(dataProfileUser ){
@@ -52,7 +53,7 @@ class Notification extends Component {
     dataMessageCurrent.idAnwsersUser = value.user._id
     dataMessageCurrent.idMessage= value.idMessage
 
-    this.props.navigation.navigate('MessageCategory',{
+    this.props.navigation.navigate('MyQuestions',{
         answerCurrent:value.text,
         navigation:this.props.navigation,
         showAboveInput:true,
@@ -62,7 +63,7 @@ class Notification extends Component {
 
   render() {
      const { notificationQuestions ,profileUser } =this.state
-   
+    
     return (
       <View style={{flex:1}}>
         <Menu nameMenu="Notification" navigation={this.props.navigation} />

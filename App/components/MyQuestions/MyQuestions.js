@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
 import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
-import Menu from '../Menu/Menu'
+import Menu from '../../containers/Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
@@ -66,10 +66,10 @@ class MyQuestions extends Component {
       //           console.log("eroor",err)
       //         })
       
-        const { dataProfileUser} = this.props
+        const { dataProfileUser ,receiveResponseConnection} = this.props
         var isInternetReachable ;
         var isConnected;
-        let decode = jwtDecode(this.props.receiveResponseConnection)
+        let decode = jwtDecode(receiveResponseConnection)
         
         const data = this._dataInfo()
 
@@ -81,12 +81,13 @@ class MyQuestions extends Component {
     
        
       if(decode.roles[0] === "ROLE_ADMIN"){
-        this.props.dataMessagesHome(this.props.receiveResponseConnection)
+        this.props.dataMessagesHome(receiveResponseConnection)
             timerMessage = setInterval(()=>{
       
               if(isConnected && isInternetReachable){
                 this.props.receiveMessagesHome()
-                this.props.dataMessagesHome(this.props.receiveResponseConnection)
+                this.props.dataMessagesHome(receiveResponseConnection)
+                this.props.notificationPrecision(receiveResponseConnection)
               }
               
             },3000)

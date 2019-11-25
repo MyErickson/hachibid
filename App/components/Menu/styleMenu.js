@@ -12,5 +12,11 @@ export const Style = StyleSheet.create({
     },
     icon:{
         color:'white',
+    },
+    badge:{
+        position: 'absolute',
+         top: -4,
+          right: -4 ,
+          zIndex:1
     }
 })

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import Menu from '../Menu/Menu';
+import Menu from '../../containers/Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate';
 import { Style } from './styleCategory';
 import AsyncStorage from '@react-native-community/async-storage';

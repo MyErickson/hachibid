@@ -22,7 +22,9 @@ const  ViewListNotification =({
                   return (
                       <ListItem
                       key={i}
+                      rightSubtitleProps={{backgroundColor:"black"}}
                       roundAvatar
+                      containerStyle={item.seen ? {backgroundColor:"#D7DCE1"}:{backgroundColor:"white"}}
                       title={item.text}
                       leftIcon={{ name: 'notifications' }}
                       bottomDivider

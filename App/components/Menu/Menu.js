@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text} from 'react-native';
 import {  Header, Left, Body, Right, Icon, Title} from 'native-base';
-
+import { Badge } from 'react-native-elements'
+import { counterNotif } from '../../store/actionRequetes/actionRequetes'
 import { Style } from './styleMenu'
 
 
 class Menu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      drawer:false
-    };
+      state = {
+      notifQ:undefined,
+      profileUser:undefined
+    }
    
+  
+  static getDerivedStateFromProps(props,state){
+    const { notificationQuestion,dataProfileUser} = props
+
+
+    if(notificationQuestion){
+    state.notifQ = counterNotif(notificationQuestion)
+
+    }
+    if(dataProfileUser){
+    state.profileUser = dataProfileUser.data
+    }
   }
+
 
   render() {
     var navigationView = (
@@ -20,8 +33,10 @@ class Menu extends Component {
         <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
       </View>
     );
+  const { notifQ ,profileUser}=this.state
 
 
+    console.log("le nombre de notif pour es questions est de : ",this.state.notifQ)
     return (
      
       <View>
@@ -39,7 +54,14 @@ class Menu extends Component {
    
           <Right style={{flex:1}}>
             <TouchableOpacity onPress={()=>this.props.navigation.navigate("Notification")}>
-              <Icon style={Style.icon} name='notifications' />
+              { notifQ > 0 
+              &&  profileUser&& profileUser.roles[0] === "ROLE_ADMIN" && 
+              <Badge  
+              status="error"  
+              containerStyle={Style.badge} 
+              value={notifQ}/>}
+      
+            <Icon style={Style.icon} name='notifications' />
             </TouchableOpacity>
           </Right>
         </Header>

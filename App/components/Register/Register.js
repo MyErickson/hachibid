@@ -6,7 +6,7 @@ import {  Content, Form, Item, Input, } from 'native-base';
 import axios from 'axios';
 
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
-import { presetColors } from '../../data/dataCasual'
+import { presetColors } from '../../store/actionRequetes/actionRequetes'
 import AlertDialog from '../AlertDialog/AlertDialog';
 
 
@@ -81,9 +81,10 @@ class Register extends Component {
                 email:email,
                 username:login,
                 roles:["ROLE_USER"],
-                password:password
+                password:password,
+                resetToken:null
             }).catch((err)=>{
-                console.log(err)
+                console.log(err.response)
                    
                    
                 this.setState({

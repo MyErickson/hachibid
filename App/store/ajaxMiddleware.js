@@ -41,6 +41,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
                 content:action.message[0].text,
                 user:`api/users/${action.message[0].user._id}`,
                 valid:false,
+                seen:false,
               
             }).then((response)=>{
 
@@ -49,7 +50,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
                 data.token = action.message[0].token
                 store.dispatch(receiveDataMessagesMyQuestions(data))
             }).catch((err)=>{
-                console.log("error axios message send user",err)
+                console.log("error axios message send user",err.response)
                 
             })
             break;
@@ -383,6 +384,7 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
              message: action.data.idMessage,
              answerer:`api/users/${action.data.idUser}`,
              answered:true,
+             seen:false
 
            }).then((response)=>{
           

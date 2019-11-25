@@ -13,6 +13,29 @@ class ChatNotif extends Component {
 
       }
 
+
+    static async getDerivedStateFromProps(props, state){ 
+              
+   
+        if(props.dataProfileUser){
+         // console.log("message ===",props.dataFilterMyquestion )
+         state.ProfileUser = props.dataProfileUser.data
+           if(props.allDataMessagesHome){
+             
+             state._messages = props.allDataMessagesHome
+             
+           }
+       
+        }
+
+        if(props.dataFilterMyquestion && state.filter){
+         state._messageFilter =props.dataFilterMyquestion
+        }else{
+         state._messageFilter =undefined
+        } 
+
+    }
+
     async  onSend(messages = []) {
         const { ProfileUser , dataMessageCurrent,isQuestion } = this.state
        

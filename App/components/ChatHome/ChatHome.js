@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { View, Text,TouchableOpacity} from 'react-native';
 import { Style} from './styleChatHome';
 import { Button ,Icon } from 'react-native-elements'
-import Menu from '../Menu/Menu'
+import Menu from '../../containers/Menu/Menu'
 import Filtrate from '../Filtrate/Filtrate'
 import { GiftedChat ,Bubble } from 'react-native-gifted-chat';
 import axios from 'axios';

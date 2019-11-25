@@ -16,6 +16,7 @@ import { sendMessageUser ,
         sendDatafilterMessageMyQuestion,
         sendAnswersForQuestion,
         sendPrecisionForQuestion,DataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
+        import { notificationPrecision } from '../../store/actionCreator/Notification'
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -68,6 +69,9 @@ receiveMessagesHome:()=>{
 },
 DataMessagesMyQuestions:()=>{
   dispatch(DataMessagesMyQuestions(undefined))
+},
+notificationPrecision:(data)=>{
+  dispatch(notificationPrecision(data))
 }
 
 });

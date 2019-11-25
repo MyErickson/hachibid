@@ -4,7 +4,7 @@ import { Button , Icon} from 'react-native-elements';
 import { Style }  from './styleProfile'
 import { Form, Item, Input ,Card } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
-import Menu from '../Menu/Menu'
+import Menu from '../../containers/Menu/Menu'
 import AlertDialog from '../AlertDialog/AlertDialog';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';

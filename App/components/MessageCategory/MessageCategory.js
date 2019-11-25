@@ -3,7 +3,7 @@ import { View, Text,TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { Style } from './styleMessageCategory'
 import Filtrate from '../Filtrate/Filtrate'
-import Menu from '../Menu/Menu';
+import Menu from '../../containers/Menu/Menu'
 import AsyncStorage from '@react-native-community/async-storage';
 import {  Bubble} from 'react-native-gifted-chat'
 import AlertDialog from '../AlertDialog/AlertDialog'

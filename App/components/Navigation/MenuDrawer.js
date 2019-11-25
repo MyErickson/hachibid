@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 
 import {  View , Text,TouchableOpacity , Image , ScrollView} from 'react-native';
-import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
+
 import { Styles } from './styleMenuDrawer';
 import { Icon,Container, Header, Content, List, ListItem, } from 'native-base';
-import { casualList} from '../../data/dataCasual'
-import { presetColors } from '../../data/dataCasual'
+
 import {  SafeAreaView } from 'react-navigation';
 
 
@@ -146,7 +145,7 @@ export default class MenuDrawer extends React.Component{
      const {profileUser} = this.state
 
      return(
-        // <AnimatedLinearGradient   customColors={presetColors.backgroundColor} speed={4000}>
+  
             <SafeAreaView style={Styles.container}>
         
             
@@ -171,7 +170,7 @@ export default class MenuDrawer extends React.Component{
                 
         
         </SafeAreaView>
-        // </AnimatedLinearGradient>
+
         
      )
  }
