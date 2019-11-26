@@ -6,7 +6,8 @@ import { Style } from '../styleNotification'
 
 const  ViewListNotification =({ 
        notificationQuestions,
-       goToCategoryPage
+       goToCategoryPage,
+       requete
 })=> {
   
         return (
@@ -29,7 +30,7 @@ const  ViewListNotification =({
                       leftIcon={{ name: 'notifications' }}
                       bottomDivider
                       chevron
-                      onPress={()=>goToCategoryPage(item)}
+                      onPress={()=>goToCategoryPage(item,requete)}
                       />
                   );
                   })

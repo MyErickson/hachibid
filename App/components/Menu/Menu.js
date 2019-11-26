@@ -8,21 +8,25 @@ import { Style } from './styleMenu'
 
 class Menu extends Component {
       state = {
-      notifQ:undefined,
-      profileUser:undefined
+      notifQandP:undefined,
+      profileUser:undefined,
+      notifAnswers:undefined 
     }
    
   
   static getDerivedStateFromProps(props,state){
-    const { notificationQuestion,dataProfileUser} = props
+    const { notificationQuestion,dataProfileUser,allPrecision,answerUser} = props
 
 
-    if(notificationQuestion){
-    state.notifQ = counterNotif(notificationQuestion)
+    if(notificationQuestion && allPrecision ){
+    state.notifQandP = counterNotif(notificationQuestion,allPrecision)
 
     }
     if(dataProfileUser){
     state.profileUser = dataProfileUser.data
+    }
+    if(answerUser){
+      state.notifAnswers = counterNotif(answerUser)
     }
   }
 
@@ -33,10 +37,10 @@ class Menu extends Component {
         <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
       </View>
     );
-  const { notifQ ,profileUser}=this.state
+  const { notifQandP ,profileUser,notifAnswers}=this.state
 
 
-    console.log("le nombre de notif pour es questions est de : ",this.state.notifQ)
+    console.log("le nombre de notif pour es questions est de : ",profileUser)
     return (
      
       <View>
@@ -54,12 +58,22 @@ class Menu extends Component {
    
           <Right style={{flex:1}}>
             <TouchableOpacity onPress={()=>this.props.navigation.navigate("Notification")}>
-              { notifQ > 0 
-              &&  profileUser&& profileUser.roles[0] === "ROLE_ADMIN" && 
+              { notifQandP > 0 
+              &&  profileUser&& profileUser.roles[0] === "ROLE_ADMIN" &&
               <Badge  
               status="error"  
               containerStyle={Style.badge} 
-              value={notifQ}/>}
+              textStyle ={{fontSize:10,padding:5}}
+            
+              value={notifQandP}/> }
+              {notifAnswers >0 &&  profileUser&& profileUser.roles[0] === "ROLE_USER" &&
+              <Badge  
+              status="error"  
+              containerStyle={Style.badge} 
+              textStyle ={{fontSize:10,padding:5}}
+            
+              value={notifAnswers}/>
+              }
       
             <Icon style={Style.icon} name='notifications' />
             </TouchableOpacity>

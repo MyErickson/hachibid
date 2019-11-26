@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,ALL_PRECISION,
+import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,ALL_PRECISION,ANSWERS_USER,
      RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,SEND_PRECISION_FOR_QUESTION,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,SEND_ANSWERS_FOR_QUESTION,
         SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,ASK_PRECISION  } from './reducer'
@@ -13,7 +13,7 @@ import {topDataCategory} from './actionCreator/MenuDrawer';
 import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from './actionCreator/MyQuestions';
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
 import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "./actionRequetes/actionRequetes"
-
+import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notification"
 
 
 
@@ -398,10 +398,62 @@ import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "
 
         case ALL_PRECISION:
             next(action)
-            console.log(action )
+       
             axios.defaults.headers['Authorization']= "Bearer "+action.data;
             axios.get(`accuracies`).then((response)=>{
-                    console.log("axios tout les reponses pour acuuracy",response)
+              
+                     const dataMessage = response.data['hydra:member'].map((value)=>{
+
+                        return{
+                            _id:value["@id"],
+                            text:value.message.content,
+                            createdAt:new Date (value.createdAt),
+                            idMessage:value["@id"],
+                            seen:value.seen,
+                            user:{
+                                _id:value.user.id,
+                                name:value.user.username,
+                                typeUser:value.user["@type"]
+                            }
+                          }
+                  
+                      })
+
+                     const allDataMessageUser = actionRequeteSort(dataMessage)
+                     store.dispatch(receiveAllPrecision (allDataMessageUser))
+            }).catch((err)=>{
+                console.log("33333",err.response)
+                
+            })
+        break;
+
+
+        case ANSWERS_USER:
+            next(action)
+       
+            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
+            axios.get(`answers?users=${action.data.id}`).then((response)=>{
+               console.log("je suis dans answeer" , response)
+                     const dataMessage = response.data['hydra:member'].map((value)=>{
+                      
+                            return{
+                                _id:value["@id"],
+                                text:value.content,
+                                createdAt:new Date (value.createdAt),
+                                idAnswers:value["@id"],
+                                seen:value.seen,
+                                userAnswerer:{
+                                    _id:value.answerer.id,
+                                    name:value.answerer.username,
+                                    typeUser:value.answerer["@type"]
+                                }
+                              }
+                            
+                  
+                      })
+                     const  answer =   dataMessage.filter((value)=>value.text)
+                     const allDataMessageUser = actionRequeteSort(answer)
+                     store.dispatch(receiveAnswerUser(allDataMessageUser))
             }).catch((err)=>{
                 console.log("33333",err.response)
                 

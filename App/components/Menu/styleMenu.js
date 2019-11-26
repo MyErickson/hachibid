@@ -15,8 +15,9 @@ export const Style = StyleSheet.create({
     },
     badge:{
         position: 'absolute',
-         top: -4,
-          right: -4 ,
-          zIndex:1
+         top: -7,
+          right: -16 ,
+          zIndex:1,
+          width:40
     }
 })

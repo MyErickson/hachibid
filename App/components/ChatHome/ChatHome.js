@@ -28,19 +28,22 @@ class ChatHome extends Component {
     }
   
     async componentDidMount() {
-       let data = new Object 
-       const sessionId = await AsyncStorage.getItem('sessionJWT')
-       var isInternetReachable 
-        var isConnected  
+      let data = new Object 
+      const sessionId = await AsyncStorage.getItem('sessionJWT')
+      var isInternetReachable 
+      var isConnected  
+
+      const { receiveResponseConnection , dataMessagesHome , dataProfileUsers ,answerUser} = this.props
      
-      console.log("ASYNCSTORAGE avant le decode ===>",this.props.receiveResponseConnection)
+      console.log("ASYNCSTORAGE avant le decode ===>",receiveResponseConnection)
   
-        var decode = jwtDecode(this.props.receiveResponseConnection)
+        var decode = jwtDecode(receiveResponseConnection)
         console.log(decode)
         data.id = decode.id 
-        data.token = this.props.receiveResponseConnection
-         this.props.dataProfileUsers( data )
-        this.props.dataMessagesHome(this.props.receiveResponseConnection)
+        data.token = receiveResponseConnection
+        dataProfileUsers( data )
+        answerUser(data)
+        dataMessagesHome(receiveResponseConnection)
       
         await NetInfo.fetch().then(state => {
           isInternetReachable = state.isInternetReachable
@@ -52,7 +55,8 @@ class ChatHome extends Component {
       
           if(isConnected && isInternetReachable){
           
-            this.props.dataMessagesHome(this.props.receiveResponseConnection)
+            dataMessagesHome(receiveResponseConnection)
+            answerUser(data)
           }
           
         },3000)

@@ -23,6 +23,8 @@ const mapStateToProps = (state, ownProps) => ({
     notificationQuestion: state.allDataMessagesHome,
     dataProfileUser: state.dataProfileUser,
     receiveResponseConnection: state.receiveResponseConnection,
+    allPrecision:state.allPrecision,
+    answerUser:state.answerUser
 });
 
 /* === Actions ===

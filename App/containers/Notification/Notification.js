@@ -24,6 +24,8 @@ const mapStateToProps = (state, ownProps) => ({
     dataStateAllCategory:state.dataAllCategory,
     receiveResponseConnection: state.receiveResponseConnection,
     dataProfileUser: state.dataProfileUser,
+    allPrecision:state.allPrecision,
+    answerUser:state.answerUser
 });
 
 /* === Actions ===

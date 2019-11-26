@@ -9,7 +9,9 @@ class Notification extends Component {
 
     state = {
       notificationQuestions :undefined,
-      profileUser:undefined
+      profileUser:undefined,
+      notificationPrecision:undefined,
+      notificationAnswerUser:undefined
     }
   
     async componentDidMount(){
@@ -18,7 +20,7 @@ class Notification extends Component {
     }
   static getDerivedStateFromProps(props,state){ 
      
-      const { notificationQuestions ,dataProfileUser } = props
+      const { notificationQuestions ,dataProfileUser,allPrecision , answerUser } = props
       if(notificationQuestions){
         const notif = notificationQuestions.filter((value) => value.question === undefined)
       
@@ -28,6 +30,14 @@ class Notification extends Component {
 
       if(dataProfileUser ){
         state.profileUser = dataProfileUser.data
+      }
+
+      if(allPrecision){
+        state.notificationPrecision = allPrecision
+      }
+
+      if(answerUser){
+        state.notificationAnswerUser = answerUser
       }
    
   }
@@ -48,7 +58,8 @@ class Notification extends Component {
 //        state.allCategory= allCategory
 //   }
 
-  goToCategoryPage=(value)=>{
+  goToCategoryPage=(value,requete)=>{
+    console.log("value de got to page",value)
     const dataMessageCurrent = new Object
     dataMessageCurrent.idAnwsersUser = value.user._id
     dataMessageCurrent.idMessage= value.idMessage
@@ -62,7 +73,7 @@ class Notification extends Component {
  }
 
   render() {
-     const { notificationQuestions ,profileUser } =this.state
+     const { notificationQuestions ,profileUser,notificationPrecision,notificationAnswerUser } =this.state
     
     return (
       <View style={{flex:1}}>
@@ -81,6 +92,7 @@ class Notification extends Component {
                 <ViewListNotification 
                 notificationQuestions={notificationQuestions}
                 goToCategoryPage={this.goToCategoryPage}
+                requete="messages"
                 />
 
               </Tab>
@@ -92,8 +104,9 @@ class Notification extends Component {
               }>
 
                   <ViewListNotification 
-                    notificationQuestions={notificationQuestions}
+                    notificationQuestions={notificationPrecision}
                     goToCategoryPage={this.goToCategoryPage}
+                    requete="accuracies"
                     />
 
           </Tab>
@@ -108,8 +121,9 @@ class Notification extends Component {
           </TabHeading>
         }>
         <ViewListNotification 
-          notificationQuestions={notificationQuestions}
+          notificationQuestions={notificationAnswerUser}
           goToCategoryPage={this.goToCategoryPage}
+          requete="answers"
           />
           </Tab>
           

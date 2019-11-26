@@ -13,6 +13,7 @@ import ChatHome from '../../components/ChatHome/ChatHome'
 import { dataMessagesHome,sendDataFilterHomeMessage , receiveMessagesHome,askPrecision } from '../../store/actionCreator/ChatHome';
 import { dataProfileUsers } from '../../store/actionCreator/Profile';
 import { responseConnection} from '../../store/actionCreator/Connection';
+import { answerUser } from '../../store//actionCreator/Notification'
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -51,6 +52,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   askPrecision:(data)=>{
     dispatch(askPrecision(data))
+  },
+  answerUser:(data)=>{
+    dispatch(answerUser(data))
   }
 });
 

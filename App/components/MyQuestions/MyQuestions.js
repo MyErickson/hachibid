@@ -14,8 +14,7 @@ import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
-
-
+import RNFetchBlob from 'rn-fetch-blob'
 var timer;
 var timerMessage;
 
@@ -65,8 +64,33 @@ class MyQuestions extends Component {
       //         }).catch((err)=>{
       //           console.log("eroor",err)
       //         })
-      
-        const { dataProfileUser ,receiveResponseConnection} = this.props
+      RNFetchBlob.fetch('post', 'http://192.168.1.88:4001/audio', {
+        // this is required, otherwise it won't be process as a multipart/form-data request
+        otherHeader : "foo",
+        'Content-Type' : 'application/octet',
+        
+      },[{
+        uri:"file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3",
+        type : 'application/mp3',
+        name : 'ringtone',
+        filename : 'axl-rosenberg-into-the-wild-part-ii.mp3',
+        data: RNFetchBlob.wrap("file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3")}]
+      ).then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+        const { 
+          dataProfileUser ,
+          dataMessagesHome,
+          receiveMessagesHome,
+          notificationPrecision,
+          DataMessagesMyQuestions,
+          receiveResponseConnection,
+          receiveDataMessagesMyQuestions,
+          } = this.props
+
         var isInternetReachable ;
         var isConnected;
         let decode = jwtDecode(receiveResponseConnection)
@@ -81,36 +105,37 @@ class MyQuestions extends Component {
     
        
       if(decode.roles[0] === "ROLE_ADMIN"){
-        this.props.dataMessagesHome(receiveResponseConnection)
+        dataMessagesHome(receiveResponseConnection)
+        notificationPrecision(receiveResponseConnection)
             timerMessage = setInterval(()=>{
       
               if(isConnected && isInternetReachable){
-                this.props.receiveMessagesHome()
-                this.props.dataMessagesHome(receiveResponseConnection)
-                this.props.notificationPrecision(receiveResponseConnection)
+                receiveMessagesHome()
+                dataMessagesHome(receiveResponseConnection)
+                notificationPrecision(receiveResponseConnection)
               }
               
             },3000)
 
-        // try{
-          // const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
-          // const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
-          // this.permission = granted
-          // this.writeExternalStorage = storage 
+        try{
+          const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+          const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+          this.permission = granted
+          this.writeExternalStorage = storage 
        
-        // }catch(err){
-        //     console.log("eroor ====== >",err)
-        // }
+        }catch(err){
+            console.log("eroor ====== >",err)
+        }
       
      
 
       }else{
-        this.props.receiveDataMessagesMyQuestions(data)
+        receiveDataMessagesMyQuestions(data)
         timerMessage = setInterval(()=>{
       
           if(isConnected && isInternetReachable){
-            this.props.DataMessagesMyQuestions()
-            this.props.receiveDataMessagesMyQuestions(data)
+            DataMessagesMyQuestions()
+            receiveDataMessagesMyQuestions(data)
           }
           
         },3000)
@@ -437,39 +462,41 @@ class MyQuestions extends Component {
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
   
    
-    this.setState(previousState=>({
-      recordSecs: 0,
-      _messages: GiftedChat.append(previousState._messages,  {
-        id:Date.now(),
-        text: result,
-        createdAt: new Date(),
-        recordDuration:this.state.recordDuration,
-        recordPosition:0,
-        type:'record',
-        user: {
-          _id:this.props.dataProfileUser.data.id,
+    // this.setState(previousState=>({
+    //   recordSecs: 0,
+    //   _messages: GiftedChat.append(previousState._messages,  {
+    //     id:Date.now(),
+    //     text: result,
+    //     createdAt: new Date(),
+    //     recordDuration:this.state.recordDuration,
+    //     recordPosition:0,
+    //     type:'record',
+    //     user: {
+    //       _id:this.props.dataProfileUser.data.id,
       
-        },
-        valid: true
-      },),
-    }));
-    const formData = new FormData();
-    console.log(formData)
-    formData.append("audio",{
-       uri: result,
-       name: Date.now(),
-       type: ".aac"
-     })
+    //     },
+    //     valid: true
+    //   },),
+    // }));
+    // const formData = new FormData();
+    // console.log(formData)
+    // formData.append("audio",{
+    //    uri: result,
+    //    name: Date.now(),
+    //    type: ".aac"
+    //  })
 
-     axios.post("http://192.168.1.88:80/audio",{
-       data:formData
-     }).then((res)=>{
-      console.log(res)
-    }).catch((err)=>{
-      console.log("eroor",err)
-    })
-
-  };
+    //  axios.post("http://192.168.1.88:80/audio",{
+    //    data:formData
+    //  }).then((res)=>{
+    //   console.log(res)
+    // }).catch((err)=>{
+    //   console.log("eroor",err)
+    // })
+    console.log(result)
+    // `RNFetchBlob-file://sdcard/Music/1574765701686.aac`
+   
+ };
 
   onStartPlay = async (propsSounder) => {
      const currentPath = propsSounder.currentMessage.text.split('//')
@@ -480,7 +507,7 @@ class MyQuestions extends Component {
     })
 
     const msg = await this.audioRecorderPlayer.startPlayer(currentPath[1]);
-    // console.log("msg ==>",msg,this.path);
+     console.log("msg ==>",msg,this.path);
 
      timer = setInterval(()=>{
        console.log("dans le timer 2");

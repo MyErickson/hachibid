@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 export const actionRequeteDataMessage = (response)=>{
-     console.log("je sis dans action requetes ", response)
+    //  console.log("je sis dans action requetes ", response)
           const dataMessage = response.data['hydra:member'].map((value)=>{
 
             return{
@@ -73,13 +73,19 @@ export const actionRequeteSort =(filterDataMessage )=>{
     return allDataMessageUser   
 }
 
-export const counterNotif = (notification)=>{
-    var i = 0;
-    if(notification){
-        const counterNotif = notification.filter((value)=>value.seen === true)
-        return counterNotif.length
+export const counterNotif = (notificationQ = null, notificationP = null)=>{
+    console.log(notificationQ)
+    var x  = 0 , i = 0
+    if(notificationQ){
+        let counterNotif = notificationQ.filter((value)=>value.seen === false)
+        i = counterNotif.length
     }
- console.log(counterNotif)
+    if(notificationP){
+       let counterNotif = notificationP.filter((value)=>value.seen === false)
+       x =  counterNotif.length
+    }
+    console.log(x,i)
+    return x + i 
 }
 
 export const presetColors = {
