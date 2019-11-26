@@ -433,7 +433,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
        
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.get(`answers?users=${action.data.id}`).then((response)=>{
-               console.log("je suis dans answeer" , response)
+               
                      const dataMessage = response.data['hydra:member'].map((value)=>{
                       
                             return{

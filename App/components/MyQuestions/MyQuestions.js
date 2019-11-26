@@ -110,7 +110,7 @@ class MyQuestions extends Component {
             timerMessage = setInterval(()=>{
       
               if(isConnected && isInternetReachable){
-                receiveMessagesHome()
+               
                 dataMessagesHome(receiveResponseConnection)
                 notificationPrecision(receiveResponseConnection)
               }

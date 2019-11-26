@@ -4,6 +4,7 @@ import { Tab, Tabs, TabHeading, Icon,} from 'native-base';
 import ViewListNotification from './ViewListNotification/ViewListNotification'
 import Menu from '../../containers/Menu/Menu'
 import { Style } from './styleNotification';
+import axios from 'axios';
 
 class Notification extends Component {
 
@@ -60,16 +61,35 @@ class Notification extends Component {
 
   goToCategoryPage=(value,requete)=>{
     console.log("value de got to page",value)
-    const dataMessageCurrent = new Object
-    dataMessageCurrent.idAnwsersUser = value.user._id
-    dataMessageCurrent.idMessage= value.idMessage
+    const data = new Object
+    data._id = value._id
+    data.token= this.props.receiveResponseConnection
 
-    this.props.navigation.navigate('MyQuestions',{
-        answerCurrent:value.text,
-        navigation:this.props.navigation,
-        showAboveInput:true,
-        dataMessageCurrent
+    axios.put(`https://rabbin-dev.digitalcube.fr${data._id}`,
+          {
+            headers:{
+              'Authorization':"Bearer "+data.token
+          }},
+            {
+            seen:true
+          }    
+    ).then((res)=>{
+      console.log("response vaut ",res)
+    }).catch((err)=>{
+      console.log("error vaut ",err.response)
     })
+    
+
+    // if(requete !== "answers"){
+    //   this.props.navigation.navigate('MyQuestions',{
+    //     answerCurrent:value.text,
+    //     navigation:this.props.navigation,
+    //     showAboveInput:true,
+     
+    // })
+    // }
+
+ 
  }
 
   render() {
@@ -106,7 +126,7 @@ class Notification extends Component {
                   <ViewListNotification 
                     notificationQuestions={notificationPrecision}
                     goToCategoryPage={this.goToCategoryPage}
-                    requete="accuracies"
+                    requete="precision"
                     />
 
           </Tab>

@@ -40,7 +40,7 @@ class Menu extends Component {
   const { notifQandP ,profileUser,notifAnswers}=this.state
 
 
-    console.log("le nombre de notif pour es questions est de : ",profileUser)
+  
     return (
      
       <View>
