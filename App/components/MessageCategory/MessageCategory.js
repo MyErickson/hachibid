@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text,TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { Style } from './styleMessageCategory'
-import Filtrate from '../Filtrate/Filtrate'
+import FiltrateContainer from '../../containers/Filtrate/Filtrate'
 import Menu from '../../containers/Menu/Menu'
 import AsyncStorage from '@react-native-community/async-storage';
 import {  Bubble} from 'react-native-gifted-chat'
@@ -203,7 +203,7 @@ class MessageCategory extends Component {
         <Menu nameMenu={title} navigation={this.props.navigation}/>
       
         <View style={Style.messageContainer}>
-        <Filtrate searchBar={this.searchBar} textFilter={_textFilter } deleteTextSearchBar={deleteTextSearchBar}/>
+        <FiltrateContainer  searchBar={this.searchBar} textFilter={_textFilter } deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 scrollToBottom={true}
                 messages={filter?_messageFilter:_messages}

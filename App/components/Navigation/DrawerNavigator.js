@@ -46,7 +46,8 @@ const DrawerNavigator = createDrawerNavigator(
    
     Notification:{
         screen:NotificationContainer,
-    }
+    },
+   
 },
 DrawerConfig 
 )

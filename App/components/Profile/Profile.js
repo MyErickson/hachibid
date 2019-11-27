@@ -162,9 +162,9 @@ class Profile extends Component {
                         messageAlertPWd:undefined
         
                         })
-                        console.log("axios update profile 22222",response.data)
+              
                    this.props.receiveDataProfile(response)
-                    console.log("axios update profile 33333",response)
+               
             
                 }).catch((err)=>{
                     console.log("axios error update profile ",err.response.data.violations)

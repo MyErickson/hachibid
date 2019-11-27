@@ -60,16 +60,18 @@ class Notification extends Component {
 //   }
 
   goToCategoryPage=(value,requete)=>{
-    console.log("value de got to page",value)
+  
+    const { profileUser } = this.state
+    console.log("value de got to page",profileUser)
     const data = new Object
     data._id = value._id
+    data.idUser= profileUser.id
+    data.text=value.text
+    data.role= "ROLE_ADMIN"
     data.token= this.props.receiveResponseConnection
-
+ 
+    axios.defaults.headers['Authorization']= "Bearer "+data.token;
     axios.put(`https://rabbin-dev.digitalcube.fr${data._id}`,
-          {
-            headers:{
-              'Authorization':"Bearer "+data.token
-          }},
             {
             seen:true
           }    
@@ -80,14 +82,11 @@ class Notification extends Component {
     })
     
 
-    // if(requete !== "answers"){
-    //   this.props.navigation.navigate('MyQuestions',{
-    //     answerCurrent:value.text,
-    //     navigation:this.props.navigation,
-    //     showAboveInput:true,
-     
-    // })
-    // }
+    if(requete !== "answers"){
+      console.log('je suis ')
+      this.props.navigation.navigate('MyQuestions')
+      this.props.sendDataFilterHomeMessage(data)
+    }
 
  
  }

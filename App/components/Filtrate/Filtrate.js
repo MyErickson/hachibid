@@ -6,14 +6,15 @@ import { Input,Icon} from 'react-native-elements';
 const input = React.createRef();
 
 
- Filtrate =(props)=>{
+ const Filtrate =(props)=>{
 
 
- const { searchBar,deleteTextSearchBar,textFilter} = props
+ const { searchBar,deleteTextSearchBar,textFilter, receiveDatafilterMessageMyQuestion} = props
 
 
  const clear=()=>{
   input.current.clear();
+  receiveDatafilterMessageMyQuestion()
   searchBar(null)
 }
 

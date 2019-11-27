@@ -32,11 +32,7 @@ class Menu extends Component {
 
 
   render() {
-    var navigationView = (
-      <View style={{flex: 1, backgroundColor: '#fff'}}>
-        <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
-      </View>
-    );
+  
   const { notifQandP ,profileUser,notifAnswers}=this.state
 
 
@@ -63,7 +59,7 @@ class Menu extends Component {
               <Badge  
               status="error"  
               containerStyle={Style.badge} 
-              textStyle ={{fontSize:10,padding:5}}
+              textStyle ={{fontSize:10}}
             
               value={notifQandP}/> }
               {notifAnswers >0 &&  profileUser&& profileUser.roles[0] === "ROLE_USER" &&

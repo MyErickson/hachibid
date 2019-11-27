@@ -3,7 +3,7 @@ import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
 import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
 import Menu from '../../containers/Menu/Menu'
-import Filtrate from '../Filtrate/Filtrate'
+import FiltrateContainer from '../../containers/Filtrate/Filtrate'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
@@ -14,7 +14,7 @@ import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
-import RNFetchBlob from 'rn-fetch-blob'
+// import RNFetchBlob from 'rn-fetch-blob'
 var timer;
 var timerMessage;
 
@@ -45,7 +45,7 @@ class MyQuestions extends Component {
       alertText:undefined,
       alertConfirm:undefined,
       style:undefined,
-      textIpnut:undefined
+
 
     };
 
@@ -64,23 +64,39 @@ class MyQuestions extends Component {
       //         }).catch((err)=>{
       //           console.log("eroor",err)
       //         })
-      RNFetchBlob.fetch('post', 'http://192.168.1.88:4001/audio', {
-        // this is required, otherwise it won't be process as a multipart/form-data request
-        otherHeader : "foo",
-        'Content-Type' : 'application/octet',
+      // RNFetchBlob.fetch('post', 'http://192.168.1.88:4001/audio', {
+      //   // this is required, otherwise it won't be process as a multipart/form-data request
+      //   otherHeader : "foo",
+      //   'Content-Type' : 'application/octet',
         
-      },[{
-        uri:"file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3",
-        type : 'application/mp3',
-        name : 'ringtone',
-        filename : 'axl-rosenberg-into-the-wild-part-ii.mp3',
-        data: RNFetchBlob.wrap("file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3")}]
-      ).then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      // },[{
+      //   uri:"file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3",
+      //   type : 'application/mp3',
+      //   name : 'ringtone',
+      //   filename : 'axl-rosenberg-into-the-wild-part-ii.mp3',
+      //   data: RNFetchBlob.wrap("file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3")}]
+      // ).then((res) => {
+      //   console.log(res)
+      // })
+      // .catch((err) => {
+      //   console.log(err)
+      // })
+
+      const formData = new FormData();
+          console.log(formData)
+          formData.append("file",{
+            uri: "file://sdcard/Music/1574765701686.aac",
+            name: Date.now(),
+            type: ".aac"
+          })
+
+          axios.post("http://192.168.1.88:4001/audio",{
+            data:formData
+          }).then((res)=>{
+            console.log(res)
+          }).catch((err)=>{
+            console.log("eroor",err.response)
+          })
         const { 
           dataProfileUser ,
           dataMessagesHome,
@@ -107,6 +123,7 @@ class MyQuestions extends Component {
       if(decode.roles[0] === "ROLE_ADMIN"){
         dataMessagesHome(receiveResponseConnection)
         notificationPrecision(receiveResponseConnection)
+ 
             timerMessage = setInterval(()=>{
       
               if(isConnected && isInternetReachable){
@@ -118,10 +135,10 @@ class MyQuestions extends Component {
             },3000)
 
         try{
-          const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
-          const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
-          this.permission = granted
-          this.writeExternalStorage = storage 
+          // const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+          // const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+          // this.permission = granted
+          // this.writeExternalStorage = storage 
        
         }catch(err){
             console.log("eroor ====== >",err)
@@ -156,32 +173,42 @@ class MyQuestions extends Component {
 
     static async getDerivedStateFromProps(props, state){ 
               
-   
-             if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
-              // console.log("message ===",props.dataFilterMyquestion )
-              state.ProfileUser = props.dataProfileUser.data
-                if(props.allDataMessagesHome){
-                  
-                  state._messages = props.allDataMessagesHome
-                  
-                }
+  
+          if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
+          state.ProfileUser = props.dataProfileUser.data
             
-             }else {
-             if(props.dataProfileUser ){
-              state.ProfileUser = props.dataProfileUser.data
-             }
-             if(props.dataMessagesMyQuestions){
-              state._messages = props.dataMessagesMyQuestions
-             }
-            }
-
-        
-
-             if(props.dataFilterMyquestion && state.filter){
+            if(props.dataFilterMyquestion  ){
               state._messageFilter =props.dataFilterMyquestion
-             }else{
+              state.filter = true
+              
+              }else {
               state._messageFilter =undefined
-             } 
+              state.filter = false
+              } 
+              if(props.allDataMessagesHome){
+              
+              state._messages = props.allDataMessagesHome //
+              
+            }
+          
+          }else {
+          if(props.dataProfileUser ){
+          state.ProfileUser = props.dataProfileUser.data
+          }
+          if(props.dataMessagesMyQuestions){
+          state._messages = props.dataMessagesMyQuestions //
+          }
+        }
+
+  
+          if(props.dataFilterMyquestion && state.filter){
+          state._messageFilter =props.dataFilterMyquestion
+      
+          
+          }else{
+          state._messageFilter =undefined
+      
+          } 
 
      }
 
@@ -259,7 +286,7 @@ class MyQuestions extends Component {
        recordPosition,
        token: receiveResponseConnection
      }]
-   console.log("profiluser dans on send ",dataMessageCurrent)
+
   
     if(ProfileUser.roleTitle !== "Administrateur" ){
       
@@ -428,7 +455,7 @@ class MyQuestions extends Component {
     const { stop } =this.state
     this.setState({
       stop:!stop,
-      textIpnut:"go"
+   
     })
     this.path = Platform.select({
       ios: 'hello.m4a',
@@ -462,26 +489,26 @@ class MyQuestions extends Component {
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
   
    
-    // this.setState(previousState=>({
-    //   recordSecs: 0,
-    //   _messages: GiftedChat.append(previousState._messages,  {
-    //     id:Date.now(),
-    //     text: result,
-    //     createdAt: new Date(),
-    //     recordDuration:this.state.recordDuration,
-    //     recordPosition:0,
-    //     type:'record',
-    //     user: {
-    //       _id:this.props.dataProfileUser.data.id,
+    this.setState(previousState=>({
+      recordSecs: 0,
+      _messages: GiftedChat.append(previousState._messages,  {
+        id:Date.now(),
+        text: result,
+        createdAt: new Date(),
+        recordDuration:this.state.recordDuration,
+        recordPosition:0,
+        type:'record',
+        user: {
+          _id:this.props.dataProfileUser.data.id,
       
-    //     },
-    //     valid: true
-    //   },),
-    // }));
+        },
+        valid: true
+      },),
+    }));
     // const formData = new FormData();
     // console.log(formData)
-    // formData.append("audio",{
-    //    uri: result,
+    // formData.append("file",{
+    //    uri: "file://sdcard/Music/1574765701686.aac",
     //    name: Date.now(),
     //    type: ".aac"
     //  })
@@ -621,7 +648,7 @@ class MyQuestions extends Component {
         currentPositionSec={this.state.currentPositionSec}
        />
         <View style={Style.messageContainer}>
-           <Filtrate searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
+           <FiltrateContainer searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 inverted={true}
                 scrollToBottom={true}

@@ -4,7 +4,7 @@ import { View, Text,TouchableOpacity} from 'react-native';
 import { Style} from './styleChatHome';
 import { Button ,Icon } from 'react-native-elements'
 import Menu from '../../containers/Menu/Menu'
-import Filtrate from '../Filtrate/Filtrate'
+import FiltrateContainer from '../../containers/Filtrate/Filtrate'
 import { GiftedChat ,Bubble } from 'react-native-gifted-chat';
 import axios from 'axios';
 import AlertDialog  from '../AlertDialog/AlertDialog'
@@ -248,7 +248,7 @@ class ChatHome extends Component {
         <Menu nameMenu="Chat Géneral" navigation={this.props.navigation} />
       
         <View style={Style.messageContainer}>
-          <Filtrate  searchBar={this.searchBar} textFilter={_textFilter} deleteTextSearchBar={deleteTextSearchBar} />
+          <FiltrateContainer  searchBar={this.searchBar} textFilter={_textFilter} deleteTextSearchBar={deleteTextSearchBar} />
               <GiftedChat
                
                 scrollToBottom={true}

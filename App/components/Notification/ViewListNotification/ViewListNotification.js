@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView  } from 'react-native'
+import { ScrollView,View,Text  } from 'react-native'
 import { Card, ListItem } from 'react-native-elements'
 
 import { Style } from '../styleNotification'
@@ -24,12 +24,20 @@ const  ViewListNotification =({
                       <ListItem
                       key={i}
                       rightSubtitleProps={{backgroundColor:"black"}}
+                      contentContainerStyle={{borderRadius:15,backgroundColor:"#8ECCE7",padding:10}}
+                      pad={10}
+                      subtitleStyle={{color:"green"}}
                       roundAvatar
+                      subtitle= {
+                      <View style={{flexDirection:'row',justifyContent:"space-between",}}>
+                        <Text style={{color:"green"}}>{item.user.name}</Text>
+                        <Text style={{color:"white"}}>{`${item.createdAt.getDate()}.${item.createdAt.getMonth()}.${item.createdAt.getFullYear()}`}</Text>
+                      </View>}
                       containerStyle={item.seen ? {backgroundColor:"#D7DCE1"}:{backgroundColor:"white"}}
                       title={item.text}
                       leftIcon={{ name: 'notifications' }}
                       bottomDivider
-                      chevron
+               
                       onPress={()=>goToCategoryPage(item,requete)}
                       />
                   );

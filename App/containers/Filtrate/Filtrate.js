@@ -7,11 +7,11 @@ import { connect } from 'react-redux';
  * Local import
  */
 // import Example from 'App/components/Example';
-import Notification from '../../components/Notification/Notification'
+import Filtrate from '../../components/Filtrate/Filtrate'
 
 // Action Creators
-import {notificationPrecision,currentNotif} from '../../store/actionCreator/Notification'
-import { sendDataFilterHomeMessage} from '../../store/actionCreator/ChatHome';
+
+import { receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -20,12 +20,7 @@ import { sendDataFilterHomeMessage} from '../../store/actionCreator/ChatHome';
  * Pas de data à transmettre ? const mapStateToProps = null;
  */
 const mapStateToProps = (state, ownProps) => ({
-    notificationQuestions: state.allDataMessagesHome,
-    dataStateAllCategory:state.dataAllCategory,
-    receiveResponseConnection: state.receiveResponseConnection,
-    dataProfileUser: state.dataProfileUser,
-    allPrecision:state.allPrecision,
-    answerUser:state.answerUser
+    // currentNotification:state.currentNotification
 });
 
 /* === Actions ===
@@ -36,28 +31,22 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  notificationQuestion: (data) => {
-    dispatch(notificationQuestion(data));
-  },
-  notificationPrecision:(data)=>{
-      dispatch(notificationPrecision(data));
-  },currentNotif:(data)=>{
-    dispatch(currentNotif(data))
-  }, sendDataFilterHomeMessage:(data)=>{
-    dispatch(sendDataFilterHomeMessage(data))
-  },
-});
+
+  receiveDatafilterMessageMyQuestion:()=>{
+    dispatch( receiveDatafilterMessageMyQuestion(undefined))
+  }
+})
 
 // Container
 // connect(Ce dont j'ai besoin)(Qui en a besoin)
- const NotificationContainer = connect(
+ const FiltrateContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Notification);
+)(Filtrate);
 
 
 
 /**
  * Export
  */
-export default NotificationContainer;
+export default FiltrateContainer;

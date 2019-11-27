@@ -67,26 +67,38 @@ export default class MenuDrawer extends React.Component{
 
 
     gotToNavLink=async (nav)=>{
-         this.props.dataFilterMessagesCategory()
-         await this.props.DataMessagesMyQuestions()
+        const { dataFilterMessagesCategory,
+            DataMessagesMyQuestions,
+            dataAllCategory,
+            receiveDataMessagesMyQuestions,
+            receiveDatafilterMessageMyQuestion,
+            navigation
+        } = this.props
+         dataFilterMessagesCategory()
+         DataMessagesMyQuestions()
  
-         console.log("click")
+        console.log(nav)
         const { receiveResponseConnection , profileUser }=this.state
 
-        await this.props.dataAllCategory(receiveResponseConnection)
+        dataAllCategory(receiveResponseConnection)
         var data = new Object
         data.token = receiveResponseConnection
         data.idUser = profileUser.id
 
-        await this.props.receiveDataMessagesMyQuestions(data)
+       receiveDataMessagesMyQuestions(data)
+       if(nav === 'MyQuestions'){
+          
+        receiveDatafilterMessageMyQuestion()
+    }
+
         if(nav === 'Category'){
-            this.props.navigation.navigate(nav,{
+            navigation.navigate(nav,{
                 nameCategory:nav
             })
-            this.props.navigation.toggleDrawer()
+            navigation.closeDrawer()
         }else{
-            this.props.navigation.navigate(nav)
-            this.props.navigation.toggleDrawer()
+           navigation.navigate(nav)
+           navigation.closeDrawer()
         }
     }
   

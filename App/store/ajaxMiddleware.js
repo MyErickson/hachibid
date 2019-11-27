@@ -172,7 +172,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
     
                     const filterDataMessage = actionRequeteFilter(dataMessage)
                     const allDataMessageUser = actionRequeteSort(filterDataMessage)
-
+                    console.group("je suis pour le filter ajax",allDataMessageUser)
                     if(action.data.role === "ROLE_ADMIN"){
                         store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
                     }else{
@@ -199,7 +199,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
                         const dataMessage= actionRequeteDataMessage(response) 
 
                         const allDataMessageUser = actionRequeteSort(dataMessage)
-
+                    
                          store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
                     }).catch((err)=>{
                         console.log("errr oro axios ",err.response)

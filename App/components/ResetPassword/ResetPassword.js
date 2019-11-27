@@ -14,7 +14,7 @@ export class ResetPassword extends Component {
         messageErrorForReset:undefined,
         modalVisible: this.props.isModalVisible,
         showValidate:undefined,
-    
+        message:undefined
     }
 
     
@@ -22,24 +22,30 @@ export class ResetPassword extends Component {
 
         const { email } = this.state;
 
-        console.log(email)
-         await axios.post('https://rabbin-dev.digitalcube.fr/forgot-password',{
-             email
-        }).then((response)=>{
-       
-            console.log('dans le component reset pour la reponse',response)
-            this.setState({
-                email:undefined,
-            })
-            this.setState({messageErrorForReset:false , showValidate:true })
-        }).catch((err)=>{
-
-             console.log('error dans le component reset ',err)
-            this.setState({messageErrorForReset:true, showValidate:false})
-        })
+        console.log("mon email est ",email)
+        if(email){
+            await axios.post('https://rabbin-dev.digitalcube.fr/forgot-password',{
+                email:email
+           }).then((response)=>{
+          
+               console.log('dans le component reset pour la reponse',response)
+               this.setState({
+                   email:undefined,
+               })
+               this.setState({messageErrorForReset:false , showValidate:true })
+           }).catch((err)=>{
+   
+                console.log('error dans le component reset ',err.response)
+                this.setState({messageErrorForReset:true, showValidate:false,message:err.response.data.message})
+           })
+        }else{
+            this.setState({messageErrorForReset:true, showValidate:false,message:"Le champ est vide"})
+        }
+      
      }
     
      collectLoginAndPwd=(text)=>{
+         console.log(text)
          this.setState({email:text})
      }
 
@@ -53,7 +59,7 @@ export class ResetPassword extends Component {
     render() {
 
        
-        const { messageErrorForReset , showValidate } = this.state;
+        const { messageErrorForReset , showValidate,message } = this.state;
           
         return (
             <Modal style={{height:10}} 
@@ -64,7 +70,7 @@ export class ResetPassword extends Component {
                <Container  style={ Style.container}>
              <Content>
             { messageErrorForReset ? 
-                  (<Text style={{color:'red',marginBottom: 20,margin: 10}}>Nous avons pas trouvé votre mail</Text>)
+                  (<Text style={{color:'red',marginBottom: 20,margin: 10}}>{message}</Text>)
                   :
             
                 <Text style={{margin: 10,fontSize:16}}>Entrer votre email pour renitialiser votre mot de passe</Text>
@@ -83,7 +89,7 @@ export class ResetPassword extends Component {
               name="email"
               maxLength={255}
               value={this.state.email}
-              onChange={this.collectLoginAndPwd}/>
+              onChangeText={this.collectLoginAndPwd}/>
 
 
           </Item>  
@@ -98,7 +104,7 @@ export class ResetPassword extends Component {
                      containerStyle={Style.button}
                      buttonStyle={{borderRadius:30,backgroundColor:'#e5e6e8'}}
                      onPress= {()=>this.closeModal()}
-                     title= 'Annuler'
+                     title= 'Fermer'
                  />
                    <Button rounded 
                      containerStyle={Style.button}

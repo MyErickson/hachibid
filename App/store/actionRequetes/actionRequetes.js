@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 export const actionRequeteDataMessage = (response)=>{
-      console.log("je sis dans action requetes ", response)
+    //   console.log("je sis dans action requetes ", response)
           const dataMessage = response.data['hydra:member'].map((value)=>{
 
             return{
@@ -45,9 +45,9 @@ export const actionRequeteDataMessage = (response)=>{
                                         },
                             createdAt:new Date(valueAnswers.createdAt),
                             user:{
-                                  _id:valueAnswers.id,
-                                  name:"admin",
-                                  typeUser:value.user["@type"]
+                                  _id:valueAnswers.answerer.id,
+                                  name:valueAnswers.answerer.username,
+                                  typeUser:valueAnswers.answerer["@type"]
                             }
                         })
                     }
@@ -56,7 +56,7 @@ export const actionRequeteDataMessage = (response)=>{
                }
             }  
         })
-
+       
         return dataMessage
         
    
@@ -74,14 +74,14 @@ export const actionRequeteSort =(filterDataMessage )=>{
 }
 
 export const counterNotif = (notificationQ = null, notificationP = null)=>{
-   
+
     var x  = 0 , i = 0
     if(notificationQ){
-        let counterNotif = notificationQ.filter((value)=>value.seen === false)
+        let counterNotif = notificationQ.filter((value)=> value.answered !== true && value.seen === false)
         i = counterNotif.length
     }
     if(notificationP){
-       let counterNotif = notificationP.filter((value)=>value.seen === false)
+       let counterNotif = notificationP.filter((value)=> value.answered !== true && value.seen === false)
        x =  counterNotif.length
     }
  
@@ -90,8 +90,9 @@ export const counterNotif = (notificationQ = null, notificationP = null)=>{
 
 export const presetColors = {
     backgroundColor: [
-      'rgb(160, 190, 235)',
-      'rgb(14, 65, 144)',
+        '#1285F0',
+        '#12EEF0',
+     
    
     ],
     colorsProfile: [
