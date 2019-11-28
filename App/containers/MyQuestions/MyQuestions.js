@@ -15,7 +15,7 @@ import { sendMessageUser ,
         receivePrecision,
         sendDatafilterMessageMyQuestion,
         sendAnswersForQuestion,
-        sendPrecisionForQuestion,DataMessagesMyQuestions} from '../../store/actionCreator/MyQuestions'
+        sendPrecisionForQuestion,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
 import { notificationPrecision , currentNotif } from '../../store/actionCreator/Notification'
 
 /* === State (données) ===
@@ -75,6 +75,9 @@ DataMessagesMyQuestions:()=>{
 notificationPrecision:(data)=>{
   dispatch(notificationPrecision(data))
 },
+receiveDatafilterMessageMyQuestion:()=>{
+  dispatch( receiveDatafilterMessageMyQuestion(undefined))
+}
 
 })
 // Container

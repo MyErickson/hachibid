@@ -14,6 +14,8 @@ import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
+import { answerUser } from '../../store/actionCreator/Notification';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 // import RNFetchBlob from 'rn-fetch-blob'
 var timer;
 var timerMessage;
@@ -45,6 +47,7 @@ class MyQuestions extends Component {
       alertText:undefined,
       alertConfirm:undefined,
       style:undefined,
+      hideInputGifted:undefined
 
 
     };
@@ -56,47 +59,16 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-      // axios.get("http://192.168.1.88:80/audio",{
-      //   "Content-Type": "application/x-www-form-urlencoded",
-      //     Accept: "application/json"
-      //         }).then((res)=>{
-      //           console.log(res)
-      //         }).catch((err)=>{
-      //           console.log("eroor",err)
-      //         })
-      // RNFetchBlob.fetch('post', 'http://192.168.1.88:4001/audio', {
-      //   // this is required, otherwise it won't be process as a multipart/form-data request
-      //   otherHeader : "foo",
-      //   'Content-Type' : 'application/octet',
-        
-      // },[{
-      //   uri:"file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3",
-      //   type : 'application/mp3',
-      //   name : 'ringtone',
-      //   filename : 'axl-rosenberg-into-the-wild-part-ii.mp3',
-      //   data: RNFetchBlob.wrap("file://sdcard/Music/axl-rosenberg-into-the-wild-part-ii.mp3")}]
-      // ).then((res) => {
-      //   console.log(res)
-      // })
-      // .catch((err) => {
-      //   console.log(err)
-      // })
 
-      const formData = new FormData();
-          console.log(formData)
-          formData.append("file",{
-            uri: "file://sdcard/Music/1574765701686.aac",
-            name: Date.now(),
-            type: ".aac"
-          })
+      // const formData = new FormData();
+      // console.log("TCL: MyQuestions -> componentDidMount -> formData", formData)
 
-          axios.post("http://192.168.1.88:4001/audio",{
-            data:formData
-          }).then((res)=>{
-            console.log(res)
-          }).catch((err)=>{
-            console.log("eroor",err.response)
-          })
+      //     formData.append("file",{
+      //       uri: "file://sdcard/Music/1574765701686.aac",
+      //       name: Date.now(),
+      //       type: ".aac"
+      //     })
+
         const { 
           dataProfileUser ,
           dataMessagesHome,
@@ -275,7 +247,7 @@ class MyQuestions extends Component {
       recordDuration,
       recordPosition} = messages[0]
 
-     const {receiveResponseConnection } = this.props
+     const {receiveResponseConnection ,receiveDatafilterMessageMyQuestion} = this.props
  
      const newMessage = [{
        _id,
@@ -299,11 +271,12 @@ class MyQuestions extends Component {
         data.idMessage = dataMessageCurrent.idMessage
         data.idAnwsersUser = dataMessageCurrent.idAnwsersUser 
         this.props.sendPrecisionForQuestion(data) 
-   
+        receiveDatafilterMessageMyQuestion()
       }else{
         let data = this._dataInfo(text)
         data.idMessage = dataMessageCurrent.idMessage
         this.props.sendAnswersForQuestion(data) 
+        receiveDatafilterMessageMyQuestion()
       }
       this.setState({
         answerCurrent:undefined,
@@ -375,12 +348,23 @@ class MyQuestions extends Component {
  
   }
 
-  renderSend(props) {
-    return (
-     
-      <Send {...props} label={<Icon name="paper-plane" />} />
+  renderSend(props,dataMessageCurrent,ProfileUser) {
 
-    );
+
+    if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent){
+      return (
+     
+        <Send {...props} label={<Icon name="paper-plane" />} />
+  
+      );
+    }else if (ProfileUser && ProfileUser.roleTitle !== "Administrateur" ){
+      return (
+     
+        <Send {...props} label={<Icon name="paper-plane" />} />
+  
+      );
+    }
+  
   }
  
   renderInputToolbar(props) {
@@ -426,23 +410,36 @@ class MyQuestions extends Component {
   }
 
   renderActions=(props)=>{
- 
-    const { ProfileUser, stop  } = this.state
-    if(ProfileUser !== undefined && ProfileUser.roles[0]=== "ROLE_ADMIN"){
-      if (stop){
-        return (
-          <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-          <Icon name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
-          </TouchableOpacity>
-        )
-      }else{
-        return (
-          <TouchableOpacity style={{marginBottom:10,marginLeft:10}}>
-          <Icon name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
-          </TouchableOpacity>
-        )
-      }
-    }
+   
+    const { ProfileUser, stop ,dataMessageCurrent } = this.state
+  
+    // if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent ){
+    //   if (stop){
+    //     return (
+    //       <View style={{flexDirection:"row",justifyContent:"space-between",width:wp("80%")}}>
+    //         <TouchableOpacity >
+    //           <View style={Style.containerIconRecorder}>
+    //           <Icon style={{color:"white"}} name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
+    //           </View>
+    //         </TouchableOpacity>
+    //         <Text 
+    //         style={{paddingTop:15,color:"red"}}
+    //         onPress={()=>this.onStopRecord()}
+    //         >Annuler</Text>
+    //       </View>
+    //     )
+    //   }else{
+    //     return (
+       
+    //       <TouchableOpacity >
+    //         <View style={Style.containerIconRecorder}>
+    //           <Icon  style={{color:"white"}} name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
+    //         </View>
+    //       </TouchableOpacity>
+          
+    //     )
+    //   }
+    // }
     
   }
 
@@ -455,7 +452,7 @@ class MyQuestions extends Component {
     const { stop } =this.state
     this.setState({
       stop:!stop,
-   
+      hideInputGifted:true
     })
     this.path = Platform.select({
       ios: 'hello.m4a',
@@ -481,7 +478,8 @@ class MyQuestions extends Component {
   onStopRecord = async () => {
     const { stop } =this.state
     this.setState({
-      stop:!stop
+      stop:!stop,
+      hideInputGifted:false
     })
 
     const result = await this.audioRecorderPlayer.stopRecorder(this.path);
@@ -489,22 +487,22 @@ class MyQuestions extends Component {
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
   
    
-    this.setState(previousState=>({
-      recordSecs: 0,
-      _messages: GiftedChat.append(previousState._messages,  {
-        id:Date.now(),
-        text: result,
-        createdAt: new Date(),
-        recordDuration:this.state.recordDuration,
-        recordPosition:0,
-        type:'record',
-        user: {
-          _id:this.props.dataProfileUser.data.id,
+    // this.setState(previousState=>({
+    //   recordSecs: 0,
+    //   _messages: GiftedChat.append(previousState._messages,  {
+    //     id:Date.now(),
+    //     text: result,
+    //     createdAt: new Date(),
+    //     recordDuration:this.state.recordDuration,
+    //     recordPosition:0,
+    //     type:'record',
+    //     user: {
+    //       _id:this.props.dataProfileUser.data.id,
       
-        },
-        valid: true
-      },),
-    }));
+    //     },
+    //     valid: true
+    //   },),
+    // }));
     // const formData = new FormData();
     // console.log(formData)
     // formData.append("file",{
@@ -513,15 +511,6 @@ class MyQuestions extends Component {
     //    type: ".aac"
     //  })
 
-    //  axios.post("http://192.168.1.88:80/audio",{
-    //    data:formData
-    //  }).then((res)=>{
-    //   console.log(res)
-    // }).catch((err)=>{
-    //   console.log("eroor",err)
-    // })
-    console.log(result)
-    // `RNFetchBlob-file://sdcard/Music/1574765701686.aac`
    
  };
 
@@ -565,6 +554,7 @@ class MyQuestions extends Component {
     this.setState({
       play:false ,
       currentPositionSec:0
+    
       })
       this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
   }
@@ -623,7 +613,9 @@ class MyQuestions extends Component {
       alertConfirm,
       alertText,
       style,
-      alertVisible
+      alertVisible,
+      dataMessageCurrent,
+      hideInputGifted
      } = this.state
   
     var nameMenu = "";
@@ -653,17 +645,20 @@ class MyQuestions extends Component {
                 inverted={true}
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
+                extraData={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
+                maxComposerHeight={90}
                 onSend={messages => this.onSend(messages)}
-                // maxInputLength={0}
+                maxInputLength={ hideInputGifted?0:10000}
                 renderUsernameOnMessage={true}
+                multiline={true}
                 renderAvatar={null}
                 isAnimated= {true}
                 minInputToolbarHeight={49}
-                placeholder="Poser une question..."
+                placeholder={hideInputGifted?"":"Poser une question..."}
                 keyboardShouldPersistTaps={'never'}
                 renderBubble={(props)=>this.renderBubble(props)}
-                renderSend={this.renderSend}
+                renderSend={(props)=>this.renderSend(props,dataMessageCurrent,ProfileUser)}
                 renderInputToolbar={this.renderInputToolbar}
                 renderActions={this.renderActions}
                 renderChatFooter={this.renderComposer}

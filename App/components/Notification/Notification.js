@@ -83,7 +83,6 @@ class Notification extends Component {
     
 
     if(requete !== "answers"){
-      console.log('je suis ')
       this.props.navigation.navigate('MyQuestions')
       this.props.sendDataFilterHomeMessage(data)
     }

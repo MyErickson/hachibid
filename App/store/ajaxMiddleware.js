@@ -337,9 +337,10 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
       
            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
            axios.post('accuracies',{
-            user:action.data.userQuestion,
+            user:action.data.user,
             answered:true,
-            message:action.data.message
+            message:action.data.message,
+            seen:false
 
         }).then((response)=>{
             console.log("response pour precisison ",response)
@@ -418,9 +419,9 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
                           }
                   
                       })
-
+                  
                      const allDataMessageUser = actionRequeteSort(dataMessage)
-                     store.dispatch(receiveAllPrecision (allDataMessageUser))
+                     store.dispatch(receiveAllPrecision (allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("33333",err.response)
                 
@@ -453,7 +454,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
                       })
                      const  answer =   dataMessage.filter((value)=>value.text)
                      const allDataMessageUser = actionRequeteSort(answer)
-                     store.dispatch(receiveAnswerUser(allDataMessageUser))
+                     store.dispatch(receiveAnswerUser(allDataMessageUser.reverse()))
             }).catch((err)=>{
                 console.log("33333",err.response)
                 

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 export const actionRequeteDataMessage = (response)=>{
-    //   console.log("je sis dans action requetes ", response)
+    //    console.log("je sis dans action requetes ", response)
           const dataMessage = response.data['hydra:member'].map((value)=>{
 
             return{
@@ -39,7 +39,7 @@ export const actionRequeteDataMessage = (response)=>{
                             seen:value.seen,
                             answered:valueAnswers.answered,
                             question:{
-                                id:value["@id"], 
+                                id:value.user["@id"], 
                                 text:value.content,
                                 name:value.user.username
                                         },

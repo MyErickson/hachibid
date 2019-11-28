@@ -80,6 +80,17 @@ export const Style = StyleSheet.create({
         width:wp("82%"),
         borderRadius:10,
         backgroundColor:'rgba(41,113,232,0.8)'
+    },containerIconRecorder:{
+        flexDirection:"row",
+        justifyContent:"center",
+        marginBottom:10,
+        marginLeft:10 ,
+        backgroundColor:"#18C9D1",
+        padding:7,
+        borderRadius:30,
+        width:40,
+        height:40,
+        alignItems:"flex-start"
     },
     iconRecorder:{
      
@@ -113,6 +124,7 @@ export const Style = StyleSheet.create({
         textAlign:'right',
         marginRight:13,
         top:6
-    }
+    },
+    
  
 })

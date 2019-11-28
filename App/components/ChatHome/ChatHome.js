@@ -213,12 +213,12 @@ class ChatHome extends Component {
   sendPrecision=()=>{
     const { currentMessageForPrecision } = this.state
   
-    
+    console.log("demande une precision",currentMessageForPrecision)
     let data = new Object;
 
     data.content = currentMessageForPrecision.text
     data.message = currentMessageForPrecision.idMessage
-    data.userQuestion = currentMessageForPrecision.question.idUser
+    data.user = currentMessageForPrecision.question.id
     data.token = this.props.receiveResponseConnection
 
     this.props.askPrecision(data)
