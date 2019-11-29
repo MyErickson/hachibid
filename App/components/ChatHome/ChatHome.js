@@ -272,7 +272,7 @@ class ChatHome extends Component {
        <View style={Style.containerButton} >
         <Button  
         title="Poser une question" 
-        buttonStyle={{ borderRadius:20,padding:10}} 
+        buttonStyle={{ borderRadius:20,padding:10,marginBottom:10}} 
         onPress={this.goToMyQuestion} />
       </View>
         <AlertDialog 

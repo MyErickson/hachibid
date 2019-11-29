@@ -3,6 +3,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
   } from "react-native-responsive-screen";
+import { bold } from 'ansi-colors';
 
 export const Style = StyleSheet.create({
     container:{
@@ -14,10 +15,14 @@ export const Style = StyleSheet.create({
         color:'white',
     },
     badge:{
+   
         position: 'absolute',
          top: -7,
-          right: -16 ,
+          right: -7 ,
           zIndex:1,
-          width:40
+         minWidth:25,
+         height:19,
+         
+         
     }
 })

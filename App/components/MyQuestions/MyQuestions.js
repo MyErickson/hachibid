@@ -105,16 +105,18 @@ class MyQuestions extends Component {
               }
               
             },3000)
-
-        try{
-          // const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
-          // const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
-          // this.permission = granted
-          // this.writeExternalStorage = storage 
-       
-        }catch(err){
-            console.log("eroor ====== >",err)
+        if(Platform.OS ==="android"){
+          try{
+            const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+            const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+            this.permission = granted
+            this.writeExternalStorage = storage 
+         
+          }catch(err){
+              console.log("eroor ====== >",err)
+          }
         }
+   
       
      
 
@@ -159,7 +161,7 @@ class MyQuestions extends Component {
               } 
               if(props.allDataMessagesHome){
               
-              state._messages = props.allDataMessagesHome //
+              // state._messages = props.allDataMessagesHome //
               
             }
           
@@ -168,7 +170,7 @@ class MyQuestions extends Component {
           state.ProfileUser = props.dataProfileUser.data
           }
           if(props.dataMessagesMyQuestions){
-          state._messages = props.dataMessagesMyQuestions //
+          // state._messages = props.dataMessagesMyQuestions //
           }
         }
 
@@ -412,34 +414,34 @@ class MyQuestions extends Component {
   renderActions=(props)=>{
    
     const { ProfileUser, stop ,dataMessageCurrent } = this.state
-  
-    // if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent ){
-    //   if (stop){
-    //     return (
-    //       <View style={{flexDirection:"row",justifyContent:"space-between",width:wp("80%")}}>
-    //         <TouchableOpacity >
-    //           <View style={Style.containerIconRecorder}>
-    //           <Icon style={{color:"white"}} name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
-    //           </View>
-    //         </TouchableOpacity>
-    //         <Text 
-    //         style={{paddingTop:15,color:"red"}}
-    //         onPress={()=>this.onStopRecord()}
-    //         >Annuler</Text>
-    //       </View>
-    //     )
-    //   }else{
-    //     return (
+    // && dataMessageCurrent 
+    if(ProfileUser && ProfileUser.roleTitle === "Administrateur" ){
+      if (stop){
+        return (
+          <View style={{flexDirection:"row",justifyContent:"space-between",width:wp("80%")}}>
+      
+              <View style={Style.containerIconRecorder}>
+              <Icon style={{color:"white"}} name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
+              </View>
+            
+            <Text 
+            style={{paddingTop:15,color:"red"}}
+            onPress={()=>this.onStopRecord()}
+            >Annuler</Text>
+          </View>
+        )
+      }else{
+        return (
        
-    //       <TouchableOpacity >
-    //         <View style={Style.containerIconRecorder}>
-    //           <Icon  style={{color:"white"}} name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
-    //         </View>
-    //       </TouchableOpacity>
+          <TouchableOpacity >
+            <View style={Style.containerIconRecorder}>
+              <Icon  style={{color:"white"}} name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
+            </View>
+          </TouchableOpacity>
           
-    //     )
-    //   }
-    // }
+        )
+      }
+    }
     
   }
 
@@ -454,9 +456,10 @@ class MyQuestions extends Component {
       stop:!stop,
       hideInputGifted:true
     })
+
     this.path = Platform.select({
-      ios: 'hello.m4a',
-      android: `sdcard/Music/${Date.now()}.aac`
+      ios: `/${Date.now()}.m4a`,
+      android: `sdcard/${Date.now()}.aac`
     })
      await this.audioRecorderPlayer.startRecorder(this.path);
    
@@ -475,6 +478,9 @@ class MyQuestions extends Component {
   
   };
    
+
+ 
+
   onStopRecord = async () => {
     const { stop } =this.state
     this.setState({
@@ -487,22 +493,22 @@ class MyQuestions extends Component {
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
   
    
-    // this.setState(previousState=>({
-    //   recordSecs: 0,
-    //   _messages: GiftedChat.append(previousState._messages,  {
-    //     id:Date.now(),
-    //     text: result,
-    //     createdAt: new Date(),
-    //     recordDuration:this.state.recordDuration,
-    //     recordPosition:0,
-    //     type:'record',
-    //     user: {
-    //       _id:this.props.dataProfileUser.data.id,
+    this.setState(previousState=>({
+      recordSecs: 0,
+      _messages: GiftedChat.append(previousState._messages,  {
+        id:Date.now(),
+        text: result,
+        createdAt: new Date(),
+        recordDuration:this.state.recordDuration,
+        recordPosition:0,
+        type:'record',
+        user: {
+          _id:this.props.dataProfileUser.data.id,
       
-    //     },
-    //     valid: true
-    //   },),
-    // }));
+        },
+        valid: true
+      },),
+    }));
     // const formData = new FormData();
     // console.log(formData)
     // formData.append("file",{
@@ -512,21 +518,30 @@ class MyQuestions extends Component {
     //  })
 
    
- };
+  };
+    
+    osMobile =(propsSounder)=>{
+      const currentPath = propsSounder.currentMessage.text.split('//')
+      var path 
+      if(Platform.OS === 'ios'){
+        return path =  currentPath[2]
+      }else{
+        return path =  currentPath[1]
+      }
+    }
 
   onStartPlay = async (propsSounder) => {
-     const currentPath = propsSounder.currentMessage.text.split('//')
-    console.log('onStartPlay',currentPath);
-  
+    const path = this.osMobile(propsSounder)
+
     this.setState({
       play:true
     })
 
-    const msg = await this.audioRecorderPlayer.startPlayer(currentPath[1]);
+    const msg = await this.audioRecorderPlayer.startPlayer(path);
      console.log("msg ==>",msg,this.path);
 
      timer = setInterval(()=>{
-       console.log("dans le timer 2");
+       
        this.setState({
          currentPositionSec: 100 + this.state.currentPositionSec
       })
@@ -539,7 +554,7 @@ class MyQuestions extends Component {
     await this.audioRecorderPlayer.addPlayBackListener(async(e) => {
 
       if (e.current_position === e.duration) {
-         this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
+         this.audioRecorderPlayer.stopPlayer(path).catch(()=>{});
       }
       return e.current_position;
     });
@@ -548,27 +563,31 @@ class MyQuestions extends Component {
     
   }
 
+
+
   onStopPlay=(propsSounder)=>{
-    const currentPath = propsSounder.currentMessage.text.split('//')
+    const path = this.osMobile(propsSounder)
+  
     clearInterval(timer)  
     this.setState({
       play:false ,
       currentPositionSec:0
     
       })
-      this.audioRecorderPlayer.stopPlayer(currentPath[1]).catch(()=>{});
+      this.audioRecorderPlayer.stopPlayer(path).catch(()=>{});
   }
+  
 
 
   onPausePlay =  (propsSounder,currentPositionSec) => {
-  const currentPath = propsSounder.currentMessage.text.split('//')
+ const path = this.osMobile(propsSounder)
   clearInterval(timer)  
 
    this.setState({
      play:false ,
      currentPositionSec:currentPositionSec
     })
-  this.audioRecorderPlayer.pausePlayer(currentPath[1]);
+  this.audioRecorderPlayer.pausePlayer(path);
   
   };
 

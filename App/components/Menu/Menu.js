@@ -66,9 +66,10 @@ class Menu extends Component {
               <Badge  
               status="error"  
               containerStyle={Style.badge} 
-              textStyle ={{fontSize:10,padding:5}}
+              textStyle ={{fontSize:10}}
             
               value={notifAnswers}/>
+             
               }
       
             <Icon style={Style.icon} name='notifications' />

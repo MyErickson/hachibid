@@ -41,13 +41,16 @@ const PlaySound = ({
     isVisible={isModalVisible}
     backdropTransitionOutTiming={0}
     >
-        <Icon style={Style.iconClose}  name="close" onPress={()=>toggleModal()}/> 
+      <View style={Style.iconClose} >
+      <Icon  name="close" onPress={()=>toggleModal()}/> 
+      </View>
+        
     <View  style={Style.recorderPlaySound}>
           {play?<IconElement  style={Style.iconRecorder} size={35} name="pause" onPress={()=>onPausePlay(propsSounder,currentPositionSec)
       }/>  
           :<Icon style={Style.iconRecorder} name="play" onPress={()=>onStartPlay(propsSounder)}/> }
 
-        {<ProgressBar progress={progress?progress:0} style={{width:wp("70%"),top:hp("2.5%")}} color={	"#404040"} /> }
+        {<ProgressBar progress={progress?progress:0} style={{width:wp("70%"),top:hp("2.1%")}} color={	"#404040"} /> }
       </View>
     </Modal>
 );

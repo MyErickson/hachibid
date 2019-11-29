@@ -98,11 +98,12 @@ export const Style = StyleSheet.create({
     },
     iconClose:{
         backgroundColor:'white',
-        paddingLeft:7,
-        paddingTop:1,
+        justifyContent:"center",
+        flexDirection:"row",
+    
         marginBottom:5,
         marginLeft:35,
-        borderRadius:30, 
+        borderRadius:40, 
         height:30,
         width:30
     },

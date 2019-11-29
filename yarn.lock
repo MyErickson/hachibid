@@ -5765,10 +5765,10 @@ react-native-waveview@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-native-waveview/-/react-native-waveview-1.1.0.tgz#7a791545d08bd0baadd66f8d8c7d3b55dcc572fe"
   integrity sha512-TkYkWlfjutYfsLSIbeRtJbLVAHMpkkvhIfyWF3K7O1jocoBa94qXSdcv1bb0owWvBtUyEE9ODaVBnX5CJZezdQ==
 
-react-native-webview@^7.4.0:
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-7.4.0.tgz#22d051866099fb86ec1c7d64cc1534a95655c14b"
-  integrity sha512-FIemA3gVaH2jfkzyvJWqiBLvqIdMBAOLJ8tF9VVfa3YP9hpJDFu0VaAUDOz+bbJgXldTOF945STWmX6UGJt31w==
+react-native-webview@^7.5.2:
+  version "7.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-7.5.2.tgz#9da3006e03636faaa9d05f3abff46cd40bfb80f9"
+  integrity sha512-e2ODq2KuTchhATosONNMZIubAzmjWoHg7WK0s1R515PVeKqOc30v6KdJy8IW5/4kw/2aal+Pb7b/F4s1zp6PFQ==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
