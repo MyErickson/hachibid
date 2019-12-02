@@ -16,7 +16,10 @@ import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
 import { answerUser } from '../../store/actionCreator/Notification';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
-// import RNFetchBlob from 'rn-fetch-blob'
+import RNFetchBlob from 'rn-fetch-blob';
+
+import formData from "form-data";
+
 var timer;
 var timerMessage;
 
@@ -59,15 +62,6 @@ class MyQuestions extends Component {
   }
     
     async componentDidMount() {
-
-      // const formData = new FormData();
-      // console.log("TCL: MyQuestions -> componentDidMount -> formData", formData)
-
-      //     formData.append("file",{
-      //       uri: "file://sdcard/Music/1574765701686.aac",
-      //       name: Date.now(),
-      //       type: ".aac"
-      //     })
 
         const { 
           dataProfileUser ,
@@ -433,11 +427,11 @@ class MyQuestions extends Component {
       }else{
         return (
        
-          <TouchableOpacity >
+   
             <View style={Style.containerIconRecorder}>
               <Icon  style={{color:"white"}} name="mic"  {...props} onPress={()=>this.onStartRecord()}/>
             </View>
-          </TouchableOpacity>
+     
           
         )
       }
@@ -482,7 +476,7 @@ class MyQuestions extends Component {
  
 
   onStopRecord = async () => {
-    const { stop } =this.state
+    const { stop ,recordDuration} =this.state
     this.setState({
       stop:!stop,
       hideInputGifted:false
@@ -493,29 +487,82 @@ class MyQuestions extends Component {
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
   
    
-    this.setState(previousState=>({
-      recordSecs: 0,
-      _messages: GiftedChat.append(previousState._messages,  {
-        id:Date.now(),
-        text: result,
-        createdAt: new Date(),
-        recordDuration:this.state.recordDuration,
-        recordPosition:0,
-        type:'record',
-        user: {
-          _id:this.props.dataProfileUser.data.id,
+    // this.setState(previousState=>({
+    //   recordSecs: 0,
+    //   _messages: GiftedChat.append(previousState._messages,  {
+    //     id:Date.now(),
+    //     text: result,
+    //     createdAt: new Date(),
+    //     recordDuration:recordDuration,
+    //     recordPosition:0,
+    //     type:'record',
+    //     user: {
+    //       _id:this.props.dataProfileUser.data.id,
       
-        },
-        valid: true
-      },),
-    }));
-    // const formData = new FormData();
-    // console.log(formData)
-    // formData.append("file",{
-    //    uri: "file://sdcard/Music/1574765701686.aac",
-    //    name: Date.now(),
-    //    type: ".aac"
-    //  })
+    //     },
+    //     valid: true
+    //   },),
+    // }));
+   
+    const formData = new FormData();
+
+    const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+    formData.append("file",  result)
+    // formData.append("duration",recordDuration)
+  console.log(result)
+
+    // axios.defaults.headers['Authorization']= "Bearer "+this.props.receiveResponseConnection;
+
+    // requete avec juste un fetch 
+    fetch(`https://rabbin-dev.digitalcube.fr/api/audios/upload`,
+    {
+      method: "POST",
+      // body:{ data:
+      //   {
+      //     file:"file://sdcard/1575299258095.aac",
+      //     duration:145
+      //   },
+      //   url:"file://sdcard/1575299258095.aac",
+      // },
+      data:"file://sdcard/1575299258095.aac",
+      Authorization : "Bearer "+this.props.receiveResponseConnection,
+      Accept: 'application/json',
+      headers:{ 'content-type': 'multipart/form-data' }
+    
+    },formData)
+    .then((res)=>{    console.log("TCL: MyQuestions -> onStopRecord -> res", res)})
+    .catch((err)=> { console.log("TCL: MyQuestions -> onStopRecord -> err", err)})
+   
+ 
+
+//requete avec la lib RNFetchBlob
+    RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',   {
+  
+    Authorization : "Bearer "+this.props.receiveResponseConnection,
+    headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
+
+    },[
+      {
+   
+      filename : '1575299258095.aac',
+      // use custom MIME type
+      type : 'application/aac',
+      // upload a file from asset is also possible in version >= 0.6.2
+      data:RNFetchBlob.wrap("sdcard/1575299258095.aac")
+      }
+    ]) .uploadProgress((written, total) => {
+      console.log('uploaded', written / total , written , total)
+  })
+
+    .then((res) => {
+   
+      console.log("TCL: MyQuestions -> onStopRecord -> res", res)
+    })
+    .catch((err) => {
+    console.log("TCL: MyQuestions -> onStopRecord -> err", err)
+      // error handling ..
+     
+    })
 
    
   };
