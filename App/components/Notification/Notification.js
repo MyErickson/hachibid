@@ -3,9 +3,10 @@ import { View,  Text } from 'react-native';
 import { Tab, Tabs, TabHeading, Icon,} from 'native-base';
 import ViewListNotification from './ViewListNotification/ViewListNotification'
 import Menu from '../../containers/Menu/Menu'
+import Playsound  from '../MyQuestions/PlaySound/PlaySound'
 import { Style } from './styleNotification';
 import axios from 'axios';
-
+import { osMobile } from '../../store/actionRequetes/actionRequetes'
 
 var timer;
 
@@ -16,7 +17,7 @@ class Notification extends Component {
       notificationQuestions :undefined,
       profileUser:undefined,
       notificationPrecision:undefined,
-      notificationAnswerUser:undefined
+      notificationAnswerUser:undefined,
     }
   
     async componentDidMount(){
@@ -97,33 +98,6 @@ class Notification extends Component {
 
  
  }
-    toggleModal=(props)=>{
-      clearInterval(timer) 
-      const { isModalVisible } = this.state
-      this.setState({isModalVisible: !isModalVisible,
-                    propsSounder:props,
-                    play:false ,
-                    currentPositionSec:0
-      })
-    }
-
-    showAlertDialog = ()=>{
-      this.setState({
-        alertVisible:true,
-        alertText:"Etes sur de vouloir enregistrer un message vocal ?",
-        alertConfirm:true,
-        style:true
-      })
-    }
-    
-    closeAlert=()=>{
-      this.setState({
-        alertVisible:false,
-        alertText:"",
-        alertConfirm:false,
-        style:false
-      })
-    }
 
   render() {
      const { notificationQuestions ,profileUser,notificationPrecision,notificationAnswerUser } =this.state
@@ -177,12 +151,13 @@ class Notification extends Component {
           notification={notificationAnswerUser}
           goToCategoryPage={this.goToCategoryPage}
           requete="answers"
+          openModal={this.openModal}
+          closeModal={this.closeModal}
           />
           </Tab>
           
         </Tabs>
         }    
-
 
     
       </View>

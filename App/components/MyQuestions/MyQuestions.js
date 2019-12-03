@@ -19,7 +19,9 @@ import { answerUser } from '../../store/actionCreator/Notification';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import RNFetchBlob from 'rn-fetch-blob';
 import Reactotron from 'reactotron-react-native'
-import formData from "form-data";
+
+import { osMobile } from '../../store/actionRequetes/actionRequetes'
+
 
 var timer;
 var timerMessage;
@@ -543,18 +545,9 @@ class MyQuestions extends Component {
    
   };
     
-    osMobile =(propsSounder)=>{
-      const currentPath = propsSounder.currentMessage.text.split('//')
-      var path 
-      if(Platform.OS === 'ios'){
-        return path =  currentPath[2]
-      }else{
-        return path =  currentPath[1]
-      }
-    }
 
   onStartPlay = async (propsSounder) => {
-    const path = this.osMobile(propsSounder)
+    const path = osMobile(propsSounder)
 
     this.setState({
       play:true
@@ -589,7 +582,7 @@ class MyQuestions extends Component {
 
 
   onStopPlay=(propsSounder)=>{
-    const path = this.osMobile(propsSounder)
+    const path = osMobile(propsSounder)
   
     clearInterval(timer)  
     this.setState({
@@ -603,7 +596,7 @@ class MyQuestions extends Component {
 
 
   onPausePlay =  (propsSounder,currentPositionSec) => {
- const path = this.osMobile(propsSounder)
+ const path = osMobile(propsSounder)
   clearInterval(timer)  
 
    this.setState({
@@ -618,6 +611,8 @@ class MyQuestions extends Component {
  // ******************** Modal *******************
 
  openModal=(props)=>{
+ console.log("TCL: MyQuestions -> openModal -> props", props)
+   
   clearInterval(timer) 
   this.setState({isModalVisible: true,
                 propsSounder:props,

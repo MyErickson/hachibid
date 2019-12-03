@@ -8,7 +8,8 @@ import { bold } from 'ansi-colors'
 const  ViewListNotification =({ 
        notification,
        goToCategoryPage,
-       requete
+       requete,
+     
 })=> {
   
         return (
@@ -43,7 +44,7 @@ const  ViewListNotification =({
                         >
                           <Text>{user && text.length > 100 ?`${text.slice(0,100)}...`:text}</Text>
                         </ScrollView>
-                        : <Text>Message vocale "Press pour lecture"</Text>
+                        : <Text>Vous avez reçu un message vocal</Text>
                       }
                       leftIcon={{ name: 'notifications' }}
                       
