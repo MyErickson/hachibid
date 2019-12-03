@@ -6,7 +6,7 @@ import { Style } from '../styleNotification'
 import { bold } from 'ansi-colors'
 
 const  ViewListNotification =({ 
-       notificationQuestions,
+       notification,
        goToCategoryPage,
        requete
 })=> {
@@ -20,8 +20,8 @@ const  ViewListNotification =({
             >
               <Card containerStyle={{padding: 0}} >
               {
-                  notificationQuestions&& notificationQuestions.map((item, i) => {
-                    const { user , userAnswerer, createdAt, text , seen} = item
+                  notification&& notification.map((item, i) => {
+                    const { user , userAnswerer, createdAt, text , seen ,audio} = item
                   return (
                       <ListItem
                       key={i}
@@ -36,12 +36,15 @@ const  ViewListNotification =({
                       </View>}
                       containerStyle={seen ? {backgroundColor:"#D7DCE1"}:{backgroundColor:"white"}}
                       title={
+                        !audio ?
                         <ScrollView style={{maxHeight:51}}
                         showsVerticalScrollIndicator={false}
                         keyboardShouldPersistTaps="always"
                         >
                           <Text>{user && text.length > 100 ?`${text.slice(0,100)}...`:text}</Text>
-                        </ScrollView>}
+                        </ScrollView>
+                        : <Text>Message vocale "Press pour lecture"</Text>
+                      }
                       leftIcon={{ name: 'notifications' }}
                       
                       chevron={user?<Text style={{fontSize:15,fontWeight:"bold"}}>></Text>:false}

@@ -2,12 +2,13 @@ import React, {Component} from 'react'
 import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
 import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
+
 import Menu from '../../containers/Menu/Menu'
 import FiltrateContainer from '../../containers/Filtrate/Filtrate'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
-import PlaySound from './PlaySound';
+import PlaySound from './PlaySound/PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
 import ViewBubble from './ViewBubble';
 import NetInfo from "@react-native-community/netinfo";
@@ -17,7 +18,7 @@ import axios from 'axios';
 import { answerUser } from '../../store/actionCreator/Notification';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import RNFetchBlob from 'rn-fetch-blob';
-
+import Reactotron from 'reactotron-react-native'
 import formData from "form-data";
 
 var timer;
@@ -46,10 +47,7 @@ class MyQuestions extends Component {
       answerCurrent:"",
       dataMessageCurrent:undefined,
       isQuestion:undefined,
-      alertVisible:undefined,
-      alertText:undefined,
-      alertConfirm:undefined,
-      style:undefined,
+
       hideInputGifted:undefined
 
 
@@ -218,7 +216,7 @@ class MyQuestions extends Component {
 
     }
 
-    _dataInfo=(text)=>{
+    _dataInfo=(text )=>{
       const { ProfileUser } = this.state
 
       const {  receiveResponseConnection } = this.props
@@ -227,6 +225,8 @@ class MyQuestions extends Component {
       data.token = receiveResponseConnection
       data.idUser = ProfileUser && ProfileUser.id
       data.text = text
+
+  
  
 
       return data 
@@ -289,8 +289,9 @@ class MyQuestions extends Component {
 
 
   renderBubble(props) {
-   const { type ,createdAt ,question, text ,user ,idMessage,_id} = props.currentMessage
-   const { ProfileUser } = this.state
+   const { audio ,createdAt ,question, text ,user ,idMessage,_id} = props.currentMessage
+
+  const { ProfileUser } =this.state
   
    var minutes = createdAt.getMinutes() 
    const dataMessageCurrent = new Object
@@ -301,12 +302,12 @@ class MyQuestions extends Component {
    if(createdAt.getMinutes() < 10){
     minutes = `0`+createdAt.getMinutes()
         }
-     if(type === "record"){
-   
+     if(audio){
+
       
        return (
         <View style={Style.recorder}>    
-          <Text  onPress={()=>this.toggleModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
+          <Text  onPress={()=>this.openModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
           <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
           
         </View>
@@ -476,93 +477,68 @@ class MyQuestions extends Component {
  
 
   onStopRecord = async () => {
-    const { stop ,recordDuration} =this.state
+    const { stop ,recordDuration , dataMessageCurrent } =this.state
     this.setState({
       stop:!stop,
       hideInputGifted:false
     })
-
+   var filename= undefined;
     const result = await this.audioRecorderPlayer.stopRecorder(this.path);
 
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
-  
-   
-    // this.setState(previousState=>({
-    //   recordSecs: 0,
-    //   _messages: GiftedChat.append(previousState._messages,  {
-    //     id:Date.now(),
-    //     text: result,
-    //     createdAt: new Date(),
-    //     recordDuration:recordDuration,
-    //     recordPosition:0,
-    //     type:'record',
-    //     user: {
-    //       _id:this.props.dataProfileUser.data.id,
-      
-    //     },
-    //     valid: true
-    //   },),
-    // }));
-   
-    const formData = new FormData();
-
-    const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-    formData.append("file",  result)
-    // formData.append("duration",recordDuration)
-  console.log(result)
-
-    // axios.defaults.headers['Authorization']= "Bearer "+this.props.receiveResponseConnection;
-
-    // requete avec juste un fetch 
-    fetch(`https://rabbin-dev.digitalcube.fr/api/audios/upload`,
-    {
-      method: "POST",
-      // body:{ data:
-      //   {
-      //     file:"file://sdcard/1575299258095.aac",
-      //     duration:145
-      //   },
-      //   url:"file://sdcard/1575299258095.aac",
-      // },
-      data:"file://sdcard/1575299258095.aac",
-      Authorization : "Bearer "+this.props.receiveResponseConnection,
-      Accept: 'application/json',
-      headers:{ 'content-type': 'multipart/form-data' }
     
-    },formData)
-    .then((res)=>{    console.log("TCL: MyQuestions -> onStopRecord -> res", res)})
-    .catch((err)=> { console.log("TCL: MyQuestions -> onStopRecord -> err", err)})
-   
- 
+    const resultSplit = this.path.split("/")
+    
+    if(Platform.OS === 'ios'){
+      filename =  resultSplit
+    }else{
+       filename =  resultSplit[1]
+    }
+   this.setState(previousState=>({
+      recordSecs: 0,
+      _messages: GiftedChat.append(previousState._messages,  {
+        id:Date.now(),
+        text: result,
+        createdAt: new Date(),
+        recordDuration:recordDuration,
+        recordPosition:0,
+        audio:true,
+        user: {
+          _id:this.props.dataProfileUser.data.id,
+      
+        },
+        valid: true
+      },),
+    }));
 
 //requete avec la lib RNFetchBlob
-    RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',   {
-  
-    Authorization : "Bearer "+this.props.receiveResponseConnection,
-    headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
-
-    },[
-      {
+    // RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
+    // Authorization : "Bearer "+this.props.receiveResponseConnection,
+    // headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
+    // },[
+    //   {
+    //  // name est la clé attendu pour le backend
+    //   name:'file',
+      
+    //   filename : filename,
+    //   // use custom MIME type
+    //   type : 'application/aac',
+    //   // data it's the path
+    //   data:RNFetchBlob.wrap(result)
+    //   },
+    // ]).then((res) => {
+    // console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
    
-      filename : '1575299258095.aac',
-      // use custom MIME type
-      type : 'application/aac',
-      // upload a file from asset is also possible in version >= 0.6.2
-      data:RNFetchBlob.wrap("sdcard/1575299258095.aac")
-      }
-    ]) .uploadProgress((written, total) => {
-      console.log('uploaded', written / total , written , total)
-  })
+    //   Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
+    //   let data = this._dataInfo( res.json()["@id"])
+    //   data.idMessage  = dataMessageCurrent.idMessage
 
-    .then((res) => {
-   
-      console.log("TCL: MyQuestions -> onStopRecord -> res", res)
-    })
-    .catch((err) => {
-    console.log("TCL: MyQuestions -> onStopRecord -> err", err)
-      // error handling ..
-     
-    })
+    //   this.props.sendAnswersForQuestion(data) 
+
+    // })
+    // .catch((err) => {
+    // console.log("TCL: MyQuestions -> onStopRecord -> err", err)
+    // })
 
    
   };
@@ -641,34 +617,23 @@ class MyQuestions extends Component {
 
  // ******************** Modal *******************
 
- toggleModal=(props)=>{
+ openModal=(props)=>{
   clearInterval(timer) 
-   const { isModalVisible } = this.state
-  this.setState({isModalVisible: !isModalVisible,
+  this.setState({isModalVisible: true,
                 propsSounder:props,
                 play:false ,
                 currentPositionSec:0
   })
  }
 
- showAlertDialog = ()=>{
-   this.setState({
-    alertVisible:true,
-    alertText:"Etes sur de vouloir enregistrer un message vocal ?",
-    alertConfirm:true,
-    style:true
-   })
+ closeModal=(props)=>{
+  clearInterval(timer) 
+  this.setState({isModalVisible: false,
+                propsSounder:props,
+                play:false ,
+                currentPositionSec:0
+  })
  }
- 
- closeAlert=()=>{
-  this.setState({
-    alertVisible:false,
-    alertText:"",
-    alertConfirm:false,
-    style:false
-   })
- }
-
 
   render() {
      const { ProfileUser,
@@ -681,7 +646,12 @@ class MyQuestions extends Component {
       style,
       alertVisible,
       dataMessageCurrent,
-      hideInputGifted
+      hideInputGifted,
+      isModalVisible,
+      play,
+      propsSounder,
+      duration,
+      currentPositionSec
      } = this.state
   
     var nameMenu = "";
@@ -695,23 +665,24 @@ class MyQuestions extends Component {
     
       <View  style={Style.container}>
         <Menu nameMenu={nameMenu} navigation={this.props.navigation}/>
+
        <PlaySound 
-        isModalVisible={this.state.isModalVisible}
-        toggleModal={this.toggleModal}
+         isModalVisible={isModalVisible}
+         closeModal={this.closeModal}
         onStartPlay={this.onStartPlay}
         onPausePlay ={this.onPausePlay}
-        play={this.state.play}
-        propsSounder={this.state.propsSounder}
-        duration={this.state.duration}
-        currentPositionSec={this.state.currentPositionSec}
+        play={play}
+        propsSounder={propsSounder}
+        duration={duration}
+        currentPositionSec={currentPositionSec}
        />
+
         <View style={Style.messageContainer}>
            <FiltrateContainer searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 inverted={true}
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
-                extraData={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
                 maxComposerHeight={90}
                 onSend={messages => this.onSend(messages)}
@@ -736,14 +707,6 @@ class MyQuestions extends Component {
               />
     
         </View>
-        <AlertDialog 
-          alertVisible={alertVisible}
-          messageAlert={alertText}
-          closeAlert={this.closeAlert}
-          alertConfirm={alertConfirm}
-          yesConfirm={this.onStartRecord}
-          style={style}
-                 />
 
       </View>
     );

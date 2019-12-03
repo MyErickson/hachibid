@@ -24,11 +24,13 @@ export const actionRequeteDataMessage = (response)=>{
           })
 
           response.data["hydra:member"].map((value)=>{
-         
+       
             if(value.valid){
                 if(value.answers.length){
                     var date = 0 ;
                     value.answers.map((valueAnswers)=>{
+                        const { audio ,answerer} = valueAnswers
+                   
                         
                     if(valueAnswers.answered){
                         dataMessage.push({
@@ -38,6 +40,13 @@ export const actionRequeteDataMessage = (response)=>{
                             valid:value.valid,
                             seen:value.seen,
                             answered:valueAnswers.answered,
+                            audio:audio && {
+                                idAudio:audio.id,
+                                id:audio["@id"],
+                                contentUrl: audio.contentUrl,
+                                duration:audio.duration,
+
+                            },
                             question:{
                                 id:value.user["@id"], 
                                 text:value.content,
@@ -45,9 +54,9 @@ export const actionRequeteDataMessage = (response)=>{
                                         },
                             createdAt:new Date(valueAnswers.createdAt),
                             user:{
-                                  _id:valueAnswers.answerer.id,
-                                  name:valueAnswers.answerer.username,
-                                  typeUser:valueAnswers.answerer["@type"]
+                                  _id:answerer.id,
+                                  name:answerer.username,
+                                  typeUser:answerer["@type"]
                             }
                         })
                     }

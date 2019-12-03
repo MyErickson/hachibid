@@ -6,6 +6,10 @@ import Menu from '../../containers/Menu/Menu'
 import { Style } from './styleNotification';
 import axios from 'axios';
 
+
+var timer;
+
+
 class Notification extends Component {
 
     state = {
@@ -19,10 +23,15 @@ class Notification extends Component {
        const { notificationPrecision , receiveResponseConnection} = this.props
       notificationPrecision(receiveResponseConnection)
     }
+
+
+
   static getDerivedStateFromProps(props,state){ 
      
       const { notificationQuestions ,dataProfileUser,allPrecision , answerUser } = props
       if(notificationQuestions){
+  
+        
         const notif = notificationQuestions.filter((value) => value.question === undefined)
       
         state.notificationQuestions = notif
@@ -38,10 +47,14 @@ class Notification extends Component {
       }
 
       if(answerUser){
+
         state.notificationAnswerUser = answerUser
       }
    
   }
+
+
+
     searchBar= async (text)=>{
           console.log(text)
       //   await this.props.sendDataFilterCategory(text)
@@ -51,13 +64,8 @@ class Notification extends Component {
       // })
 
     }
-//   static async getDerivedStateFromProps(props, state){
-//     const { params } = props.navigation.state
-//     // await this.props.receiveDataCategory(params.nameCategory)
 
-//      const allCategory =  props.dataStateAllCategory
-//        state.allCategory= allCategory
-//   }
+
 
   goToCategoryPage=(value,requete)=>{
   
@@ -89,6 +97,33 @@ class Notification extends Component {
 
  
  }
+    toggleModal=(props)=>{
+      clearInterval(timer) 
+      const { isModalVisible } = this.state
+      this.setState({isModalVisible: !isModalVisible,
+                    propsSounder:props,
+                    play:false ,
+                    currentPositionSec:0
+      })
+    }
+
+    showAlertDialog = ()=>{
+      this.setState({
+        alertVisible:true,
+        alertText:"Etes sur de vouloir enregistrer un message vocal ?",
+        alertConfirm:true,
+        style:true
+      })
+    }
+    
+    closeAlert=()=>{
+      this.setState({
+        alertVisible:false,
+        alertText:"",
+        alertConfirm:false,
+        style:false
+      })
+    }
 
   render() {
      const { notificationQuestions ,profileUser,notificationPrecision,notificationAnswerUser } =this.state
@@ -108,7 +143,7 @@ class Notification extends Component {
               }> 
 
                 <ViewListNotification 
-                notificationQuestions={notificationQuestions}
+                notification={notificationQuestions}
                 goToCategoryPage={this.goToCategoryPage}
                 requete="messages"
                 />
@@ -122,7 +157,7 @@ class Notification extends Component {
               }>
 
                   <ViewListNotification 
-                    notificationQuestions={notificationPrecision}
+                    notification={notificationPrecision}
                     goToCategoryPage={this.goToCategoryPage}
                     requete="precision"
                     />
@@ -139,7 +174,7 @@ class Notification extends Component {
           </TabHeading>
         }>
         <ViewListNotification 
-          notificationQuestions={notificationAnswerUser}
+          notification={notificationAnswerUser}
           goToCategoryPage={this.goToCategoryPage}
           requete="answers"
           />

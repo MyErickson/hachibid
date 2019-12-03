@@ -104,7 +104,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
 
                 store.dispatch(receiveMessagesHome( allDataMessageUser.reverse()))
             }).catch((err)=>{
-                console.log("error axios data message home",err.response)
+                console.log("error axios data message home",err)
                 
             })
             break;
@@ -378,21 +378,25 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
 
         case SEND_ANSWERS_FOR_QUESTION:
             next(action)
-            console.log(action )
+            console.log("TCL: action", action)
+            
+            let name = action.text ? "content":"audio"
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.post(`answers`,{
-             content: action.data.text, 
+             [name]:action.data.text,
              message: action.data.idMessage,
              answerer:`api/users/${action.data.idUser}`,
              answered:true,
              seen:false
 
            }).then((response)=>{
+           console.log("TCL: response", response)
           
                 store.dispatch(dataMessagesHome(action.data.token))
-                console.log("axios tout les reponses,22222",response)
+   
            }).catch((err)=>{
-               console.log("33333",err.response)
+           console.log("TCL: err", err)
+      
                
            })
             break;
@@ -434,15 +438,26 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
        
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.get(`answers?users=${action.data.id}`).then((response)=>{
+       
+
                
                      const dataMessage = response.data['hydra:member'].map((value)=>{
-                      
+          
+                       const { audio } = value
+                 
                             return{
                                 _id:value["@id"],
                                 text:value.content,
                                 createdAt:new Date (value.createdAt),
                                 idAnswers:value["@id"],
                                 seen:value.seen,
+                                audio:audio && {
+                                    idAudio:audio.id,
+                                    id:audio["@id"],
+                                    contentUrl: audio.contentUrl,
+                                    duration:audio.duration,
+    
+                                },
                                 userAnswerer:{
                                     _id:value.answerer.id,
                                     name:value.answerer.username,
@@ -452,7 +467,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
                             
                   
                       })
-                     const  answer =   dataMessage.filter((value)=>value.text)
+                     const  answer =   dataMessage.filter((value)=>value.text || value.audio )
                      const allDataMessageUser = actionRequeteSort(answer)
                      store.dispatch(receiveAnswerUser(allDataMessageUser.reverse()))
             }).catch((err)=>{
