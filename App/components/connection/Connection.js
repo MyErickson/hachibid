@@ -28,6 +28,7 @@ class Connection extends Component {
             style:false
          };
          this.position = new Animated.Value(0)
+         this.input = {}
     }
     async   componentDidMount (){
         AsyncStorage.removeItem('sessionJWT')
@@ -159,19 +160,25 @@ class Connection extends Component {
                                  maxLength={255}
                                  value={login}
                                  onChange={this.collectLoginAndPwd}
+                                 onSubmitEditing={()=>this.input["password"]._root.focus()}
+                                 returnKeyType="next"
                                  />
                               
                             </Item>
                             <Item last regular style={Style.containerInput}>
                              
                                 <Input 
-                             
+                                ref = { input => this.input["password"] = input}
                                 placeholder="Mot de passe *" 
                                 secureTextEntry={true}
                                 name="password"
                                 maxLength={255}
                                 value={password}
-                                onChange={this.collectLoginAndPwd}/>
+                                onChange={this.collectLoginAndPwd}
+                                onSubmitEditing={this.sendInformation}
+                                returnKeyType="send"
+                                />
+                                 
                             </Item>
                             
                             <Button rounded info 

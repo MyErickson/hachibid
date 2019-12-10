@@ -1,9 +1,9 @@
 import React from 'react'
 import { ScrollView,View,Text  } from 'react-native'
-import { Card, ListItem ,Icon} from 'react-native-elements'
+import { Card, ListItem } from 'react-native-elements'
 
 import { Style } from '../styleNotification'
-import { bold } from 'ansi-colors'
+
 
 const  ViewListNotification =({ 
        notification,
@@ -17,6 +17,7 @@ const  ViewListNotification =({
             bounces={true}
             style={Style.scrollview}
             showsVerticalScrollIndicator={false}
+            
             
             >
               <Card containerStyle={{padding: 0}} >

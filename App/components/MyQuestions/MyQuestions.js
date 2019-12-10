@@ -155,7 +155,7 @@ class MyQuestions extends Component {
               } 
               if(props.allDataMessagesHome){
               
-              // state._messages = props.allDataMessagesHome //
+              state._messages = props.allDataMessagesHome //
               
             }
           
@@ -164,7 +164,7 @@ class MyQuestions extends Component {
           state.ProfileUser = props.dataProfileUser.data
           }
           if(props.dataMessagesMyQuestions){
-          // state._messages = props.dataMessagesMyQuestions //
+          state._messages = props.dataMessagesMyQuestions //
           }
         }
 
@@ -676,6 +676,7 @@ class MyQuestions extends Component {
            <FiltrateContainer searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 inverted={true}
+                alignTop={true}
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
@@ -688,13 +689,15 @@ class MyQuestions extends Component {
                 isAnimated= {true}
                 minInputToolbarHeight={49}
                 placeholder={hideInputGifted?"":"Poser une question..."}
-                keyboardShouldPersistTaps={'never'}
+                keyboardShouldPersistTaps="handled"
+                listViewProps={{keyboardDismissMode: 'on-drag'}}
                 renderBubble={(props)=>this.renderBubble(props)}
                 renderSend={(props)=>this.renderSend(props,dataMessageCurrent,ProfileUser)}
                 renderInputToolbar={this.renderInputToolbar}
                 renderActions={this.renderActions}
                 renderChatFooter={this.renderComposer}
                 timeFormat='HH:mm'
+                keyboardDismissMode='on-drag'
                 user={{
                   _id: ProfileUser ? ProfileUser.id : "user",
 

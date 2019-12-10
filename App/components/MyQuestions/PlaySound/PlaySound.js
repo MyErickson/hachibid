@@ -13,8 +13,8 @@ import {
 
 
 const PlaySound = ({
-  isModalVisible,
-  closeModal,
+    isModalVisible,
+    closeModal,
     onStartPlay,
     onPausePlay,
     play,

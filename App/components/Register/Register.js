@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View , Text , ScrollView } from 'react-native';
+import { View , Text , ScrollView,SafeAreaView} from 'react-native';
 import { Button,Icon } from 'react-native-elements';
 import { Style }  from './styleRegister'
 import {  Content, Form, Item, Input, } from 'native-base';
@@ -13,20 +13,25 @@ import AlertDialog from '../AlertDialog/AlertDialog';
 
 class Register extends Component {
   
-    state = { 
-        login:"",
-        email:"",
-        password:"",
-        confPWD:"",
-        errorLoginCharacter:undefined,
-        errorEmailCharacter:undefined,
-        errorPwdCharacter:undefined,
-        receiveResponseRegister:this.props.receiveResponseRegister,
-        alertVisible:false,
-        messageAlert:undefined,
-        style:false
-     };
+    constructor(props){
+        super(props)
+        this.state = { 
+            login:"",
+            email:"",
+            password:"",
+            confPWD:"",
+            errorLoginCharacter:undefined,
+            errorEmailCharacter:undefined,
+            errorPwdCharacter:undefined,
+            receiveResponseRegister:this.props.receiveResponseRegister,
+            alertVisible:false,
+            messageAlert:undefined,
+            style:false
+         };
+         this.input = { }
+    }
 
+    
    componentDidMount(){
   
  
@@ -111,6 +116,10 @@ class Register extends Component {
     }
      }
  
+    inputFocus=(id)=>{
+        this.input[id]._root.focus()
+    }
+
 
     goBack(){
         this.setState({receiveResponseRegister:false})
@@ -118,7 +127,15 @@ class Register extends Component {
     }
 
     closeAlert=()=>{
-        this.setState({alertVisible:false})
+        const { messageAlert } =this.state
+        if(messageAlert === "Vous etes maintenant enregistré"){
+            this.setState({alertVisible:false})
+            this.props.navigation.navigate("Connection")
+        }else{
+            this.setState({alertVisible:false})
+        }
+      
+        
     }
 
     render() {
@@ -126,20 +143,26 @@ class Register extends Component {
 
         return (
             <AnimatedLinearGradient  customColors={presetColors.backgroundColor} speed={4000}>
+                    <SafeAreaView style={{flex:1}} >
                 <View style={ Style.textRegister}   >
-                <Icon  underlayColor='none' onPress={()=>this.goBack()} size={30} name='keyboard-backspace'/> 
+                <Icon underlayColor="none" onPress={()=>this.goBack()} size={30} name='keyboard-backspace'/> 
                 </View>
             <View style={Style.container}>
+       
             <ScrollView
-                    
+                    keyboardDismissMode='on-drag'
                     showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps="always"
+                    keyboardShouldPersistTaps="handled"
+                    contentInsetAdjustmentBehavior="automatic"
+                    
                  >
                 <Text style={{color:'white',fontWeight:'bold',fontSize:20,textAlign:"center"}}>Create My Account</Text>
             <View style={Style.form}>
      
        
-                    <Form >
+                    <Form 
+                    
+                    >
                    
                         <Item last  style={Style.containerInput}>
                         <Icon active name='person'/>
@@ -151,6 +174,10 @@ class Register extends Component {
                              maxLength={255}
                              value={this.state.login}
                              onChange={this.collectDataForRegister}
+                             onSubmitEditing={() => { this.inputFocus("email") }}
+                             blurOnSubmit={false}
+                             returnKeyType="next"
+                            
                              />
                           
                         </Item>
@@ -161,13 +188,19 @@ class Register extends Component {
                         <Item last  style={Style.containerInput}>
                         <Icon active name='mail'/>
                             <Input 
+                            
+                            ref={ text => this.input['email'] = text}
                             placeholderTextColor='white'
                             style={Style.input} 
                             placeholder='E-mail *'
                             name="email"
                             maxLength={255}
                             value={this.state.email}
-                            onChange={this.collectDataForRegister}/>
+                            onChange={this.collectDataForRegister}
+                            onSubmitEditing={() => { this.inputFocus("password") }}
+                            returnKeyType="next"
+                            />
+                       
                         </Item>
 
                         { this.state.errorEmailCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
@@ -176,6 +209,7 @@ class Register extends Component {
                         <Item last  style={Style.containerInput}>
                         <Icon active name='lock'/>
                          <Input 
+                         ref={ text => this.input['password'] = text}
                          style={Style.input}
                          name="password"
                          placeholderTextColor='white'
@@ -183,7 +217,11 @@ class Register extends Component {
                          secureTextEntry={true}
                          maxLength={255}
                          value={this.state.password}
-                         onChange={this.collectDataForRegister}/>
+                         onChange={this.collectDataForRegister}
+                         onSubmitEditing={() => { this.inputFocus("confPWD") }}
+                         returnKeyType="next"
+                         />
+               
                      </Item>
                      {this.state.errorPwdCharacter && (<Text style={{color:'red'}}>Il faut au moins 4 caractères</Text>)}
                     
@@ -193,6 +231,7 @@ class Register extends Component {
                      <Item last  style={Style.containerInput}>
                      <Icon  active name='lock'/> 
                          <Input 
+                         ref={ text => this.input['confPWD'] = text}
                          style={Style.input} 
                          name="confPWD"
                          placeholderTextColor='white'
@@ -200,10 +239,21 @@ class Register extends Component {
                          secureTextEntry={true}
                          maxLength={255}
                          value={this.state.confPWD}
-                         onChange={this.collectDataForRegister}/>
+                         onChange={this.collectDataForRegister}
+                         onSubmitEditing={this.sendInformation}
+                         returnKeyType="send"
+                         />
+                
                      </Item>
-
-                    
+                     <View   style={{marginTop:40}}>
+                     {this.state.errorRegister && <Text style={{color:"red",marginBottom:10,textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
+                        <Button 
+                     
+                        containerStyle={Style.button}
+                        buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
+                        onPress={this.sendInformation}
+                        title='Valider'/>
+                   </View> 
                     </Form>
                     <AlertDialog 
                         alertVisible={this.state.alertVisible}
@@ -211,24 +261,18 @@ class Register extends Component {
                         closeAlert={this.closeAlert}
                         style={this.state.style}
                         />
-                    {this.state.errorRegister && <Text style={{color:"red",marginTop:40,textAlign:'center'}}>Les mots de passe ne sont pas identiques</Text>}
-                   
+                    
+          
             </View>
-        
-            <Content>
+
             
-                <Button 
-                    containerStyle={Style.button}
-                    buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
-                    onPress={this.sendInformation}
-                    title='Valider'
-                 
-                />
+           
               
-             
-            </Content>
+
             </ScrollView>
+    
         </View>
+        </SafeAreaView>
         </AnimatedLinearGradient>
         );
     }

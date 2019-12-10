@@ -46,6 +46,7 @@ class Profile extends Component {
 
     };
     this.picture=undefined
+    this.input={}
   }
     
 
@@ -222,6 +223,11 @@ class Profile extends Component {
       })
    }
 
+   inputFocus=(id)=>{
+    this.input[id]._root.focus()
+    }
+
+
   render() {
     const { login , 
             email , 
@@ -272,6 +278,8 @@ class Profile extends Component {
                              placeholder='Identifiant *'
                              value={login}
                              onChange={this.collectDataForUpdate}
+                             onSubmitEditing={()=>this.inputFocus("email")}
+                             returnKeyType="next"
                              />
                           
                         </Item>
@@ -281,12 +289,17 @@ class Profile extends Component {
                      
                         <Item last style={Style.containerInput}>
                         <Icon  active name='mail'/> 
-                            <Input 
+                            <Input
+                            ref = {input => this.input["email"] = input} 
                             placeholder='E-mail *'
                             name="email"
                             maxLength={255}
                             value={email}
-                            onChange={this.collectDataForUpdate}/>
+                            onChange={this.collectDataForUpdate}
+                            onSubmitEditing={()=>this.inputFocus("password")}
+                            returnKeyType="next"
+                            />
+                            
                         </Item>
 
                         { errorEmailCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
@@ -295,12 +308,17 @@ class Profile extends Component {
                         <Item last style={Style.containerInput}>
                         <Icon  active name='lock'/> 
                          <Input 
+                         ref={ input => this.input["password"]= input}
                          placeholder='Changer mon mot de passe *'
                          name="password"
                          secureTextEntry={true}
                          maxLength={255}
                          value={password}
-                         onChange={this.collectDataForUpdate}/>
+                         onChange={this.collectDataForUpdate}
+                         onSubmitEditing={()=>this.openModal("êtes vous sur de vouloir modifier vos informations ?","register") }
+                         returnKeyType="send"
+                         />
+                        
                      </Item>
                      {errorPwdCharacter && (<Text style={{color:'red',marginLeft:20}}>Il faut au moins 4 caractères</Text>)}
                 

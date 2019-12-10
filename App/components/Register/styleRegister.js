@@ -22,23 +22,23 @@ export const Style = StyleSheet.create({
         
     },
     form:{
+
         width:wp('80%'),
         height:hp('55%'),
         marginTop:marginTop,
+       
        
     },
     button:{
         width:wp('80%'),
         justifyContent:"center",
+        marginBottom:marginTop,
   
     },
     textRegister:{
         textAlign:'left', 
         width:wp('20%'),
         marginTop:Platform.OS ==="ios" ?hp("5%"):10,
-        
-      
-
        
     },
     input:{
@@ -52,7 +52,8 @@ export const Style = StyleSheet.create({
     errorRegister:{
         color:"red",textAlign:'center'
 
-    }
+    },
+ 
    
     
 
