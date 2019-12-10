@@ -12,6 +12,7 @@ import Notification from '../../components/Notification/Notification'
 // Action Creators
 import {notificationPrecision,currentNotif} from '../../store/actionCreator/Notification'
 import { sendDataFilterHomeMessage} from '../../store/actionCreator/ChatHome';
+import { receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -46,6 +47,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   }, sendDataFilterHomeMessage:(data)=>{
     dispatch(sendDataFilterHomeMessage(data))
   },
+  receiveDatafilterMessageMyQuestion:()=>{
+    dispatch(receiveDatafilterMessageMyQuestion(undefined))
+  }
 });
 
 // Container

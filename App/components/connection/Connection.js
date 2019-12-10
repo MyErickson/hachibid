@@ -9,6 +9,7 @@ import axios from 'axios';
 import AlertDialog from '../AlertDialog/AlertDialog';
 import LinearGradient from 'react-native-linear-gradient';
 import { Style } from './styleConnection'
+import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 
 
@@ -32,7 +33,8 @@ class Connection extends Component {
     }
     async   componentDidMount (){
         AsyncStorage.removeItem('sessionJWT')
-      
+    
+          
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,
@@ -54,10 +56,16 @@ class Connection extends Component {
     }
 
     sendInformation= async ()=>{
-        
+        var isInternetReachable 
+        var isConnected  
         const { login , password } = this.state;
-      
-           await  axios.post('https://rabbin-dev.digitalcube.fr/api/login_check',{
+        await NetInfo.fetch().then(state => {
+            isInternetReachable = state.isInternetReachable
+            isConnected  = state.isConnected 
+       
+          });
+          if(isConnected && isInternetReachable){
+            await  axios.post('https://rabbin-dev.digitalcube.fr/api/login_check',{
              
                 username:login,
                 password:password,
@@ -96,6 +104,14 @@ class Connection extends Component {
                 })
       
             })
+          }else{
+            this.setState({
+                alertVisible:true,
+                style:false,
+                messageAlert:`Vous n'avez pas de reseau mobile ou wifi`
+            })
+          }
+           
            
     }
   

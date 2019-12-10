@@ -92,6 +92,7 @@ class Notification extends Component {
     
 
     if(requete !== "answers"){
+      this.props.sendDataFilterHomeMessage(undefined)
       this.props.navigation.navigate('MyQuestions')
       this.props.sendDataFilterHomeMessage(data)
     }
@@ -120,6 +121,7 @@ class Notification extends Component {
                 notification={notificationQuestions}
                 goToCategoryPage={this.goToCategoryPage}
                 requete="messages"
+                icon="message"
                 />
 
               </Tab>
@@ -134,6 +136,7 @@ class Notification extends Component {
                     notification={notificationPrecision}
                     goToCategoryPage={this.goToCategoryPage}
                     requete="precision"
+                    icon="notifications"
                     />
 
           </Tab>
@@ -153,6 +156,7 @@ class Notification extends Component {
           requete="answers"
           openModal={this.openModal}
           closeModal={this.closeModal}
+          icon="message"
           />
           </Tab>
           

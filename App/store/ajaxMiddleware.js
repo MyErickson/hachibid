@@ -406,7 +406,8 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
        
             axios.defaults.headers['Authorization']= "Bearer "+action.data;
             axios.get(`accuracies`).then((response)=>{
-              
+               
+      
                      const dataMessage = response.data['hydra:member'].map((value)=>{
 
                         return{

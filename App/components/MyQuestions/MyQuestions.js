@@ -456,7 +456,7 @@ class MyQuestions extends Component {
 
     this.path = Platform.select({
       ios: `/${Date.now()}.m4a`,
-      android: `sdcard/${Date.now()}.aac`
+      android: `sdcard/${Date.now()}.mp3`
     })
      await this.audioRecorderPlayer.startRecorder(this.path);
    
@@ -496,81 +496,90 @@ class MyQuestions extends Component {
     }else{
        filename =  resultSplit[1]
     }
-   this.setState(previousState=>({
-      recordSecs: 0,
-      _messages: GiftedChat.append(previousState._messages,  {
-        id:Date.now(),
-        text: result,
-        createdAt: new Date(),
-        recordDuration:recordDuration,
-        recordPosition:0,
-        audio:true,
-        user: {
-          _id:this.props.dataProfileUser.data.id,
+  //  this.setState(previousState=>({
+  //     recordSecs: 0,
+  //     _messages: GiftedChat.append(previousState._messages,  {
+  //       id:Date.now(),
+  //       text: result,
+  //       createdAt: new Date(),
+  //       recordDuration:recordDuration,
+  //       recordPosition:0,
+  //       audio:true,
+  //       user: {
+  //         _id:this.props.dataProfileUser.data.id,
       
-        },
-        valid: true
-      },),
-    }));
+  //       },
+  //       valid: true
+  //     },),
+  //   }));
 
 //requete avec la lib RNFetchBlob
-    // RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
-    // Authorization : "Bearer "+this.props.receiveResponseConnection,
-    // headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
-    // },[
-    //   {
-    //  // name est la clé attendu pour le backend
-    //   name:'file',
+    RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
+    Authorization : "Bearer "+this.props.receiveResponseConnection,
+    headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
+    },[
+      {
+     // name est la clé attendu pour le backend
+      name:'file',
       
-    //   filename : filename,
-    //   // use custom MIME type
-    //   type : 'application/aac',
-    //   // data it's the path
-    //   data:RNFetchBlob.wrap(result)
-    //   },
-    // ]).then((res) => {
-    // console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
+      filename : filename,
+      // use custom MIME type
+      type : Platform.OS==="ios"? 'application/m4a':'application/mp3',
+      // data it's the path
+      data:RNFetchBlob.wrap(result)
+      },
+      {
+        // name est la clé attendu pour le backend
+         name:'duration',
+         data:`${recordDuration}`
+         },
+    ]).then((res) => {
+    console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
    
-    //   Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
-    //   let data = this._dataInfo( res.json()["@id"])
-    //   data.idMessage  = dataMessageCurrent.idMessage
+      Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
+      let data = this._dataInfo( res.json()["@id"])
+      data.idMessage  = dataMessageCurrent.idMessage
 
-    //   this.props.sendAnswersForQuestion(data) 
+      this.props.sendAnswersForQuestion(data) 
 
-    // })
-    // .catch((err) => {
-    // console.log("TCL: MyQuestions -> onStopRecord -> err", err)
-    // })
+    })
+    .catch((err) => {
+    console.log("TCL: MyQuestions -> onStopRecord -> err", err)
+    })
 
    
   };
     
 
   onStartPlay = async (propsSounder) => {
-    const path = osMobile(propsSounder)
+    // const path = osMobile(propsSounder)
 
     this.setState({
       play:true
     })
+    const { duration } = propsSounder.currentMessage.audio
+ 
 
-    const msg = await this.audioRecorderPlayer.startPlayer(path);
+    const msg = await this.audioRecorderPlayer.startPlayer(this.path);
+    // this.path = msg
      console.log("msg ==>",msg,this.path);
 
      timer = setInterval(()=>{
-       
+   
        this.setState({
          currentPositionSec: 100 + this.state.currentPositionSec
       })
-      if (this.state.currentPositionSec > propsSounder.currentMessage.recordDuration){
+      if (this.state.currentPositionSec > parseInt(duration)){
          this.onStopPlay(propsSounder)
       }
     },100)
+     
 
 
     await this.audioRecorderPlayer.addPlayBackListener(async(e) => {
 
       if (e.current_position === e.duration) {
-         this.audioRecorderPlayer.stopPlayer(path).catch(()=>{});
+         this.audioRecorderPlayer.stopPlayer(this.path).catch(()=>{});
       }
       return e.current_position;
     });
@@ -582,7 +591,7 @@ class MyQuestions extends Component {
 
 
   onStopPlay=(propsSounder)=>{
-    const path = osMobile(propsSounder)
+    // const path = osMobile(propsSounder)
   
     clearInterval(timer)  
     this.setState({
@@ -590,39 +599,65 @@ class MyQuestions extends Component {
       currentPositionSec:0
     
       })
-      this.audioRecorderPlayer.stopPlayer(path).catch(()=>{});
+      this.audioRecorderPlayer.stopPlayer(this.path).catch(()=>{});
   }
   
 
 
   onPausePlay =  (propsSounder,currentPositionSec) => {
- const path = osMobile(propsSounder)
+//  const path = osMobile(propsSounder)
   clearInterval(timer)  
 
    this.setState({
      play:false ,
      currentPositionSec:currentPositionSec
     })
-  this.audioRecorderPlayer.pausePlayer(path);
+  this.audioRecorderPlayer.pausePlayer(this.path);
   
   };
 
 
  // ******************** Modal *******************
 
- openModal=(props)=>{
- console.log("TCL: MyQuestions -> openModal -> props", props)
+  openModal=(props)=>{
+
+   const { contentUrl } = props.currentMessage.audio
+   console.log("TCL: MyQuestions -> openModal -> contentUrl", contentUrl)
+
+
+
+
+    // upload file audio on device
+    RNFetchBlob
+    .config({
+      // response data will be saved to this path if it has access right.
+      fileCache : true,
+      path : Platform.OS === "ios"? `/${Date.now()}.m4a`:`/sdcard/Music/${Date.now()}.mp3`
+    })
+    .fetch('GET', contentUrl)
+    .then((res) => {
    
-  clearInterval(timer) 
-  this.setState({isModalVisible: true,
-                propsSounder:props,
-                play:false ,
-                currentPositionSec:0
-  })
- }
+      this.path = res.path()
+      RNFetchBlob.fs.scanFile([ { path : res.path(), mime : Platform.OS === "ios"?'audio/m4a' :'audio/mp3' } ])
+    })
+    
+      clearInterval(timer) 
+      this.setState({isModalVisible: true,
+                    propsSounder:props,
+                    play:false ,
+                    currentPositionSec:0
+      })
+
+  }
 
  closeModal=(props)=>{
   clearInterval(timer) 
+
+  // remove file audio 
+  RNFetchBlob.fs.unlink(this.path)
+  RNFetchBlob.fs.scanFile([ { path : this.path, mime : Platform.OS === "ios"?'audio/aac' :'audio/aac' } ])
+ 
+
   this.setState({isModalVisible: false,
                 propsSounder:props,
                 play:false ,
@@ -676,7 +711,6 @@ class MyQuestions extends Component {
            <FiltrateContainer searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 inverted={true}
-                alignTop={true}
                 scrollToBottom={true}
                 messages={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
@@ -690,14 +724,14 @@ class MyQuestions extends Component {
                 minInputToolbarHeight={49}
                 placeholder={hideInputGifted?"":"Poser une question..."}
                 keyboardShouldPersistTaps="handled"
-                listViewProps={{keyboardDismissMode: 'on-drag'}}
+                listViewProps={{keyboardDismissMode: 'on-drag' , keyboardShouldPersistTaps:"handled" }}
                 renderBubble={(props)=>this.renderBubble(props)}
                 renderSend={(props)=>this.renderSend(props,dataMessageCurrent,ProfileUser)}
                 renderInputToolbar={this.renderInputToolbar}
                 renderActions={this.renderActions}
                 renderChatFooter={this.renderComposer}
                 timeFormat='HH:mm'
-                keyboardDismissMode='on-drag'
+              
                 user={{
                   _id: ProfileUser ? ProfileUser.id : "user",
 

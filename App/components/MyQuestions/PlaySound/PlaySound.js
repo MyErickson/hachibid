@@ -19,10 +19,11 @@ const PlaySound = ({
     onPausePlay,
     play,
     propsSounder,
+ 
     currentPositionSec
 }) =>{
 
-  var progress =propsSounder && currentPositionSec/propsSounder.currentMessage.recordDuration;
+  var progress =propsSounder && currentPositionSec/parseInt(propsSounder.currentMessage.audio.duration);
 
  if(progress > 1.1){
    progress=0

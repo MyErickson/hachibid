@@ -9,9 +9,10 @@ const  ViewListNotification =({
        notification,
        goToCategoryPage,
        requete,
+       icon
      
 })=> {
-  
+   console.log("icon vaut : ",icon)
         return (
           <ScrollView
             bounces={true}
@@ -47,7 +48,7 @@ const  ViewListNotification =({
                         </ScrollView>
                         : <Text>Vous avez reçu un message vocal</Text>
                       }
-                      leftIcon={{ name: 'notifications' }}
+                      leftIcon={{ name: `${audio?"voicemail":icon}` }}
                       
                       chevron={user?<Text style={{fontSize:15,fontWeight:"bold"}}>></Text>:false}
                       bottomDivider
