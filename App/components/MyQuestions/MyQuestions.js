@@ -10,7 +10,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound/PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
-import ViewBubble from './ViewBubble';
+import ViewBubble from './ViewBubble/ViewBubble';
 import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 import AlertDialog  from '../AlertDialog/AlertDialog'
@@ -292,7 +292,7 @@ class MyQuestions extends Component {
 
   renderBubble(props) {
    const { audio ,createdAt ,question, text ,user ,idMessage,_id} = props.currentMessage
-
+ 
   const { ProfileUser } =this.state
   
    var minutes = createdAt.getMinutes() 
@@ -304,17 +304,8 @@ class MyQuestions extends Component {
    if(createdAt.getMinutes() < 10){
     minutes = `0`+createdAt.getMinutes()
         }
-     if(audio){
 
-      
-       return (
-        <View style={Style.recorder}>    
-          <Text  onPress={()=>this.openModal(props)} style={{margin:5}}>Message vocal, Click pour lecture</Text>
-          <Text  style={{fontSize:11, textAlign:"right",marginRight:5}}>{`${createdAt.getHours()}:${minutes}`}</Text>
-          
-        </View>
-       )
-     }else if( question || ProfileUser && ProfileUser.roleTitle === "Administrateur"){
+     if( question || ProfileUser && ProfileUser.roleTitle === "Administrateur"){
 
         return (
           <ViewBubble
@@ -324,8 +315,12 @@ class MyQuestions extends Component {
           user={user}
           profileUser={ProfileUser.roleTitle}
           minutes={minutes}
+          audio={audio}
+          openModal={this.openModal}
+          user={user}
+          props={props}
           showMessage={(res)=>this.setState({
-            answerCurrent:text,
+            answerCurrent:audio ? question.text : text,
             showAboveInput:true,
             dataMessageCurrent:dataMessageCurrent,
             isQuestion:res
@@ -411,13 +406,13 @@ class MyQuestions extends Component {
   renderActions=(props)=>{
    
     const { ProfileUser, stop ,dataMessageCurrent } = this.state
-    // && dataMessageCurrent 
-    if(ProfileUser && ProfileUser.roleTitle === "Administrateur" ){
+ 
+    if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent ){
       if (stop){
         return (
           <View style={{flexDirection:"row",justifyContent:"space-between",width:wp("80%")}}>
       
-              <View style={Style.containerIconRecorder}>
+              <View style={Style.containerIconRecorderOff}>
               <Icon style={{color:"white"}} name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
               </View>
             
@@ -496,22 +491,6 @@ class MyQuestions extends Component {
     }else{
        filename =  resultSplit[1]
     }
-  //  this.setState(previousState=>({
-  //     recordSecs: 0,
-  //     _messages: GiftedChat.append(previousState._messages,  {
-  //       id:Date.now(),
-  //       text: result,
-  //       createdAt: new Date(),
-  //       recordDuration:recordDuration,
-  //       recordPosition:0,
-  //       audio:true,
-  //       user: {
-  //         _id:this.props.dataProfileUser.data.id,
-      
-  //       },
-  //       valid: true
-  //     },),
-  //   }));
 
 //requete avec la lib RNFetchBlob
     RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
@@ -539,8 +518,15 @@ class MyQuestions extends Component {
       Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
       let data = this._dataInfo( res.json()["@id"])
       data.idMessage  = dataMessageCurrent.idMessage
-
-      this.props.sendAnswersForQuestion(data) 
+     if(isQuestion){
+      data.idAnwsersUser = dataMessageCurrent.idAnwsersUser 
+      this.props.sendPrecisionForQuestion(data) 
+      receiveDatafilterMessageMyQuestion()
+     }else{
+      this.props.sendAnswersForQuestion(data)
+      receiveDatafilterMessageMyQuestion()
+     }
+      
 
     })
     .catch((err) => {
@@ -622,10 +608,6 @@ class MyQuestions extends Component {
   openModal=(props)=>{
 
    const { contentUrl } = props.currentMessage.audio
-   console.log("TCL: MyQuestions -> openModal -> contentUrl", contentUrl)
-
-
-
 
     // upload file audio on device
     RNFetchBlob
@@ -642,10 +624,11 @@ class MyQuestions extends Component {
     })
     
       clearInterval(timer) 
-      this.setState({isModalVisible: true,
-                    propsSounder:props,
-                    play:false ,
-                    currentPositionSec:0
+      this.setState({
+        isModalVisible: true,
+        propsSounder:props,
+        play:false ,
+        currentPositionSec:0
       })
 
   }
@@ -656,12 +639,12 @@ class MyQuestions extends Component {
   // remove file audio 
   RNFetchBlob.fs.unlink(this.path)
   RNFetchBlob.fs.scanFile([ { path : this.path, mime : Platform.OS === "ios"?'audio/aac' :'audio/aac' } ])
- 
 
-  this.setState({isModalVisible: false,
-                propsSounder:props,
-                play:false ,
-                currentPositionSec:0
+  this.setState({
+    isModalVisible: false,
+    propsSounder:props,
+    play:false ,
+    currentPositionSec:0
   })
  }
 

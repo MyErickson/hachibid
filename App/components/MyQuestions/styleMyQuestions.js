@@ -46,14 +46,6 @@ export const Style = StyleSheet.create({
         paddingLeft:15,
         color:'gray'
     },
-    recorder:{
-        padding:5,
-        backgroundColor:"gray",
-        borderRadius:10,
-        paddingBottom:10,
-        paddingTop:10 ,
-     
-    },
     answer:{
         maxWidth:wp("80%"),
         padding:5,
@@ -80,12 +72,25 @@ export const Style = StyleSheet.create({
         width:wp("82%"),
         borderRadius:10,
         backgroundColor:'rgba(41,113,232,0.8)'
-    },containerIconRecorder:{
+    },
+    containerIconRecorder:{
         flexDirection:"row",
         justifyContent:"center",
         marginBottom:10,
         marginLeft:10 ,
         backgroundColor:"#18C9D1",
+        padding:7,
+        borderRadius:30,
+        width:40,
+        height:40,
+        alignItems:"flex-start"
+    },
+    containerIconRecorderOff:{
+        flexDirection:"row",
+        justifyContent:"center",
+        marginBottom:10,
+        marginLeft:10 ,
+        backgroundColor:"red",
         padding:7,
         borderRadius:30,
         width:40,
