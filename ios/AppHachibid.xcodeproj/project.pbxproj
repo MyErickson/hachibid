@@ -37,6 +37,8 @@
 		5EAA538E48F62A967FBB6702 /* libPods-AppHachibid-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E6FCD8CD5D28FC172FCA50 /* libPods-AppHachibid-tvOSTests.a */; };
 		66A430603EA44714B4D4A54B /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E9D575DDB9A472C88571DF0 /* FontAwesome.ttf */; };
 		68956D0E2382927D001405A8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68956D0D2382927D001405A8 /* Default-568h@2x.png */; };
+		68BEBD8623A3DF0000E66510 /* libRNAudioRecorderPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BEBD8523A3DF0000E66510 /* libRNAudioRecorderPlayer.a */; };
+		68EEF03023A3E94C00E6774A /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68EEF02D23A3E86000E6774A /* libRNFetchBlob.a */; };
 		71450BA8F52A4CF294B76F02 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C14BD15E18744BB6B19141F6 /* Zocial.ttf */; };
 		7A5144F010699EC8855C05FA /* libPods-AppHachibid-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60BA6852D158DD172892694D /* libPods-AppHachibid-tvOS.a */; };
 		7BFBF171F8E94B4C8BE14F0C /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5332A29561D747CAAB5051BE /* Roboto_medium.ttf */; };
@@ -72,6 +74,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "AppHachibid-tvOS";
+		};
+		68BEBD8323A3DECE00E66510 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68BEBD7F23A3DECE00E66510 /* RNAudioRecorderPlayer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNAudioRecorderPlayer;
+		};
+		68EEF02C23A3E86000E6774A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68EEF02723A3E86000E6774A /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -113,6 +129,10 @@
 		635771B1C33EAB52A7644A4E /* Pods-AppHachibid.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppHachibid.release.xcconfig"; path = "Target Support Files/Pods-AppHachibid/Pods-AppHachibid.release.xcconfig"; sourceTree = "<group>"; };
 		671037615EE14DC4B1077D5C /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		68956D0D2382927D001405A8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		68BEBD7F23A3DECE00E66510 /* RNAudioRecorderPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNAudioRecorderPlayer.xcodeproj; path = "../node_modules/react-native-audio-recorder-player/ios/RNAudioRecorderPlayer.xcodeproj"; sourceTree = "<group>"; };
+		68BEBD8523A3DF0000E66510 /* libRNAudioRecorderPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNAudioRecorderPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		68EEF02723A3E86000E6774A /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
+		68EEF02E23A3E91B00E6774A /* libreact-native-netinfo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-netinfo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B54356071D747EFB260D4AA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		6F2773C5FAB64366A9FF51EB /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		80F0CDB0E4614F6A97088DD5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -154,7 +174,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68BEBD8623A3DF0000E66510 /* libRNAudioRecorderPlayer.a in Frameworks */,
 				AF31C5C3CA4B5AADAA34F290 /* libPods-AppHachibid.a in Frameworks */,
+				68EEF03023A3E94C00E6774A /* libRNFetchBlob.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +275,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				68EEF02E23A3E91B00E6774A /* libreact-native-netinfo.a */,
+				68BEBD8523A3DF0000E66510 /* libRNAudioRecorderPlayer.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				5291AF2D941F07C51023EBF6 /* libPods-AppHachibid.a */,
@@ -261,6 +285,22 @@
 				ABDDBA0184CE02AE52EEC861 /* libPods-AppHachibidTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		68BEBD8023A3DECE00E66510 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				68BEBD8423A3DECE00E66510 /* libRNAudioRecorderPlayer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		68EEF02823A3E86000E6774A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				68EEF02D23A3E86000E6774A /* libRNFetchBlob.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		7305078A8B3336509FBFCC91 /* Pods */ = {
@@ -281,6 +321,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				68EEF02723A3E86000E6774A /* RNFetchBlob.xcodeproj */,
+				68BEBD7F23A3DECE00E66510 /* RNAudioRecorderPlayer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -436,6 +478,16 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 68BEBD8023A3DECE00E66510 /* Products */;
+					ProjectRef = 68BEBD7F23A3DECE00E66510 /* RNAudioRecorderPlayer.xcodeproj */;
+				},
+				{
+					ProductGroup = 68EEF02823A3E86000E6774A /* Products */;
+					ProjectRef = 68EEF02723A3E86000E6774A /* RNFetchBlob.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* AppHachibid */,
@@ -445,6 +497,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		68BEBD8423A3DECE00E66510 /* libRNAudioRecorderPlayer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNAudioRecorderPlayer.a;
+			remoteRef = 68BEBD8323A3DECE00E66510 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		68EEF02D23A3E86000E6774A /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = 68EEF02C23A3E86000E6774A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {
