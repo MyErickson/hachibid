@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { View,  Text,  TouchableOpacity , Platform } from 'react-native';
+import { View,  Text,  Platform } from 'react-native';
 import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
 
@@ -15,12 +15,12 @@ import NetInfo from "@react-native-community/netinfo";
 var jwtDecode = require('jwt-decode');
 import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
-import { answerUser } from '../../store/actionCreator/Notification';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import RNFetchBlob from 'rn-fetch-blob';
 import Reactotron from 'reactotron-react-native'
 
 import { osMobile } from '../../store/actionRequetes/actionRequetes'
+
 
 
 var timer;
@@ -99,20 +99,6 @@ class MyQuestions extends Component {
               }
               
             },3000)
-        if(Platform.OS ==="android"){
-          try{
-            const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
-            const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
-            this.permission = granted
-            this.writeExternalStorage = storage 
-         
-          }catch(err){
-              console.log("eroor ====== >",err)
-          }
-        }
-   
-      
-     
 
       }else{
         receiveDataMessagesMyQuestions(data)
@@ -126,7 +112,19 @@ class MyQuestions extends Component {
         },3000)
        
       }
-   
+
+
+      if(Platform.OS ==="android"){
+        try{
+          const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+          const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+          this.permission = granted
+          this.writeExternalStorage = storage 
+       
+        }catch(err){
+            console.log("eroor ====== >",err)
+        }
+      }
   
     }
   
@@ -140,52 +138,102 @@ class MyQuestions extends Component {
 
 
     static async getDerivedStateFromProps(props, state){ 
-              
-  
-          if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur"){
+    // console.log("TCL: MyQuestions -> getDerivedStateFromProps -> props", props)
+   
+          // si c'est un admin 
+          if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur" ){
           state.ProfileUser = props.dataProfileUser.data
-            
-            if(props.dataFilterMyquestion  ){
-              state._messageFilter =props.dataFilterMyquestion
-              state.filter = true
-              
-              }else {
-              state._messageFilter =undefined
-              state.filter = false
-              } 
-              if(props.allDataMessagesHome){
-              
-              state._messages = props.allDataMessagesHome //
-              
-            }
           
+          if(props.currentScreen === "MessageCategory"){
+
+            if(props.dataFilterMessagesCategory ){
+        
+              state._messageFilter =props.dataFilterMessagesCategory
+           
+            }else{
+              state._messageFilter =undefined
+            
+              } 
+
+            if(props.dataMessagesCategory){
+                state._messages = props.dataMessagesCategory 
+                }
+            }else{
+              if(props.dataFilterMyquestion  ){
+                state._messageFilter =props.dataFilterMyquestion
+                state.filter = true
+                
+                }else {
+                state._messageFilter =undefined
+                state.filter = false
+                } 
+                if(props.allDataMessagesHome){
+                
+                state._messages = props.allDataMessagesHome 
+                
+              }
+            }
           }else {
+
           if(props.dataProfileUser ){
-          state.ProfileUser = props.dataProfileUser.data
+          state.ProfileUser =  props.dataProfileUser.data
           }
-          if(props.dataMessagesMyQuestions){
-          state._messages = props.dataMessagesMyQuestions //
+
+
+          if(props.currentScreen === "ChatHome"){
+
+            if(props.allDataMessagesHome){
+              state._messages = props.allDataMessagesHome 
+            }
+
+          }else if(props.currentScreen === "MessageCategory"){
+            if(props.dataMessagesCategory){
+              state._messages = props.dataMessagesCategory 
+              }
+          }else{
+            if(props.dataMessagesMyQuestions){
+              state._messages = props.dataMessagesMyQuestions 
+              }
           }
         }
 
-  
+        if(props.currentScreen === "ChatHome"){
+          if(props.dataFilterHome && state.filter){
+            state._messageFilter =props.dataFilterHome
+            
+            }else{
+            state._messageFilter =undefined
+        
+            } 
+        }else if(props.currentScreen === "MessageCategory") {
+          if(props.dataFilterMessagesCategory && state.filter){
+            state._messageFilter =props.dataFilterMessagesCategory
+
+            }else{
+            state._messageFilter =undefined
+        
+            } 
+
+        }else {
           if(props.dataFilterMyquestion && state.filter){
-          state._messageFilter =props.dataFilterMyquestion
-      
-          
-          }else{
-          state._messageFilter =undefined
-      
-          } 
+            state._messageFilter =props.dataFilterMyquestion
+
+            }else{
+            state._messageFilter =undefined
+        
+            } 
+
+        }   
 
      }
 
 
 
     searchBar= async (text)=>{
+    
   
-      const {sendDatafilterMessageMyQuestion,sendDataFilterHomeMessage}=this.props
-      
+      const {sendDatafilterMessageMyQuestion,sendDataFilterHomeMessage,sendDatafilterMessageCategory ,dataFilterMessagesCategory,idCategory }=this.props
+      const { currentScreen } = this.props
      
       if(text && text.length > 2 ){
 
@@ -193,11 +241,21 @@ class MyQuestions extends Component {
         
       let decode = jwtDecode(this.props.receiveResponseConnection)
           data.role = decode.roles[0]
-
-       if(decode && decode.roles[0] === "ROLE_ADMIN"){
-        sendDataFilterHomeMessage(data)
-       }else{
+          data.id = idCategory
+       if(decode && decode.roles[0] === "ROLE_ADMIN" ||  currentScreen ==="ChatHome"){
+       
+        if(currentScreen ==="MessageCategory"){
+         
+          sendDatafilterMessageCategory(data)
+        }else{
+          sendDataFilterHomeMessage(data)
+        }
+        
+       }else if(currentScreen ==="MessageCategory"){
+        sendDatafilterMessageCategory(data)
+       }else {
         sendDatafilterMessageMyQuestion(data)
+        
        }
 
       this.setState({
@@ -206,15 +264,21 @@ class MyQuestions extends Component {
      })
     
     }else if (text){
+      
       this.setState({ deleteTextSearchBar:true})   
 
     }else{
+     
         this.setState({
           filter:false,
           deleteTextSearchBar:false
         
        }) 
       }
+
+      this.setState({
+        _textFilter : text
+    })
 
     }
 
@@ -237,6 +301,7 @@ class MyQuestions extends Component {
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
     const { ProfileUser , dataMessageCurrent,isQuestion } = this.state
+    console.log("TCL: MyQuestions -> onSend -> dataMessageCurrent", dataMessageCurrent,dataMessageCurrent.idAnswer)
    
     const {_id ,
       createdAt ,
@@ -267,7 +332,7 @@ class MyQuestions extends Component {
       if(isQuestion){
         let data = this._dataInfo(text)
         data.idMessage = dataMessageCurrent.idMessage
-        data.idAnwsersUser = dataMessageCurrent.idAnwsersUser 
+        data.idAnswer = dataMessageCurrent.idAnswer
         this.props.sendPrecisionForQuestion(data) 
         receiveDatafilterMessageMyQuestion()
       }else{
@@ -291,13 +356,16 @@ class MyQuestions extends Component {
 
 
   renderBubble(props) {
-   const { audio ,createdAt ,question, text ,user ,idMessage,_id} = props.currentMessage
+   const { audio ,createdAt ,question, text ,user ,idMessage,} = props.currentMessage
+  
  
   const { ProfileUser } =this.state
+  
   
    var minutes = createdAt.getMinutes() 
    const dataMessageCurrent = new Object
    dataMessageCurrent.idAnwsersUser = user._id
+   dataMessageCurrent.idAnswer= question && question.idAnswer
    dataMessageCurrent.idMessage= idMessage
 
 
@@ -313,12 +381,13 @@ class MyQuestions extends Component {
           question={question}
           createdAt={createdAt}
           user={user}
-          profileUser={ProfileUser.roleTitle}
+          profileUser={ProfileUser && ProfileUser.roleTitle}
           minutes={minutes}
           audio={audio}
           openModal={this.openModal}
           user={user}
           props={props}
+          alertPrecision={this.props.alertPrecision}
           showMessage={(res)=>this.setState({
             answerCurrent:audio ? question.text : text,
             showAboveInput:true,
@@ -474,7 +543,16 @@ class MyQuestions extends Component {
  
 
   onStopRecord = async () => {
-    const { stop ,recordDuration , dataMessageCurrent } =this.state
+
+    const { stop,isQuestion,recordDuration,dataMessageCurrent } =this.state
+
+    const {
+      receiveResponseConnection,
+      sendPrecisionForQuestion,
+      sendAnswersForQuestion,
+      receiveDatafilterMessageMyQuestion,}=this.props
+
+
     this.setState({
       stop:!stop,
       hideInputGifted:false
@@ -484,24 +562,20 @@ class MyQuestions extends Component {
 
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
     
-    const resultSplit = this.path.split("/")
     
-    if(Platform.OS === 'ios'){
-      filename =  resultSplit
-    }else{
-       filename =  resultSplit[1]
-    }
+    
 
+    console.log("TCL: MyQuestions -> onStopRecord -> filename", this.path)
 //requete avec la lib RNFetchBlob
     RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
-    Authorization : "Bearer "+this.props.receiveResponseConnection,
+    Authorization : "Bearer "+receiveResponseConnection,
     headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
     },[
       {
      // name est la clé attendu pour le backend
       name:'file',
       
-      filename : filename,
+      filename : this.path,
       // use custom MIME type
       type : Platform.OS==="ios"? 'application/m4a':'application/mp3',
       // data it's the path
@@ -516,14 +590,15 @@ class MyQuestions extends Component {
     console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
    
       Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
-      let data = this._dataInfo( res.json()["@id"])
+      let data = this._dataInfo()
       data.idMessage  = dataMessageCurrent.idMessage
+      data.audio = res.json()["@id"]
      if(isQuestion){
-      data.idAnwsersUser = dataMessageCurrent.idAnwsersUser 
-      this.props.sendPrecisionForQuestion(data) 
+      data.idAnswer = dataMessageCurrent.idAnswer
+      sendPrecisionForQuestion(data) 
       receiveDatafilterMessageMyQuestion()
      }else{
-      this.props.sendAnswersForQuestion(data)
+      sendAnswersForQuestion(data)
       receiveDatafilterMessageMyQuestion()
      }
       
@@ -614,10 +689,11 @@ class MyQuestions extends Component {
     .config({
       // response data will be saved to this path if it has access right.
       fileCache : true,
-      path : Platform.OS === "ios"? `/${Date.now()}.m4a`:`/sdcard/Music/${Date.now()}.mp3`
+      path : Platform.OS === "ios"? `/${Date.now()}.m4a`:`/sdcard/${Date.now()}.mp3`
     })
     .fetch('GET', contentUrl)
     .then((res) => {
+    console.log("TCL: MyQuestions -> openModal -> res", res)
    
       this.path = res.path()
       RNFetchBlob.fs.scanFile([ { path : res.path(), mime : Platform.OS === "ios"?'audio/m4a' :'audio/mp3' } ])
@@ -654,24 +730,34 @@ class MyQuestions extends Component {
       deleteTextSearchBar,
       filter,
       _messageFilter,
-      alertConfirm,
-      alertText,
-      style,
-      alertVisible,
       dataMessageCurrent,
       hideInputGifted,
       isModalVisible,
       play,
       propsSounder,
       duration,
-      currentPositionSec
+      currentPositionSec,
+      _textFilter
      } = this.state
-  
+
+
+    const {
+      currentScreen,
+      nameScreenCat
+    } =this.props
+
+
     var nameMenu = "";
     if(ProfileUser !== undefined){
-      nameMenu = ProfileUser.roleTitle === "Administrateur" ? "Chat Général" :  "Mes questions" 
+      if(currentScreen === "ChatHome"){
+        nameMenu = "Chat Général"
+      }else if(currentScreen === "MessageCategory") {
+        nameMenu = nameScreenCat
+      }else{
+        nameMenu = ProfileUser.roleTitle === "Administrateur" ? "Chat Général" :  "Mes questions" 
+      }
+      
     }
-
 
    
     return (
@@ -680,18 +766,19 @@ class MyQuestions extends Component {
         <Menu nameMenu={nameMenu} navigation={this.props.navigation}/>
 
        <PlaySound 
-         isModalVisible={isModalVisible}
-         closeModal={this.closeModal}
+        isModalVisible={isModalVisible}
+        closeModal={this.closeModal}
         onStartPlay={this.onStartPlay}
         onPausePlay ={this.onPausePlay}
         play={play}
         propsSounder={propsSounder}
         duration={duration}
         currentPositionSec={currentPositionSec}
+      
        />
 
         <View style={Style.messageContainer}>
-           <FiltrateContainer searchBar={this.searchBar} deleteTextSearchBar={deleteTextSearchBar}/>
+           <FiltrateContainer  searchBar={this.searchBar} textFilter={_textFilter } deleteTextSearchBar={deleteTextSearchBar}/>
               <GiftedChat
                 inverted={true}
                 scrollToBottom={true}
@@ -704,13 +791,13 @@ class MyQuestions extends Component {
                 multiline={true}
                 renderAvatar={null}
                 isAnimated= {true}
-                minInputToolbarHeight={49}
+                minInputToolbarHeight={currentScreen?0:49}
                 placeholder={hideInputGifted?"":"Poser une question..."}
                 keyboardShouldPersistTaps="handled"
                 listViewProps={{keyboardDismissMode: 'on-drag' , keyboardShouldPersistTaps:"handled" }}
                 renderBubble={(props)=>this.renderBubble(props)}
                 renderSend={(props)=>this.renderSend(props,dataMessageCurrent,ProfileUser)}
-                renderInputToolbar={this.renderInputToolbar}
+                renderInputToolbar={currentScreen?()=>undefined:this.renderInputToolbar}
                 renderActions={this.renderActions}
                 renderChatFooter={this.renderComposer}
                 timeFormat='HH:mm'

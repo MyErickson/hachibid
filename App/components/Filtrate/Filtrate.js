@@ -13,6 +13,7 @@ const input = React.createRef();
 
 
  const clear=()=>{
+   console.log("ferùe")
   input.current.clear();
   receiveDatafilterMessageMyQuestion()
   searchBar(null)

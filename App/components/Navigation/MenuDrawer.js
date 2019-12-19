@@ -86,7 +86,7 @@ export default class MenuDrawer extends React.Component{
         data.idUser = profileUser.id
 
        receiveDataMessagesMyQuestions(data)
-       if(nav === 'MyQuestions'){
+       if(nav === 'MyQuestions' || nav === 'Home'){
           
         receiveDatafilterMessageMyQuestion()
     }
@@ -166,8 +166,10 @@ export default class MenuDrawer extends React.Component{
                      
                         <View  style={Styles.profileText}>
                             <Text style={Styles.nameText} >{ profileUser && profileUser.username}</Text>
+                           
                         </View>
                     </View>
+                    <Header style={{height:2,backgroundColor:'white'}}/>
                 </View>
                 
                 <View style={Styles.bottomLinks}>

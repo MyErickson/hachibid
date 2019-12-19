@@ -17,6 +17,7 @@ import { sendMessageUser ,
         sendAnswersForQuestion,
         sendPrecisionForQuestion,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
 import { notificationPrecision , currentNotif } from '../../store/actionCreator/Notification'
+import {sendDatafilterMessageCategory, } from '../../store/actionCreator/MessageCategory';
 
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
@@ -31,7 +32,8 @@ const mapStateToProps = (state, ownProps) => ({
   dataProfileUser: state.dataProfileUser,
   receiveResponseConnection: state.receiveResponseConnection,
   dataFilterMyquestion:state.dataFilterMyquestion,
-  currentNotification:state.currentNotification
+  currentNotification:state.currentNotification,
+  dataFilterHome:state.dataFilterHome,
 
 } );
 
@@ -77,7 +79,10 @@ notificationPrecision:(data)=>{
 },
 receiveDatafilterMessageMyQuestion:()=>{
   dispatch( receiveDatafilterMessageMyQuestion(undefined))
-}
+},
+sendDatafilterMessageCategory:(text)=>{
+  dispatch(sendDatafilterMessageCategory(text));
+},
 
 })
 // Container

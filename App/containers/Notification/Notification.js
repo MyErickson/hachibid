@@ -37,9 +37,7 @@ const mapStateToProps = (state, ownProps) => ({
  * Pas de disptach à transmettre ? const mapDispatchToProps = {};
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  notificationQuestion: (data) => {
-    dispatch(notificationQuestion(data));
-  },
+
   notificationPrecision:(data)=>{
       dispatch(notificationPrecision(data));
   },currentNotif:(data)=>{

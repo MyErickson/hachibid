@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { View ,Dimensions} from 'react-native';
 import Modal from "react-native-modal";
-import { Button, Icon as  IconElement, Slider } from 'react-native-elements';
-import { ProgressBar, Colors } from 'react-native-paper';
+import { Icon as  IconElement} from 'react-native-elements';
+import { ProgressBar, } from 'react-native-paper';
 import {  Icon  } from 'native-base';
 import { Style } from '../styleMyQuestions'
 
@@ -10,6 +10,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+
 
 
 const PlaySound = ({
@@ -28,12 +29,14 @@ const PlaySound = ({
  if(progress > 1.1){
    progress=0
  }
-
+ const Width = Dimensions.get('window').width 
+ const Height = Dimensions.get('window').height 
  return(
 
-      <Modal style={Style.Modal} 
+      <Modal style={Width > Height ? Style.ModalLandscape:Style.ModalPortrait} 
         isVisible={isModalVisible}
         backdropTransitionOutTiming={0}
+     
       >
         <View style={Style.iconClose} >
         <Icon  name="close" onPress={()=>closeModal()}/> 

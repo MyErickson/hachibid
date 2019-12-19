@@ -31,6 +31,7 @@ class Notification extends Component {
      
       const { notificationQuestions ,dataProfileUser,allPrecision , answerUser } = props
       if(notificationQuestions){
+ 
   
         
         const notif = notificationQuestions.filter((value) => value.question === undefined)
@@ -56,22 +57,10 @@ class Notification extends Component {
 
 
 
-    searchBar= async (text)=>{
-          console.log(text)
-      //   await this.props.sendDataFilterCategory(text)
-      //   const category = await this.props.dataFilterCategory
-      // this.setState({
-      //     category
-      // })
-
-    }
-
-
-
   goToCategoryPage=(value,requete)=>{
   
     const { profileUser } = this.state
-    console.log("value de got to page",profileUser)
+    console.log("value de got to page",value)
     const data = new Object
     data._id = value._id
     data.idUser= profileUser.id
@@ -95,6 +84,8 @@ class Notification extends Component {
       this.props.sendDataFilterHomeMessage(undefined)
       this.props.navigation.navigate('MyQuestions')
       this.props.sendDataFilterHomeMessage(data)
+    }else{
+      this.props.navigation.navigate('MyQuestions')
     }
 
  
@@ -102,6 +93,7 @@ class Notification extends Component {
 
   render() {
      const { notificationQuestions ,profileUser,notificationPrecision,notificationAnswerUser } =this.state
+   
     
     return (
       <View style={{flex:1}}>
@@ -154,8 +146,6 @@ class Notification extends Component {
           notification={notificationAnswerUser}
           goToCategoryPage={this.goToCategoryPage}
           requete="answers"
-          openModal={this.openModal}
-          closeModal={this.closeModal}
           icon="message"
           />
           </Tab>

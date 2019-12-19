@@ -12,7 +12,7 @@ const  ViewListNotification =({
        icon
      
 })=> {
-   console.log("icon vaut : ",icon)
+
         return (
           <ScrollView
             bounces={true}

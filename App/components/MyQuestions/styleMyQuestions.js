@@ -36,10 +36,6 @@ export const Style = StyleSheet.create({
     messageContainer:{
         flex:1,
         justifyContent:'flex-end',
-        paddingTop: 10,
-
-        borderColor:'black',
-        // backgroundColor:'red'
 
     },
     name:{
@@ -55,7 +51,7 @@ export const Style = StyleSheet.create({
         paddingTop:10 ,
     },
 
-    Modal:{
+    ModalPortrait:{
         maxHeight:hp('20%'),
         backgroundColor:null,
         top:hp('35%'),
@@ -63,6 +59,17 @@ export const Style = StyleSheet.create({
         justifyContent:'center',
         alignItems:'flex-end'
     },
+    ModalLandscape:{
+        maxHeight:wp('10%'),
+        backgroundColor:null,
+        top:wp('20%'),
+        borderRadius:30,
+        justifyContent:'center',
+        alignItems:'flex-end',
+        paddingRight:wp("30%")
+     
+    },
+
     recorderPlaySound:{
         padding:5,
         marginRight:20,

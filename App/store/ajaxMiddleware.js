@@ -161,21 +161,24 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
 
         case SEND_DATA_FILTER_HOME_MESSAGE:
                 next(action)
+             
       
                 axios.get(`messages?content=${action.data.text}`,{
                     headers:{
                         'Authorization':"Bearer "+action.data.token
                     } 
                 }).then((response)=>{
+             
 
                     const dataMessage= actionRequeteDataMessage(response) 
     
                     const filterDataMessage = actionRequeteFilter(dataMessage)
                     const allDataMessageUser = actionRequeteSort(filterDataMessage)
-                    console.group("je suis pour le filter ajax",allDataMessageUser)
+                 
                     if(action.data.role === "ROLE_ADMIN"){
                         store.dispatch(receiveDatafilterMessageMyQuestion(allDataMessageUser.reverse()))
                     }else{
+                        console.group("je suis pour le filter ajax",allDataMessageUser)
                         store.dispatch(receiveDataFilterMessagesHome(allDataMessageUser.reverse()))
                     }
                     

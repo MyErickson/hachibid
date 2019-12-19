@@ -13,18 +13,13 @@ export const Style = StyleSheet.create({
 
     },
     messageContainer:{
-        flex:1,
-        // paddingHorizontal: 15,
-        paddingTop: 10,
-
-        
+        flex:1,     
     },
     
     message:{
 
         paddingTop: 5,
 
-       
     },
    
     containerButton :{
