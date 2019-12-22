@@ -48,7 +48,8 @@ export const actionRequeteDataMessage = (response)=>{
 
                             },
                             question:{
-                                id:value.user["@id"], 
+                                id:value.user["@id"],
+                                idAnswer:valueAnswers.id, 
                                 text:value.content,
                                 name:value.user.username
                                         },

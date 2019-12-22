@@ -7,7 +7,7 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 
-const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm =false,logOutOrRegister,yesConfirm}) => {
+const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,logOutOrRegister,yesConfirm,alertConfirm =false,noTextClose=true}) => {
 
 
 
@@ -40,7 +40,7 @@ const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,alertConfirm =f
               onPress={closeAlert} />
           </View>)
           :
-          <Dialog.Button label="ok,j'ai compris" onPress={closeAlert} />
+          noTextClose ?<Dialog.Button label="ok,j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
           }
          
         </Dialog.Container>

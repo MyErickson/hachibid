@@ -50,6 +50,7 @@ class ChatHome extends Component {
         dataProfileUsers( data )
         answerUser(data)
         dataMessagesHome(receiveResponseConnection)
+    
       
         await NetInfo.fetch().then(state => {
           isInternetReachable = state.isInternetReachable
@@ -60,7 +61,6 @@ class ChatHome extends Component {
         timerMessage = setInterval(()=>{
       
           if(isConnected && isInternetReachable){
-          
             dataMessagesHome(receiveResponseConnection)
             answerUser(data)
           }
@@ -70,7 +70,21 @@ class ChatHome extends Component {
         this.setState({
           idUser:decode.id
         })
-  
+        
+        if(Platform.OS ==="android"){
+          try{
+            const granted = await request(PERMISSIONS.ANDROID.RECORD_AUDIO)
+            const storage = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE)
+            this.permission = granted
+            this.writeExternalStorage = storage 
+         
+          }catch(err){
+              console.log("eroor ====== >",err)
+          }
+        }
+
+
+        
         }
 
     goToMyQuestion= async ()=>{

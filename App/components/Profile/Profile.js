@@ -227,6 +227,9 @@ class Profile extends Component {
     this.input[id]._root.focus()
     }
 
+    componentWillUnmount(){
+        AsyncStorage.removeItem('sessionJWT')
+    }
 
   render() {
     const { login , 

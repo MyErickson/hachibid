@@ -11,19 +11,76 @@ import DrawerNavigator from './components/Navigation/DrawerNavigator';
 import Register from './components/Register/Register';
 import ResetPasswordContainer from './containers/ResetPassword/ResetPassword';
 import ConnectionContainer from './containers/Connection/Connection';
-
-
-
+import AlertDialog from './components/AlertDialog/AlertDialog';
+import Welcome from './components/Welcome/Welcome'
+import NetInfo from "@react-native-community/netinfo";
+  
+var timerNetwork
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  };
+
+    state = { 
+      isModalVisible:false,
+      alertVisible:false,
+      style:false,
+      messageAlert:undefined,
+  };
+   
+
+
+  async  componentDidMount(){
+      let isInternetReachable 
+      let isConnected  
+
+      timerNetwork =  setInterval(async()=>{
+      
+        await NetInfo.fetch().then(state => {
+          isInternetReachable = state.isInternetReachable
+          isConnected  = state.isConnected 
+
+        })
+        if(isConnected && isInternetReachable){
+        
+          this.setState({
+            alertVisible:false,
+            style:false,
+            messageAlert:undefined
+          }) 
+        } else{
+  
+       
+          this.setState({
+            alertVisible:true,
+            style:false,
+            messageAlert:`Aucun reseau mobile ou wifi detecté`
+          }) 
+        }
+
+        },2000)
+ 
     }
+     
+    closeAlert=()=>{
+      this.setState({alertVisible:false})  
+    }
+
+    
+    componentWillUnmount(){
+
+      clearInterval(timerNetwork)
+     }
+
     render() {
+      const {messageAlert,alertVisible,style} =this.state
         return (
             <Provider store={store}>
                 <Routes hideStatusBar/>
-               
+                 <AlertDialog
+                alertVisible={alertVisible}
+                closeAlert={this.closeAlert}
+                messageAlert={messageAlert}
+                noTextClose={false}
+                style={style}
+                />
             </Provider>
         );
     }
@@ -40,10 +97,11 @@ const StackNavigator = createStackNavigator(
     {
       // Create the application routes here (the key is the route name, the value is the target screen)
       // See https://reactnavigation.org/docs/en/stack-navigator.html#routeconfigs
+      Welcome:Welcome,
       Connection:ConnectionContainer,
       Register: Register,
       ResetPassword:ResetPasswordContainer,
-   
+     
  
 
       // The main application screen is our "ExampleScreen". Feel free to replace it with your
@@ -52,7 +110,7 @@ const StackNavigator = createStackNavigator(
     },
     {
       // By default the application will show the splash screen
-      initialRouteName: 'Connection',
+      initialRouteName: 'Welcome',
       // See https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
       headerMode: 'none',
     }
@@ -71,3 +129,5 @@ const StackNavigator = createStackNavigator(
 
 
   const Routes = createAppContainer(AppNavigator)
+
+

@@ -305,7 +305,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
                 
-            axios.get(`messages?user=${action.data.idUser}`,{
+            axios.get(`messages?users=${action.data.idUser}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
@@ -360,19 +360,21 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
          case SEND_PRECISION_FOR_QUESTION:
             next(action)
             console.log(action )
+            let name = action.data.text ? "content":"audio"
+
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
-            axios.put(`answers/${action.data.idAnwsersUser}`,{
-                content: action.data.text, 
-                message: action.data.idMessage,
+            axios.put(`answers/${action.data.idAnswer}`,{
+                [name]: action.data.text? action.data.text: action.data.audio,
                 answerer:`api/users/${action.data.idUser}`,
                 answered:true,
+                
    
            }).then((response)=>{
                console.log("axios totu els reponses,",response)
          
             store.dispatch(dataMessagesHome(action.data.token))
            }).catch((err)=>{
-               console.log(err)
+               console.log(err.response)
                
            })
             break;
@@ -383,18 +385,20 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
             next(action)
             console.log("TCL: action", action)
             
-            let name = action.text ? "content":"audio"
+            
+            let content = action.data.text ? "content":"audio"
+
+
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.post(`answers`,{
-             [name]:action.data.text,
+             [content]:action.data.text ? action.data.text :action.data.audio ,
              message: action.data.idMessage,
              answerer:`api/users/${action.data.idUser}`,
              answered:true,
              seen:false
 
            }).then((response)=>{
-           console.log("TCL: response", response)
-          
+ 
                 store.dispatch(dataMessagesHome(action.data.token))
    
            }).catch((err)=>{
@@ -436,12 +440,13 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
             })
         break;
 
-
+//requete pour recurperer les reponses d'un utilisateur (notification)
         case ANSWERS_USER:
             next(action)
        
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
             axios.get(`answers?users=${action.data.id}`).then((response)=>{
+       
        
 
                
@@ -481,10 +486,6 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
         break;
 
 
-
-  
-
-     
     }
 
   };

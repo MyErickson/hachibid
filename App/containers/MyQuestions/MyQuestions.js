@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
  */
 // import Example from 'App/components/Example';
 import MyQuestions from '../../components/MyQuestions/MyQuestions'
-import { dataMessagesHome,sendDataFilterHomeMessage,receiveMessagesHome} from '../../store/actionCreator/ChatHome';
+import { dataMessagesHome,sendDataFilterHomeMessage,receiveMessagesHome,askPrecision} from '../../store/actionCreator/ChatHome';
 // Action Creators
 import { sendMessageUser ,
         receiveDataMessagesMyQuestions,
@@ -16,7 +16,7 @@ import { sendMessageUser ,
         sendDatafilterMessageMyQuestion,
         sendAnswersForQuestion,
         sendPrecisionForQuestion,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
-import { notificationPrecision , currentNotif } from '../../store/actionCreator/Notification'
+import { notificationPrecision} from '../../store/actionCreator/Notification'
 import {sendDatafilterMessageCategory, } from '../../store/actionCreator/MessageCategory';
 
 /* === State (données) ===
@@ -67,22 +67,25 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     dispatch(sendPrecisionForQuestion(data))
   },  sendDataFilterHomeMessage:(data)=>{
     dispatch(sendDataFilterHomeMessage(data));
-},
-receiveMessagesHome:()=>{
-  dispatch(receiveMessagesHome(undefined))
-},
-DataMessagesMyQuestions:()=>{
-  dispatch(DataMessagesMyQuestions(undefined))
-},
-notificationPrecision:(data)=>{
-  dispatch(notificationPrecision(data))
-},
-receiveDatafilterMessageMyQuestion:()=>{
-  dispatch( receiveDatafilterMessageMyQuestion(undefined))
-},
-sendDatafilterMessageCategory:(text)=>{
-  dispatch(sendDatafilterMessageCategory(text));
-},
+  },
+  receiveMessagesHome:()=>{
+    dispatch(receiveMessagesHome(undefined))
+  },
+  DataMessagesMyQuestions:()=>{
+    dispatch(DataMessagesMyQuestions(undefined))
+  },
+  notificationPrecision:(data)=>{
+    dispatch(notificationPrecision(data))
+  },
+  receiveDatafilterMessageMyQuestion:()=>{
+    dispatch( receiveDatafilterMessageMyQuestion(undefined))
+  },
+  sendDatafilterMessageCategory:(text)=>{
+    dispatch(sendDatafilterMessageCategory(text));
+  },
+  askPrecision:(data)=>{
+    dispatch(askPrecision(data))
+  },
 
 })
 // Container

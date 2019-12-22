@@ -76,7 +76,11 @@ export const Style = StyleSheet.create({
         minWidth: wp('100%'),
   
     },
-   
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10
+      }
     
 
 

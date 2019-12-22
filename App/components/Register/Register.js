@@ -4,7 +4,7 @@ import { Button,Icon } from 'react-native-elements';
 import { Style }  from './styleRegister'
 import {  Content, Form, Item, Input, } from 'native-base';
 import axios from 'axios';
-
+import NetInfo from "@react-native-community/netinfo";
 import AnimatedLinearGradient from 'react-native-animated-linear-gradient';
 import { presetColors } from '../../store/actionRequetes/actionRequetes'
 import AlertDialog from '../AlertDialog/AlertDialog';
@@ -70,9 +70,24 @@ class Register extends Component {
         this.setState({[name]:text})
      }
 
-     sendInformation= ()=>{
+    sendInformation= async()=>{
+
+        let isInternetReachable 
+        let isConnected  
+        let NetInfoCellularGeneration
         const { login , password,email,confPWD } = this.state;
      
+        await NetInfo.fetch().then(state => {
+            isInternetReachable = state.isInternetReachable
+            isConnected  = state.isConnected 
+
+          });
+
+        await NetInfo.getConnectionInfo().then(res =>{
+            NetInfoCellularGeneration = res.effectiveType
+          })
+
+
       if(confPWD === password ){
         this.setState({errorRegister:false})
         if(login.trim()=== "" || email.trim() ===""  || password.trim() ==="" || confPWD.trim() ===""){
@@ -82,6 +97,15 @@ class Register extends Component {
                 style:false
             })
         }else{
+            if(isConnected && isInternetReachable){
+                console.log("TCL: Connection -> sendInformation -> NetInfoCellularGeneration", NetInfoCellularGeneration)
+                if(NetInfoCellularGeneration === "2g"){
+                    this.setState({
+                        alertVisible:true,
+                        style:false,
+                        messageAlert:'Votre reseau est instable. Veuillez patienter...'
+                    })
+                }
              axios.post('https://rabbin-dev.digitalcube.fr/api/users',{
                 email:email,
                 username:login,
@@ -108,9 +132,16 @@ class Register extends Component {
                 password:"",
                 confPWD:""
                })
-        }
+            
+        }else{
+            this.setState({
+                alertVisible:true,
+                style:false,
+                messageAlert:`Aucun reseau mobile ou wifi trouvé`
+            })
+          }
         
-       
+        } 
     }else{
         this.setState({errorRegister:true})
     }

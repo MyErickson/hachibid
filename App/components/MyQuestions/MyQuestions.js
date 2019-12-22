@@ -301,7 +301,8 @@ class MyQuestions extends Component {
 // ******************************* Mehtode GiftedChat *******************************
   async  onSend(messages = []) {
     const { ProfileUser , dataMessageCurrent,isQuestion } = this.state
-    console.log("TCL: MyQuestions -> onSend -> dataMessageCurrent", dataMessageCurrent,dataMessageCurrent.idAnswer)
+    console.log("TCL: MyQuestions -> onSend -> dataMessageCurrent", dataMessageCurrent)
+  
    
     const {_id ,
       createdAt ,
@@ -329,15 +330,15 @@ class MyQuestions extends Component {
 
 
     }else {
+      let data = this._dataInfo(text)
+      data.idMessage = dataMessageCurrent.idMessage
       if(isQuestion){
-        let data = this._dataInfo(text)
-        data.idMessage = dataMessageCurrent.idMessage
         data.idAnswer = dataMessageCurrent.idAnswer
+        console.log("TCL: MyQuestions -> onSend -> dataMessageCurrent.idAnswer", dataMessageCurrent.idAnswer)
         this.props.sendPrecisionForQuestion(data) 
         receiveDatafilterMessageMyQuestion()
       }else{
-        let data = this._dataInfo(text)
-        data.idMessage = dataMessageCurrent.idMessage
+     
         this.props.sendAnswersForQuestion(data) 
         receiveDatafilterMessageMyQuestion()
       }
@@ -349,7 +350,18 @@ class MyQuestions extends Component {
   
     }          
      
-  
+  //   let data = this._dataInfo()
+  //   data.idMessage  = dataMessageCurrent.idMessage
+  //   data.audio = res.json()["@id"]
+  //  if(isQuestion){
+  //   data.idAnwsersUser = dataMessageCurrent.idAnwsersUser
+  //   sendPrecisionForQuestion(data) 
+  //   receiveDatafilterMessageMyQuestion()
+  //  }else{
+  //   sendAnswersForQuestion(data)
+  //   receiveDatafilterMessageMyQuestion()
+  //  }
+    
 
   }
 
@@ -357,6 +369,7 @@ class MyQuestions extends Component {
 
   renderBubble(props) {
    const { audio ,createdAt ,question, text ,user ,idMessage,} = props.currentMessage
+  
   
  
   const { ProfileUser } =this.state
@@ -377,6 +390,7 @@ class MyQuestions extends Component {
 
         return (
           <ViewBubble
+          askPrecision={this.props.askPrecision}
           text={text}
           question={question}
           createdAt={createdAt}
@@ -481,13 +495,13 @@ class MyQuestions extends Component {
         return (
           <View style={{flexDirection:"row",justifyContent:"space-between",width:wp("80%")}}>
       
-              <View style={Style.containerIconRecorderOff}>
+              <View style={[Style.containerIconRecorder,{backgroundColor:"red"}]}>
               <Icon style={{color:"white"}} name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
               </View>
             
             <Text 
             style={{paddingTop:15,color:"red"}}
-            onPress={()=>this.onStopRecord()}
+            onPress={()=>this.onStopRecord(false)}
             >Annuler</Text>
           </View>
         )
@@ -542,7 +556,7 @@ class MyQuestions extends Component {
 
  
 
-  onStopRecord = async () => {
+  onStopRecord = async (cancel=true) => {
 
     const { stop,isQuestion,recordDuration,dataMessageCurrent } =this.state
 
@@ -565,49 +579,53 @@ class MyQuestions extends Component {
     
     
 
-    console.log("TCL: MyQuestions -> onStopRecord -> filename", this.path)
+    
 //requete avec la lib RNFetchBlob
+if(cancel){
+    console.log("TCL: MyQuestions -> onStopRecord -> cancel", cancel)
     RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
-    Authorization : "Bearer "+receiveResponseConnection,
-    headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
-    },[
-      {
-     // name est la clé attendu pour le backend
-      name:'file',
-      
-      filename : this.path,
-      // use custom MIME type
-      type : Platform.OS==="ios"? 'application/m4a':'application/mp3',
-      // data it's the path
-      data:RNFetchBlob.wrap(result)
-      },
-      {
-        // name est la clé attendu pour le backend
-         name:'duration',
-         data:`${recordDuration}`
-         },
-    ]).then((res) => {
-    console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
+      Authorization : "Bearer "+receiveResponseConnection,
+      headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
+      },[
+        {
+      // name est la clé attendu pour le backend
+        name:'file',
+        
+        filename : this.path,
+        // use custom MIME type
+        type : Platform.OS==="ios"? 'application/m4a':'application/mp3',
+        // data it's the path
+        data:RNFetchBlob.wrap(result)
+        },
+        {
+          // name est la clé attendu pour le backend
+          name:'duration',
+          data:`${recordDuration}`
+          },
+      ]).then((res) => {
+      console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
+    
+        Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
+        let data = this._dataInfo()
+        data.idMessage  = dataMessageCurrent.idMessage
+        data.audio = res.json()["@id"]
+      if(isQuestion){
+        data.idAnswer = dataMessageCurrent.idAnswer
+        sendPrecisionForQuestion(data) 
+        receiveDatafilterMessageMyQuestion()
+      }else{
+        sendAnswersForQuestion(data)
+        receiveDatafilterMessageMyQuestion()
+      }
+        
+
+      })
+      .catch((err) => {
+      console.log("TCL: MyQuestions -> onStopRecord -> err", err)
+      })
+
+  }
    
-      Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
-      let data = this._dataInfo()
-      data.idMessage  = dataMessageCurrent.idMessage
-      data.audio = res.json()["@id"]
-     if(isQuestion){
-      data.idAnswer = dataMessageCurrent.idAnswer
-      sendPrecisionForQuestion(data) 
-      receiveDatafilterMessageMyQuestion()
-     }else{
-      sendAnswersForQuestion(data)
-      receiveDatafilterMessageMyQuestion()
-     }
-      
-
-    })
-    .catch((err) => {
-    console.log("TCL: MyQuestions -> onStopRecord -> err", err)
-    })
-
    
   };
     

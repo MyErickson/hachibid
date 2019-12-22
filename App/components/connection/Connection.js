@@ -1,5 +1,5 @@
 import React, { Component  } from 'react';
-import { View , Text , TouchableOpacity, Animated,ScrollView , Dimensions} from 'react-native';
+import { View , Text , TouchableOpacity, Animated,ScrollView , ActivityIndicator,} from 'react-native';
 import { Button } from 'react-native-elements';
 import {  Content, Form, Item, Input } from 'native-base';
 import ResetPassword from "../ResetPassword/ResetPassword"
@@ -26,15 +26,18 @@ class Connection extends Component {
             showResetPassword:false,
             isModalVisible:false,
             alertVisible:false,
+            messageAlert:undefined,
+            storage:false,
             style:false
          };
          this.position = new Animated.Value(0)
          this.input = {}
     }
     async   componentDidMount (){
-        AsyncStorage.removeItem('sessionJWT')
-    
-          
+        
+        await AsyncStorage.getItem('sessionJWT')
+     
+
         Animated.timing(this.position, {
             toValue: 100,
             duration: 2000,
@@ -42,6 +45,7 @@ class Connection extends Component {
 
         
     }
+    
 
     toggleModal = () => {
         this.setState({ isModalVisible: !this.state.isModalVisible });
@@ -56,22 +60,42 @@ class Connection extends Component {
     }
 
     sendInformation= async ()=>{
-        var isInternetReachable 
-        var isConnected  
+
+        let isInternetReachable 
+        let isConnected  
+        let NetInfoCellularGeneration
         const { login , password } = this.state;
+
         await NetInfo.fetch().then(state => {
             isInternetReachable = state.isInternetReachable
             isConnected  = state.isConnected 
        
+
           });
+
+        await NetInfo.getConnectionInfo().then(res =>{
+            NetInfoCellularGeneration = res.effectiveType
+          })
+         
+
           if(isConnected && isInternetReachable){
+        
+           
+            if(NetInfoCellularGeneration === "2g"){
+                this.setState({
+                    alertVisible:true,
+                    style:false,
+                    messageAlert:'Votre reseau est instable. Veuillez patienter...'
+                })
+            }
             await  axios.post('https://rabbin-dev.digitalcube.fr/api/login_check',{
              
                 username:login,
                 password:password,
               
             }).then(async(response)=>{
-                let data = new Object 
+
+             
                 this.setState({
                     login:undefined,
                     password:undefined,
@@ -80,19 +104,9 @@ class Connection extends Component {
                 })
                 await this.props.responseConnection(response.data.token) 
              
-                var decode = jwtDecode(response.data.token)
+                let decode = jwtDecode(response.data.token)
 
-                console.log("je sui dns connection ", decode.roles[0])
-                data.id =decode.id 
-                data.token = this.props.receiveResponseConnection
-                await this.props.dataProfileUsers( data )
-
-
-                if(decode.roles[0]=== "ROLE_ADMIN"){
-                    this.props.navigation.navigate("MyQuestions")
-                }else {
-                    this.props.navigation.navigate("Home")
-                }
+               this.gotToHome(decode,response.data.token)
               
             })
             .catch((err)=>{
@@ -108,13 +122,30 @@ class Connection extends Component {
             this.setState({
                 alertVisible:true,
                 style:false,
-                messageAlert:`Vous n'avez pas de reseau mobile ou wifi`
+                messageAlert:`Aucun reseau mobile ou wifi trouvé`
             })
           }
            
            
     }
-  
+   
+    gotToHome=async(decode,token)=>{
+        const {receiveResponseConnection } = this.props
+        let data = new Object 
+        data.id =decode.id 
+        data.token = receiveResponseConnection ?receiveResponseConnection : token
+       
+        await this.props.responseConnection(token) 
+        await this.props.dataProfileUsers( data )
+        
+        if(decode && decode.roles[0]=== "ROLE_ADMIN"){
+            this.props.navigation.navigate("MyQuestions")
+        }else {
+            this.props.navigation.navigate("Home")
+        }
+     
+    }
+
     goToRegister=()=>{
         this.props.navigation.navigate('Register')
     }
@@ -127,16 +158,29 @@ class Connection extends Component {
        this.setState({alertVisible:!this.state.alertVisible})
    }
 
+   storage=async()=>{
+    const storageConnection = await  AsyncStorage.getItem('sessionJWT')
+    
+    if(storageConnection ){
+       
+        let decode = await jwtDecode(storageConnection)
+        this.gotToHome(decode,storageConnection)
+    }
+   
+   
+   }
 
-    render() {
-        
-        const storageConnection = AsyncStorage.getItem('sessionJWT')
+     render() {
+       
+         this.storage()
 
         const { login , password,messageAlert,style } = this.state;
+        console.log("TCL: Connection -> render -> messageAlert", this.props.receiveResponseConnection)
        
-       this.state.connection && storageConnection && this.props.navigation.navigate("Home")
-      
+       
+
         return (
+            
             <View
             style={{flex:1,height:500}}
             >
@@ -264,8 +308,9 @@ class Connection extends Component {
 
                     
                     </ScrollView>      
-        </View>
-        );
+        </View> 
+   
+    );
     }
 }
 

@@ -89,7 +89,7 @@ class viewBubble extends Component{
                 
            { audio ? (
                    <TouchableOpacity   onPress={()=>openModal(props)}   style={{margin:5,alignItems:"center"}}>
-                   <Image style={{width: 50, height: 50}} source={require(`../../../images/Music.png`) } />
+                   <Image style={{width: 50, height: 50}} source={{uri:`https://blog.planethoster.com/wp-content/uploads/2018/05/streaming-music-560x560.png`} } />
                    <Text style={{fontWeight:"bold"}}>Touch pour écouter le message</Text>
                </TouchableOpacity >
            ) : (

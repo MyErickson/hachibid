@@ -21,7 +21,8 @@ const initialState = {
   dataFilterMyquestion:undefined,
   allPrecision:undefined,
   answerUser:undefined,
-  currentNotification:undefined
+  currentNotification:undefined,
+  isStorage:undefined
   
 };
 
@@ -67,6 +68,7 @@ export const RECEIVE_ALL_PRECISION ="RECEIVE_ALL_PRECISION";
 export const ANSWERS_USER = "ANSWERS_USER";
 export const RECEIVE_ANSWER_USER= "RECEIVE_ANSWER_USER";
 export const CURRENT_NOTIFICATION ="CURRENT_NOTIFICATION"
+export const IS_STORAGE ="IS_STORAGE"
 /**
  * Traitements
  */
@@ -162,7 +164,6 @@ const reducer = (state = initialState, action = {}) => {
           dataFilterMyquestion:action.dataFilterMyquestion
         }
 
-
     case RECEIVE_ALL_PRECISION:
       return {
         ...state,
@@ -181,7 +182,13 @@ const reducer = (state = initialState, action = {}) => {
         currentNotification:action.currentNotification
       }
 
-      
+    case IS_STORAGE :
+
+      return {
+        ...state,
+        isStorage:action.isStorage
+      }
+
     case INITITALIZE_STATE:
     
       return {
