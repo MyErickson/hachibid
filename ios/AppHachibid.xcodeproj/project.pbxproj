@@ -37,8 +37,6 @@
 		5EAA538E48F62A967FBB6702 /* libPods-AppHachibid-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E6FCD8CD5D28FC172FCA50 /* libPods-AppHachibid-tvOSTests.a */; };
 		66A430603EA44714B4D4A54B /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E9D575DDB9A472C88571DF0 /* FontAwesome.ttf */; };
 		68956D0E2382927D001405A8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68956D0D2382927D001405A8 /* Default-568h@2x.png */; };
-		68BEBD8623A3DF0000E66510 /* libRNAudioRecorderPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BEBD8523A3DF0000E66510 /* libRNAudioRecorderPlayer.a */; };
-		68EEF03023A3E94C00E6774A /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68EEF02D23A3E86000E6774A /* libRNFetchBlob.a */; };
 		71450BA8F52A4CF294B76F02 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C14BD15E18744BB6B19141F6 /* Zocial.ttf */; };
 		7A5144F010699EC8855C05FA /* libPods-AppHachibid-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60BA6852D158DD172892694D /* libPods-AppHachibid-tvOS.a */; };
 		7BFBF171F8E94B4C8BE14F0C /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5332A29561D747CAAB5051BE /* Roboto_medium.ttf */; };
@@ -174,9 +172,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				68BEBD8623A3DF0000E66510 /* libRNAudioRecorderPlayer.a in Frameworks */,
 				AF31C5C3CA4B5AADAA34F290 /* libPods-AppHachibid.a in Frameworks */,
-				68EEF03023A3E94C00E6774A /* libRNFetchBlob.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
