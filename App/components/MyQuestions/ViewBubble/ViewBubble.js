@@ -15,15 +15,18 @@ class viewBubble extends Component{
         alertText :undefined,
         alertConfirm:undefined,
         style:undefined,
-        currentMessageForPrecision:undefined
+        currentMessageForPrecision:undefined,
+        askPrecision:undefined
       }
 
     alertPrecision = (currentMessageForPrecision)=>{
         this.setState({
           alertVisible:true,
-          alertText:"êtes vous sur de vouloir faire une demande de plus de précision ?",
+         
+          alertText:"Pouvez vous me dire ce que vous n'avez pas compris ou ce que vous attendez comme précision ? ",
+          askPrecision:true,
           alertConfirm:true,
-          style:false,
+          style:true,
           currentMessageForPrecision
         })
       }
@@ -31,32 +34,47 @@ class viewBubble extends Component{
       closeAlert=()=>{
         this.setState({
           alertVisible:false,
-          currentMessageForPrecision:undefined
+          currentMessageForPrecision:undefined,
+          textValue:"",
     
         })
       }
     
     
-      sendPrecision=()=>{
-        const { currentMessageForPrecision } = this.state
-      
-        console.log("demande une precision",currentMessageForPrecision)
-        let data = new Object;
-    
-        data.content = currentMessageForPrecision.text
-        data.message = currentMessageForPrecision.idMessage
-        data.user = currentMessageForPrecision.question.id
-        data.token = this.props.receiveResponseConnection
-    
-        this.props.askPrecision(data)
+      yesConfirm=(text)=>{
+ 
         this.setState({
-          alertText:"Une demande de precision à bien été envoyé",
-          alertConfirm:false,
-          style:true,
-          currentMessageForPrecision:undefined
+          alertText:"êtes vous sur de vouloir faire la demande  de précision ?",
+          textValue:text,
+          askPrecision:false,
+          alertConfirm:true,
+          style:false,
     
         })
       }
+    sendPrecision=()=>{
+      const { currentMessageForPrecision,textValue } = this.state
+      
+      console.log("demande une precision",currentMessageForPrecision)
+      let data = new Object;
+  
+      data.content = currentMessageForPrecision.text
+      data.message = currentMessageForPrecision.idMessage
+      data.user = currentMessageForPrecision.question.id
+      data.token = this.props.receiveResponseConnection
+      data.textPrecision = textValue  
+      console.log("TCL: viewBubble -> sendPrecision -> data.text", textValue  )
+       this.props.askPrecision(data)
+       this.setState({
+        alertText:"Une demande de precision à bien été envoyé",
+        textValue:"",
+        alertConfirm:false,
+        style:true,
+        currentMessageForPrecision:undefined
+  
+      })
+    }
+
     render() {
         const {
             text,
@@ -75,6 +93,7 @@ class viewBubble extends Component{
         const { 
             alertVisible,
             alertText,
+            askPrecision,
             alertConfirm 
             ,style}=this.state
   
@@ -126,7 +145,9 @@ class viewBubble extends Component{
             messageAlert={alertText}
             closeAlert={this.closeAlert}
             alertConfirm={alertConfirm}
-            yesConfirm={this.sendPrecision}
+            yesConfirm={this.yesConfirm}
+            sendPrecision={this.sendPrecision}
+            askPrecision={askPrecision}
             style={style}
             />
        </View>

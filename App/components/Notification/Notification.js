@@ -98,7 +98,7 @@ class Notification extends Component {
     return (
       <View style={{flex:1}}>
         <Menu nameMenu="Notification" navigation={this.props.navigation} />
-        { profileUser  && profileUser .roles[0] !== "ROLE_USER" ?
+        { profileUser  && profileUser.roles[0] !== "ROLE_USER" ?
         <Tabs
          textStyle={{coloe:"white"}}
         >
@@ -114,6 +114,7 @@ class Notification extends Component {
                 goToCategoryPage={this.goToCategoryPage}
                 requete="messages"
                 icon="message"
+                profileUser="admin"
                 />
 
               </Tab>
@@ -129,6 +130,7 @@ class Notification extends Component {
                     goToCategoryPage={this.goToCategoryPage}
                     requete="precision"
                     icon="notifications"
+                    profileUser="admin"
                     />
 
           </Tab>
@@ -147,6 +149,7 @@ class Notification extends Component {
           goToCategoryPage={this.goToCategoryPage}
           requete="answers"
           icon="message"
+          profileUser="user"
           />
           </Tab>
           

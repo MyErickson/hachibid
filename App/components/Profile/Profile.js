@@ -119,26 +119,20 @@ class Profile extends Component {
 
 
             if(password.trim())  {
-            data.password=password
-           
-            this.setState({errorPwd:false})
-                 
+                data.password=password           
+                this.setState({errorPwd:false})                 
             }
 
             if(login.trim()){
-                data.login = login
-              
+                data.login = login             
             }
 
             if(email.trim()){
-                data.email =email
-            
+                data.email =email            
             }
-            if(login.trim().length < 0){
-                console.log( "loool",login.trim())
-            }
+
        
-         if(login.trim()  &&  email.trim()  && password.trim() ){
+         if(login.trim()  ||  email.trim() ||  password.trim() ){
             messageErr = false;
          }else{
             messageErr = true;

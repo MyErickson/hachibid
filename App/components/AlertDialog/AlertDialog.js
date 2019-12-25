@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { View, Text, Platform} from 'react-native'
+import { Input } from 'native-base';
 import Dialog from "react-native-dialog";
 import { Style } from './styleAlertDialog';
 import {
@@ -7,45 +8,81 @@ import {
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 
-const AlertDialog = ({closeAlert,alertVisible,messageAlert,style,logOutOrRegister,yesConfirm,alertConfirm =false,noTextClose=true}) => {
+class AlertDialog extends Component{
+
+  state={
+    textValue:""
+  }
+
+  textPrecision=(text)=>{
+    
+     this.setState({textValue:text})
+  }
 
 
+  render(){
 
-    return (
+      const {closeAlert,
+        alertVisible,
+        messageAlert,
+        style,
+        sendPrecision,
+        yesConfirm,
+        askPrecision,
+        alertConfirm =false,
+        logOutOrRegister,
+        noTextClose=true} = this.props
+      
+      const {
+        textValue
+      }= this.state
   
-     
-        <Dialog.Container 
-        visible={alertVisible}
-        headerStyle={{height:hp("7%"),borderRadius:30 }}
-        contentStyle={{width:wp("90%"),borderRadius:14}}
-        buttonSeparatorStyle={{color:"black"}} >
-          <Dialog.Description style={style? Style.succesRegister :Style.errorRegister }>
-            {messageAlert ?messageAlert:" " }
-          </Dialog.Description>
-          { alertConfirm ? 
-          (<View style={Platform.OS === "ios" ? Style.containerButtonIos :Style.containerButtonAndroid}>
-           
-              <Dialog.Button 
-              bold={true} 
-              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroidYes} 
-              color="white"
-              label="Oui" 
-              onPress={()=> yesConfirm(logOutOrRegister)} />
+        return (
+      
          
-              <Dialog.Button 
-              bold={true}  
-              color="white"
-              style={Platform.OS === "ios"? Style.buttonIos:Style.buttonAndroidNo} 
-              label="Annuler" 
-              onPress={closeAlert} />
-          </View>)
-          :
-          noTextClose ?<Dialog.Button label="ok,j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
-          }
+            <Dialog.Container 
+            visible={alertVisible}
+            headerStyle={{height:hp("7%"),borderRadius:30 }}
+            contentStyle={{width:wp("90%"),borderRadius:14}}
+            buttonSeparatorStyle={{color:"black"}} >
+              <Dialog.Description style={style? Style.succesRegister :Style.errorRegister }>
+                { messageAlert ? messageAlert:" "  }
+                
+              </Dialog.Description>
+             { askPrecision &&
+               <Dialog.Input
+               maxLength={255}
+               value={textValue}
+               onChangeText={this.textPrecision}
+               wrapperStyle={{top:hp("5%"),margin:10,borderColor:"black",borderStyle:"solid",borderWidth:1,borderRadius:5}}
+               />
+             }
+               {alertConfirm ? 
+              (<View style={Platform.OS === "ios" ? Style.containerButtonIos :Style.containerButtonAndroid}>
+                  <Dialog.Button 
+                  bold={true} 
+                  style={Platform.OS === "ios"? Style.buttonIos:[Style.buttonAndroid,{backgroundColor:"#0B6ACA"}]} 
+                  color="white"
+                  label= { askPrecision ? "Envoyé" : "Oui"}
+                  onPress={()=> askPrecision ? yesConfirm(textValue) :sendPrecision ? sendPrecision(): yesConfirm(logOutOrRegister) } />
+                
+                  <Dialog.Button 
+                  bold={true}  
+                  color="white"
+                  style={Platform.OS === "ios"? Style.buttonIos:[Style.buttonAndroid,{backgroundColor:"grey"}]} 
+                  label="Annuler" 
+                  onPress={closeAlert} />
+              </View>) 
+              :
+              
+              noTextClose ?<Dialog.Button label="ok,j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
+               }
+             
+            </Dialog.Container>
          
-        </Dialog.Container>
-     
-    )
+        )
+    }
 }
+ 
 
 export default AlertDialog

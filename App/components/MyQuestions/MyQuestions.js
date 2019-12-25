@@ -371,7 +371,7 @@ class MyQuestions extends Component {
    const { audio ,createdAt ,question, text ,user ,idMessage,} = props.currentMessage
   
   
- 
+  const { receiveResponseConnection} =this.props
   const { ProfileUser } =this.state
   
   
@@ -390,7 +390,7 @@ class MyQuestions extends Component {
 
         return (
           <ViewBubble
-          askPrecision={this.props.askPrecision}
+          receiveResponseConnection={receiveResponseConnection}
           text={text}
           question={question}
           createdAt={createdAt}
@@ -401,7 +401,6 @@ class MyQuestions extends Component {
           openModal={this.openModal}
           user={user}
           props={props}
-          alertPrecision={this.props.alertPrecision}
           showMessage={(res)=>this.setState({
             answerCurrent:audio ? question.text : text,
             showAboveInput:true,
@@ -575,8 +574,6 @@ class MyQuestions extends Component {
     const result = await this.audioRecorderPlayer.stopRecorder(this.path);
 
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
-    
-    
     
 
     

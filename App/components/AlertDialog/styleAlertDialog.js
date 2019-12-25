@@ -8,12 +8,12 @@ export const Style = StyleSheet.create({
     succesRegister:{
         color:"green",
         textAlign:'center',
-        fontSize:20
+        fontSize:18
     },
     errorRegister:{
         color:"red",
         textAlign:'center',
-        fontSize:20
+        fontSize:18
     },
     buttonIos:{
         fontSize:15,
@@ -33,28 +33,17 @@ export const Style = StyleSheet.create({
         marginTop:20,
      
     },
-    buttonAndroidYes:{
+    buttonAndroid:{
         fontSize:15,
         width:wp("26%"),
         paddingVertical: 6,
         margin:10,
         marginBottom:0,
         marginTop:15,
-        backgroundColor:"#0B6ACA",
         borderRadius:30
         
     },
-    buttonAndroidNo:{
-        fontSize:15,
-        width:wp("26%"),
-        paddingVertical: 6,
-        margin:10,
-        marginBottom:0,
-        marginTop:15,
-        backgroundColor:"gray",
-        borderRadius:30
-        
-    }
+
        
     
 

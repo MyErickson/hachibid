@@ -305,7 +305,7 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
         case RECEIVE_DATA_MESSAGES_MYQUESTIONS:
             next(action)
                 
-            axios.get(`messages?users=${action.data.idUser}`,{
+            axios.get(`messages?user=${action.data.idUser}`,{
                 headers:{
                     'Authorization':"Bearer "+action.data.token
                 } 
@@ -337,19 +337,21 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
 
         case ASK_PRECISION:
            next(action)
+           console.log("TCL: action", action)
       
            axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
            axios.post('accuracies',{
             user:action.data.user,
-            answered:true,
             message:action.data.message,
-            seen:false
+            content:action.data.textPrecision 
+
 
         }).then((response)=>{
             console.log("response pour precisison ",response)
           
         }).catch((err)=>{
-            console.log(err.response)
+        console.log("TCL: err_>precision", err)
+          
             
         })
          break;
@@ -414,12 +416,14 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
             axios.defaults.headers['Authorization']= "Bearer "+action.data;
             axios.get(`accuracies`).then((response)=>{
                
+            console.log("TCL: response", response)
       
                      const dataMessage = response.data['hydra:member'].map((value)=>{
 
                         return{
                             _id:value["@id"],
                             text:value.message.content,
+                            precision:value.content,
                             createdAt:new Date (value.createdAt),
                             idMessage:value["@id"],
                             seen:value.seen,
@@ -445,7 +449,8 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
             next(action)
        
             axios.defaults.headers['Authorization']= "Bearer "+action.data.token;
-            axios.get(`answers?users=${action.data.id}`).then((response)=>{
+            axios.get(`answers?message.user=${action.data.id}`).then((response)=>{
+           
        
        
 
@@ -471,6 +476,9 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
                                     _id:value.answerer.id,
                                     name:value.answerer.username,
                                     typeUser:value.answerer["@type"]
+                                },
+                                question:{
+                                    text:value.message.content
                                 }
                               }
                             
