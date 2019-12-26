@@ -17,7 +17,6 @@ import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import RNFetchBlob from 'rn-fetch-blob';
-import Reactotron from 'reactotron-react-native'
 
 import { osMobile } from '../../store/actionRequetes/actionRequetes'
 
@@ -350,17 +349,7 @@ class MyQuestions extends Component {
   
     }          
      
-  //   let data = this._dataInfo()
-  //   data.idMessage  = dataMessageCurrent.idMessage
-  //   data.audio = res.json()["@id"]
-  //  if(isQuestion){
-  //   data.idAnwsersUser = dataMessageCurrent.idAnwsersUser
-  //   sendPrecisionForQuestion(data) 
-  //   receiveDatafilterMessageMyQuestion()
-  //  }else{
-  //   sendAnswersForQuestion(data)
-  //   receiveDatafilterMessageMyQuestion()
-  //  }
+
     
 
   }
@@ -371,7 +360,7 @@ class MyQuestions extends Component {
    const { audio ,createdAt ,question, text ,user ,idMessage,} = props.currentMessage
   
   
-  const { receiveResponseConnection} =this.props
+  const { receiveResponseConnection,askPrecision} =this.props
   const { ProfileUser } =this.state
   
   
@@ -391,6 +380,7 @@ class MyQuestions extends Component {
         return (
           <ViewBubble
           receiveResponseConnection={receiveResponseConnection}
+          askPrecision={askPrecision}
           text={text}
           question={question}
           createdAt={createdAt}
@@ -530,14 +520,15 @@ class MyQuestions extends Component {
       stop:!stop,
       hideInputGifted:true
     })
-
+   console.log( )
     this.path = Platform.select({
-      ios: `/${Date.now()}.m4a`,
+      ios:`${Date.now()}.m4a`,
       android: `sdcard/${Date.now()}.mp3`
     })
      await this.audioRecorderPlayer.startRecorder(this.path);
    
     this.audioRecorderPlayer.addRecordBackListener((e) => {
+    console.log("TCL: MyQuestions -> onStartRecord -> e", e)
       
 
       this.setState({
@@ -558,6 +549,7 @@ class MyQuestions extends Component {
   onStopRecord = async (cancel=true) => {
 
     const { stop,isQuestion,recordDuration,dataMessageCurrent } =this.state
+    console.log("TCL: MyQuestions -> onStopRecord -> recordDuration", recordDuration)
 
     const {
       receiveResponseConnection,
@@ -570,16 +562,19 @@ class MyQuestions extends Component {
       stop:!stop,
       hideInputGifted:false
     })
-   var filename= undefined;
+ 
     const result = await this.audioRecorderPlayer.stopRecorder(this.path);
 
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
+    console.log("TCL: MyQuestions -> onStopRecord -> this.path", this.path)
+    console.log("TCL: MyQuestions -> onStopRecord -> result", result)
     
-
+ const filename = Platform === "ios" ? result : this.path
+ console.log("TCL: MyQuestions -> onStopRecord -> filename", filename , dataMessageCurrent)
     
 //requete avec la lib RNFetchBlob
 if(cancel){
-    console.log("TCL: MyQuestions -> onStopRecord -> cancel", cancel)
+ 
     RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
       Authorization : "Bearer "+receiveResponseConnection,
       headers: JSON.stringify({ 'content-type': 'multipart/form-data' }),
@@ -588,11 +583,11 @@ if(cancel){
       // name est la clé attendu pour le backend
         name:'file',
         
-        filename : this.path,
+        filename : filename,
         // use custom MIME type
         type : Platform.OS==="ios"? 'application/m4a':'application/mp3',
         // data it's the path
-        data:RNFetchBlob.wrap(result)
+        data:this.path
         },
         {
           // name est la clé attendu pour le backend
@@ -600,9 +595,9 @@ if(cancel){
           data:`${recordDuration}`
           },
       ]).then((res) => {
-      console.log("TCL: MyQuestions -> onStopRecord -> res", res.json())
+      console.log("TCL: MyQuestions -> onStopRecord -> res", res.json(),recordDuration)
     
-        Reactotron.log("TCL: MyQuestions -> onStopRecord -> res",res.json()["@id"])
+       
         let data = this._dataInfo()
         data.idMessage  = dataMessageCurrent.idMessage
         data.audio = res.json()["@id"]
@@ -667,7 +662,8 @@ if(cancel){
 
 
   onStopPlay=(propsSounder)=>{
-    // const path = osMobile(propsSounder)
+    //  const path = osMobile(propsSounder)
+     
   
     clearInterval(timer)  
     this.setState({
@@ -695,23 +691,34 @@ if(cancel){
 
  // ******************** Modal *******************
 
-  openModal=(props)=>{
+  openModal=async(props)=>{
 
    const { contentUrl } = props.currentMessage.audio
+   console.log("TCL: MyQuestions -> openModal -> contentUrl", props.currentMessage.audio)
 
     // upload file audio on device
     RNFetchBlob
     .config({
       // response data will be saved to this path if it has access right.
       fileCache : true,
-      path : Platform.OS === "ios"? `/${Date.now()}.m4a`:`/sdcard/${Date.now()}.mp3`
+      path : Platform.OS === "ios"? `${Date.now()}.m4a`:`/sdcard/${Date.now()}.mp3`
     })
     .fetch('GET', contentUrl)
     .then((res) => {
-    console.log("TCL: MyQuestions -> openModal -> res", res)
+    console.log("TCL: MyQuestions -> openModal -> res", res.path())
    
       this.path = res.path()
-      RNFetchBlob.fs.scanFile([ { path : res.path(), mime : Platform.OS === "ios"?'audio/m4a' :'audio/mp3' } ])
+     
+      RNFetchBlob.fs.exists("file://private/var/mobile/Containers/Data/Application/0342E4CD-3141-4447-9EB1-98D85A90E17B/tmp/1577370341329.m4a")
+      .then((exist) => {
+          console.log(`file ${exist ? '' : 'not'} exists`)
+      })
+      .catch((err) => { console.log("exists vaut =====>",err) })
+      if(Platform.OS === "android"){
+        RNFetchBlob.fs.scanFile([ { path : res.path(), mime : 'audio/mp3' } ])
+      }else{
+        RNFetchBlob.fs.readStream(res.path()).then( stats => console.log("stats vaut =====>",stats));
+      }
     })
     
       clearInterval(timer) 
@@ -729,7 +736,7 @@ if(cancel){
 
   // remove file audio 
   RNFetchBlob.fs.unlink(this.path)
-  RNFetchBlob.fs.scanFile([ { path : this.path, mime : Platform.OS === "ios"?'audio/aac' :'audio/aac' } ])
+  Platform.OS === "android" && RNFetchBlob.fs.scanFile([ { path : this.path, mime : Platform.OS === "ios"?'audio/aac' :'audio/aac' } ])
 
   this.setState({
     isModalVisible: false,

@@ -126,7 +126,7 @@ export default class MenuDrawer extends React.Component{
                     </TouchableOpacity>
                         { this.state.list && show === true && (
                              <Container style={Styles.list}>
-                             <Header style={{height:20,backgroundColor:'#3399ff'}}/>
+                             <View style={{height:20,backgroundColor:'#3399ff'}}/>
                              <ScrollView style={{flex:1}}
                                 showsVerticalScrollIndicator={false}
                                 keyboardShouldPersistTaps="always"
@@ -169,7 +169,7 @@ export default class MenuDrawer extends React.Component{
                            
                         </View>
                     </View>
-                    <Header style={{height:2,backgroundColor:'white'}}/>
+                    <View style={{height:2,backgroundColor:'white'}}/>
                 </View>
                 
                 <View style={Styles.bottomLinks}>

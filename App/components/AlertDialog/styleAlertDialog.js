@@ -5,15 +5,11 @@ import {
   } from "react-native-responsive-screen";
 export const Style = StyleSheet.create({
 
-    succesRegister:{
-        color:"green",
+  
+    register:{
         textAlign:'center',
-        fontSize:18
-    },
-    errorRegister:{
-        color:"red",
-        textAlign:'center',
-        fontSize:18
+        fontSize:18,
+        padding:10
     },
     buttonIos:{
         fontSize:15,
@@ -30,16 +26,15 @@ export const Style = StyleSheet.create({
     containerButtonAndroid:{
         flexDirection:"row",
         justifyContent:"center",
-        marginTop:20,
+        marginTop:5,
      
     },
     buttonAndroid:{
         fontSize:15,
         width:wp("26%"),
         paddingVertical: 6,
-        margin:10,
+        marginRight:12,
         marginBottom:0,
-        marginTop:15,
         borderRadius:30
         
     },

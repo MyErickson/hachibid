@@ -43,13 +43,13 @@ const  ViewListNotification =({
                             <Text>{question ? question.text:precision}</Text>
                           </View>
                         </View>:profileUser ==="admin" &&( !audio  ?
-                          <ScrollView style={{maxHeight:51}}
+                          <ScrollView style={{maxHeight:92, margin:5}}
                           showsVerticalScrollIndicator={false}
                           keyboardShouldPersistTaps="always"
                           >
-                            <Text>{user && text.length > 100 ?`${text.slice(0,100)}...`:text}</Text>
+                            <Text>{text.length > 100 ?`${text.slice(0,90)}...`:text}</Text>
                           </ScrollView>
-                          :(<Text>Vous avez reçu un message vocal</Text>)) 
+                          :(<Text style={{margin:5}}>Vous avez reçu un message vocal</Text>)) 
 
                       }
                       containerStyle={seen ? {backgroundColor:"#D7DCE1"}:{backgroundColor:"white"}}
@@ -58,19 +58,19 @@ const  ViewListNotification =({
                       subtitle= {
                         <View style={{backgroundColor:"#8ECCE7"}}>
                           {profileUser === "user"  && ( !audio ?
-                          <ScrollView style={{maxHeight:51}}
+                          <ScrollView style={{maxHeight:92,margin:5}}
                           showsVerticalScrollIndicator={false}
                           keyboardShouldPersistTaps="always"
                           >
-                            <Text>{ user && text.length > 100 ?`${text.slice(0,100)}...`:text}</Text>
+                            <Text>{ text.length > 100 ?`${text.slice(0,90)}...`:text}</Text>
                           </ScrollView>
-                          : (<Text>Vous avez reçu un message vocal</Text>) ) }
+                          : (<Text style={{padding:5}}>Vous avez reçu un message vocal</Text>) ) }
 
-                          { precision && <ScrollView style={{maxHeight:51}}
+                          { precision && <ScrollView style={{maxHeight:92,margin:5}}
                           showsVerticalScrollIndicator={false}
                           keyboardShouldPersistTaps="always"
                           >
-                            <Text>{ user && text.length > 100 ?`${text.slice(0,100)}...`:text}</Text>
+                            <Text>{  text.length > 100 ?`${text.slice(0,90)}...`:text}</Text>
                           </ScrollView>}
 
                           <View style={{flexDirection:'row',justifyContent:"space-between",}}>

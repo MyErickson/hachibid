@@ -42,19 +42,22 @@ class AlertDialog extends Component{
          
             <Dialog.Container 
             visible={alertVisible}
-            headerStyle={{height:hp("7%"),borderRadius:30 }}
-            contentStyle={{width:wp("90%"),borderRadius:14}}
+            headerStyle={{borderRadius:30 }}
+            contentStyle={{width:wp("90%"),borderRadius:14,justifyContent:"space-between"}}
             buttonSeparatorStyle={{color:"black"}} >
-              <Dialog.Description style={style? Style.succesRegister :Style.errorRegister }>
+            
+              <Dialog.Description style={style? [Style.register,{color:"green"}] :[Style.register,{color:"red"}] }>
                 { messageAlert ? messageAlert:" "  }
                 
               </Dialog.Description>
+            
              { askPrecision &&
+             
                <Dialog.Input
                maxLength={255}
                value={textValue}
                onChangeText={this.textPrecision}
-               wrapperStyle={{top:hp("5%"),margin:10,borderColor:"black",borderStyle:"solid",borderWidth:1,borderRadius:5}}
+               wrapperStyle={{margin:10,borderColor:"black",borderStyle:"solid",borderWidth:1,borderRadius:5}}
                />
              }
                {alertConfirm ? 
@@ -73,11 +76,13 @@ class AlertDialog extends Component{
                   label="Annuler" 
                   onPress={closeAlert} />
               </View>) 
+              
               :
               
-              noTextClose ?<Dialog.Button label="ok,j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
+              noTextClose ?<Dialog.Button  label="ok,j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
+              
                }
-             
+        
             </Dialog.Container>
          
         )
