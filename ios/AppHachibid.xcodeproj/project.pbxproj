@@ -37,6 +37,7 @@
 		5EAA538E48F62A967FBB6702 /* libPods-AppHachibid-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6E6FCD8CD5D28FC172FCA50 /* libPods-AppHachibid-tvOSTests.a */; };
 		66A430603EA44714B4D4A54B /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E9D575DDB9A472C88571DF0 /* FontAwesome.ttf */; };
 		68956D0E2382927D001405A8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68956D0D2382927D001405A8 /* Default-568h@2x.png */; };
+		689987D023B50292005BCD42 /* librn-fetch-blob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 689987CF23B50292005BCD42 /* librn-fetch-blob.a */; };
 		71450BA8F52A4CF294B76F02 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C14BD15E18744BB6B19141F6 /* Zocial.ttf */; };
 		7A5144F010699EC8855C05FA /* libPods-AppHachibid-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60BA6852D158DD172892694D /* libPods-AppHachibid-tvOS.a */; };
 		7BFBF171F8E94B4C8BE14F0C /* Roboto_medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5332A29561D747CAAB5051BE /* Roboto_medium.ttf */; };
@@ -87,6 +88,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNAudioRecorderPlayer;
 		};
+		68C44BAE23B651CB000FEDD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68C44BA823B651CB000FEDD1 /* RNTrackPlayer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9B0E28291F07D76F00B71D2A;
+			remoteInfo = RNTrackPlayer;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -128,8 +136,10 @@
 		671037615EE14DC4B1077D5C /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/native-base/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		68956D0D2382927D001405A8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		689987C923B50179005BCD42 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
+		689987CF23B50292005BCD42 /* librn-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "librn-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68BEBD7F23A3DECE00E66510 /* RNAudioRecorderPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNAudioRecorderPlayer.xcodeproj; path = "../node_modules/react-native-audio-recorder-player/ios/RNAudioRecorderPlayer.xcodeproj"; sourceTree = "<group>"; };
 		68BEBD8523A3DF0000E66510 /* libRNAudioRecorderPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNAudioRecorderPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		68C44BA823B651CB000FEDD1 /* RNTrackPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNTrackPlayer.xcodeproj; path = "../node_modules/react-native-track-player/ios/RNTrackPlayer.xcodeproj"; sourceTree = "<group>"; };
 		68EEF02E23A3E91B00E6774A /* libreact-native-netinfo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-netinfo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B54356071D747EFB260D4AA /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		6F2773C5FAB64366A9FF51EB /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -173,6 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF31C5C3CA4B5AADAA34F290 /* libPods-AppHachibid.a in Frameworks */,
+				689987D023B50292005BCD42 /* librn-fetch-blob.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +282,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				689987CF23B50292005BCD42 /* librn-fetch-blob.a */,
 				68EEF02E23A3E91B00E6774A /* libreact-native-netinfo.a */,
 				68BEBD8523A3DF0000E66510 /* libRNAudioRecorderPlayer.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
@@ -299,6 +311,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		68C44BA923B651CB000FEDD1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				68C44BAF23B651CB000FEDD1 /* libRNTrackPlayer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		7305078A8B3336509FBFCC91 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -317,6 +337,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				68C44BA823B651CB000FEDD1 /* RNTrackPlayer.xcodeproj */,
 				689987C923B50179005BCD42 /* RNFetchBlob.xcodeproj */,
 				68BEBD7F23A3DECE00E66510 /* RNAudioRecorderPlayer.xcodeproj */,
 			);
@@ -483,6 +504,10 @@
 					ProductGroup = 689987CA23B50179005BCD42 /* Products */;
 					ProjectRef = 689987C923B50179005BCD42 /* RNFetchBlob.xcodeproj */;
 				},
+				{
+					ProductGroup = 68C44BA923B651CB000FEDD1 /* Products */;
+					ProjectRef = 68C44BA823B651CB000FEDD1 /* RNTrackPlayer.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -507,6 +532,13 @@
 			fileType = archive.ar;
 			path = libRNAudioRecorderPlayer.a;
 			remoteRef = 68BEBD8323A3DECE00E66510 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		68C44BAF23B651CB000FEDD1 /* libRNTrackPlayer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNTrackPlayer.a;
+			remoteRef = 68C44BAE23B651CB000FEDD1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -904,13 +936,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BF8458RVX6;
 				INFOPLIST_FILE = AppHachibid/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -930,12 +962,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = BF8458RVX6;
 				INFOPLIST_FILE = AppHachibid/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.4;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

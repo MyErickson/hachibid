@@ -39,7 +39,7 @@ const  ViewListNotification =({
                       title={
                         question || precision?
                         <View style={{flexDirection:"row",marginLeft:0,paddingLeft:0}}>
-                          <View style={profileUser === "user" ? [Style.title,{ width:wp("68%")}] : [Style.title,{ width:wp("65%")}]}>
+                          <View style={profileUser === "user" ? [Style.title,{ width:wp("65%")}] : [Style.title,{ width:wp("70%")}]}>
                             <Text>{question ? question.text:precision}</Text>
                           </View>
                         </View>:profileUser ==="admin" &&( !audio  ?
