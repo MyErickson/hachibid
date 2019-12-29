@@ -17,9 +17,8 @@ import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import RNFetchBlob from 'rn-fetch-blob';
-// import TrackPlayer from 'react-native-track-player';
 import { osMobile } from '../../store/actionRequetes/actionRequetes'
-
+import SoundPlayer from 'react-native-sound-player'
 
 
 var timer;
@@ -50,7 +49,6 @@ class MyQuestions extends Component {
       answerCurrent:"",
       dataMessageCurrent:undefined,
       isQuestion:undefined,
-
       hideInputGifted:undefined
 
 
@@ -593,7 +591,7 @@ if(cancel){
         
         filename : this.path,
         // use custom MIME type
-        type : Platform.OS==="ios"? 'application/mp3':'application/mp3',
+        type :'application/mp3',
         // data it's the path
         data: Platform.OS === "ios" ?pathIOS+this.path :RNFetchBlob.wrap(this.path)
         },
@@ -636,69 +634,62 @@ if(cancel){
     this.setState({
       play:true
     })
- if(Platform.OS === 'ios'){
 
-  let track = {url:this.path}
-  TrackPlayer.setupPlayer(track ).then((res) => {
-  console.log("TCL: MyQuestions -> onStartPlay -> res", res)
-    // The player is ready to be used
-  });
 
-  timer = setInterval(()=>{
-   
-    this.setState({
-      currentPositionSec: 100 + this.state.currentPositionSec
-   })
-   if (this.state.currentPositionSec > parseInt(duration)){
-      this.onStopPlay(propsSounder)
-   }
- },100)
+      const { duration ,contentUrl} = propsSounder.currentMessage.audio
+    
 
- }else {
-
-  const { duration } = propsSounder.currentMessage.audio
- 
-
-  const msg = await this.audioRecorderPlayer.startPlayer(this.path);
-  console.log("TCL: MyQuestions -> onStartPlay -> msg", msg)
-  // this.path = msg
-   console.log("thisptah==>",this.path);
+      // const msg = await this.audioRecorderPlayer.startPlayer(this.path);
+      // console.log("TCL: MyQuestions -> onStartPlay -> msg", msg)
+      // // this.path = msg
+      // console.log("thisptah==>",this.path);
 
 
 
-   RNFetchBlob.fs.exists(this.path)
-   .then((exist) => {
-       console.log(`file ${exist ? '' : 'not'} exists`)
-   })
-   RNFetchBlob.fs.exists(msg)
-   .then((exist) => {
-       console.log(`file ${exist ? '' : 'not'} exists`)
-   })
-   timer = setInterval(()=>{
-   
-    this.setState({
-      currentPositionSec: 100 + this.state.currentPositionSec
-   })
-   if (this.state.currentPositionSec > parseInt(duration)){
-      this.onStopPlay(propsSounder)
-   }
- },100)
-   await this.audioRecorderPlayer.addPlayBackListener(async(e) => {
+      // RNFetchBlob.fs.exists(this.path)
+      // .then((exist) => {
+      //     console.log(`file ${exist ? '' : 'not'} exists`)
+      // })
+      // RNFetchBlob.fs.exists(msg)
+      // .then((exist) => {
+      //     console.log(`file ${exist ? '' : 'not'} exists`)
+      // })
 
-    if (e.current_position === e.duration) {
-       this.audioRecorderPlayer.stopPlayer(this.path).catch(()=>{});
+  try {
+      console.log("TCL: MyQuestions -> openModal -> contentUrl", contentUrl)
+      // or play from url
+      SoundPlayer.loadUrl(contentUrl)
+      const  _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener('FinishedLoadingURL', ({ success, url }) => {
+        console.log('finished loading url', success, url)
+        SoundPlayer.play()
+      }) 
+      timer = setInterval(()=>{
+      
+        this.setState({
+          currentPositionSec: 100 + this.state.currentPositionSec
+      })
+      if (this.state.currentPositionSec > parseInt(duration)){
+          this.onStopPlay(propsSounder)
+      }
+    },100)
+
+    } catch (e) {
+        console.log(`cannot play the sound file`, e)
     }
-    return e.current_position;
-  });
- }
+
+
     
 
 
 
-     
+      // await this.audioRecorderPlayer.addPlayBackListener(async(e) => {
+
+      //   if (e.current_position === e.duration) {
+      //     this.audioRecorderPlayer.stopPlayer(this.path).catch(()=>{});
+      //   }
+      //   return e.current_position;
+      // });
  
-
-
     
     
   }
@@ -721,14 +712,18 @@ if(cancel){
 
 
   onPausePlay =  (propsSounder,currentPositionSec) => {
+   
 //  const path = osMobile(propsSounder)
-  clearInterval(timer)  
+  clearInterval(timer) 
 
+    SoundPlayer.stop()
+
+  // SoundPlayer.pause()
    this.setState({
      play:false ,
-     currentPositionSec:currentPositionSec
+     currentPositionSec:0
     })
-  this.audioRecorderPlayer.pausePlayer(this.path);
+  // this.audioRecorderPlayer.pausePlayer(this.path);
   
   };
 
@@ -738,41 +733,43 @@ if(cancel){
   openModal=async(props)=>{
 
    const { contentUrl } = props.currentMessage.audio
-   console.log("TCL: MyQuestions -> openModal -> contentUrl", props.currentMessage.audio)
+
+   console.log("TCL: MyQuestions -> openModal -> contentUrl", contentUrl)
 
     // upload file audio on device
-    RNFetchBlob
-    .config({
-      // response data will be saved to this path if it has access right.
-      fileCache : false,
-      path : Platform.OS === "ios"? RNFetchBlob.fs.dirs.CacheDir+`/${Date.now()}.m4a`:`/sdcard/${Date.now()}.mp3`,
+    // RNFetchBlob
+    // .config({
+    //   // response data will be saved to this path if it has access right.
+    //   fileCache : false,
+    //   path : Platform.OS === "ios"? RNFetchBlob.fs.dirs.CacheDir+`/${Date.now()}.m4a`:`/sdcard/${Date.now()}.m4a`,
       
   
-    })
-    .fetch('GET', contentUrl)
-    .then(async(res) => {
-    console.log("TCL: MyQuestions -> openModal -> res", res.path() )
-      let pathIos =  res.path()
-      let namePathIos = pathIos.split('/')
-      console.log("TCL: MyQuestions -> openModal -> res", namePathIos[10] )
-      this.path = Platform.OS === 'ios'? res.path() : res.path()
+    // })
+    // .fetch('GET', contentUrl)
+    // .then(async(res) => {
+    // console.log("TCL: MyQuestions -> openModal -> res", res.path() )
+    //   let pathIos =  res.path()
+    //   let namePathIos = pathIos.split('/')
+    //   console.log("TCL: MyQuestions -> openModal -> res", namePathIos[10] )
+    //   this.path = Platform.OS === 'ios'? res.path() : res.path()
 
 
-      RNFetchBlob.fs.exists(res.path())
-      .then((exist) => {
+    //   RNFetchBlob.fs.exists(res.path())
+    //   .then((exist) => {
      
-          console.log(`file ${exist ? '' : 'not'} exists`)
-      })
+    //       console.log(`file ${exist ? '' : 'not'} exists`)
+    //   })
       
-      if(Platform.OS === "android"){
-        RNFetchBlob.fs.scanFile([ { path : res.path(), mime : 'audio/mp3' } ])
-      }
-    }).catch((err)=>{
+    //   if(Platform.OS === "android"){
+    //     RNFetchBlob.fs.scanFile([ { path : res.path(), mime : 'audio/mp3' } ])
+    //   }
+    // }).catch((err)=>{
      
-    console.log("TCL: MyQuestions -> openModal -> err", err)
+    // console.log("TCL: MyQuestions -> openModal -> err", err)
       
-    })
-    
+    // })
+   
+
       clearInterval(timer) 
       this.setState({
         isModalVisible: true,
@@ -785,10 +782,11 @@ if(cancel){
 
  closeModal=(props)=>{
   clearInterval(timer) 
-
+  
+  SoundPlayer.stop()
   // remove file audio 
-  RNFetchBlob.fs.unlink(this.path)
-  Platform.OS === "android" && RNFetchBlob.fs.scanFile([ { path : this.path, mime : 'audio/mp3' } ])
+  // RNFetchBlob.fs.unlink(this.path)
+  // Platform.OS === "android" && RNFetchBlob.fs.scanFile([ { path : this.path, mime : 'audio/mp3' } ])
 
   this.setState({
     isModalVisible: false,
