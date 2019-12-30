@@ -6,7 +6,7 @@ import { Style} from './styleMyQuestions';
 import Menu from '../../containers/Menu/Menu'
 import FiltrateContainer from '../../containers/Filtrate/Filtrate'
 import {request, PERMISSIONS} from 'react-native-permissions';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer  from 'react-native-audio-recorder-player';
 import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound/PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -17,13 +17,13 @@ import AlertDialog  from '../AlertDialog/AlertDialog'
 import axios from 'axios';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import RNFetchBlob from 'rn-fetch-blob';
-import { osMobile } from '../../store/actionRequetes/actionRequetes'
 import SoundPlayer from 'react-native-sound-player'
 
 
 var timer;
 var timerMessage;
-const pathIOS = "RNFetchBlob-file://private/var/mobile/Containers/Data/Application/EDF4B0AC-AFDD-40A4-B2CD-02B8916E11BD/tmp/"
+var  timerRecord ;
+// const pathIOS = "/var/mobile/Containers/Data/Application/EDF4B0AC-AFDD-40A4-B2CD-02B8916E11BD/tmp/"
 
 
 class MyQuestions extends Component {
@@ -49,7 +49,8 @@ class MyQuestions extends Component {
       answerCurrent:"",
       dataMessageCurrent:undefined,
       isQuestion:undefined,
-      hideInputGifted:undefined
+      hideInputGifted:undefined,
+      currentDurationSecRecord:0
 
 
     };
@@ -57,7 +58,8 @@ class MyQuestions extends Component {
     this.permission = undefined;
     this.writeExternalStorage = undefined ;
     this.audioRecorderPlayer = new AudioRecorderPlayer();
-    this.path = undefined
+    this.path = undefined;
+    this.pathIOS =undefined
   }
     
     async componentDidMount() {
@@ -137,7 +139,7 @@ class MyQuestions extends Component {
 
 
     static async getDerivedStateFromProps(props, state){ 
-    // console.log("TCL: MyQuestions -> getDerivedStateFromProps -> props", props)
+ 
    
           // si c'est un admin 
           if(props.dataProfileUser && props.dataProfileUser.data.roleTitle !== "Utilisateur" ){
@@ -348,9 +350,7 @@ class MyQuestions extends Component {
       })
   
     }          
-     
 
-    
 
   }
 
@@ -477,8 +477,12 @@ class MyQuestions extends Component {
 
   renderActions=(props)=>{
    
-    const { ProfileUser, stop ,dataMessageCurrent } = this.state
- 
+    const { ProfileUser, stop ,dataMessageCurrent ,currentDurationSecRecord} = this.state
+    console.log("TCL: MyQuestions -> renderActions -> currentDurationSecRecord", currentDurationSecRecord)
+    const counter= currentDurationSecRecord && ((120-(parseInt(currentDurationSecRecord))/1000))/60
+
+
+    if(counter){console.log("TCL: MyQuestions -> renderActions -> counter", counter)}
     if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent ){
       if (stop){
         return (
@@ -487,7 +491,10 @@ class MyQuestions extends Component {
               <View style={[Style.containerIconRecorder,{backgroundColor:"red"}]}>
               <Icon style={{color:"white"}} name="mic-off"  {...props} onPress={()=>this.onStopRecord()}/>
               </View>
-            
+              <Text 
+            style={{paddingTop:15,color:"red",fontSize:20}}
+            >{counter&&counter.toFixed(2)}</Text>
+      
             <Text 
             style={{paddingTop:15,color:"red"}}
             onPress={()=>this.onStopRecord(false)}
@@ -512,10 +519,9 @@ class MyQuestions extends Component {
 
 // ******************************* Methode Soundrecorder *******************************
 
- 
 
   onStartRecord = async () => {
-    const { stop } =this.state
+    const { stop} =this.state
     this.setState({
       stop:!stop,
       hideInputGifted:true
@@ -523,16 +529,30 @@ class MyQuestions extends Component {
    
    
     this.path =  Platform.select({
-      ios:`${Date.now()}.m4a`,
-      android: `sdcard/${Date.now()}.mp3`
+      ios:`${Date.now()}.aac`,
+      android: `sdcard/${Date.now()}.aac`
     })
-    console.log("TCL: MyQuestions -> onStartRecord -> this.path", this.path)
+    const audioSet= {
+      AVEncoderAudioQualityKeyIOS: 96,
+      AVNumberOfChannelsKeyIOS: 2,
+      AVFormatIDKeyIOS: 'aac',
+    };
+  
 
-     const url = await this.audioRecorderPlayer.startRecorder(this.path);
-     console.log("TCL: MyQuestions -> onStartRecord -> url", url)
+
+     const url = await this.audioRecorderPlayer.startRecorder(this.path,audioSet);
+
+     timerRecord = setInterval(()=>{
+      const {currentDurationSecRecord } = this.state
+      this.setState({
+        currentDurationSecRecord: 1000 + currentDurationSecRecord
+    })
+    if (currentDurationSecRecord === 120000){
+        this.onStopRecord()
+    }
+  },1000)
 
     this.audioRecorderPlayer.addRecordBackListener((e) => {
-    console.log("TCL: MyQuestions -> onStartRecord -> e", e)
       
 
       this.setState({
@@ -551,35 +571,32 @@ class MyQuestions extends Component {
  
 
   onStopRecord = async (cancel=true) => {
-
+    
     const { stop,isQuestion,recordDuration,dataMessageCurrent } =this.state
-    console.log("TCL: MyQuestions -> onStopRecord -> recordDuration", recordDuration)
-
+ 
     const {
       receiveResponseConnection,
       sendPrecisionForQuestion,
       sendAnswersForQuestion,
       receiveDatafilterMessageMyQuestion,}=this.props
 
-
+    clearInterval(timerRecord)
     this.setState({
       stop:!stop,
-      hideInputGifted:false
+      hideInputGifted:false,
+      currentDurationSecRecord:0
     })
  
     const result = await this.audioRecorderPlayer.stopRecorder(this.path);
 
+     
     this.audioRecorderPlayer.removeRecordBackListener(this.path);
-    console.log("TCL: MyQuestions -> onStopRecord -> this.path", this.path)
-    console.log("TCL: MyQuestions -> onStopRecord -> RNFetchBlob.wrap(this.path)", RNFetchBlob.wrap(this.path))
-    console.log("TCL: MyQuestions -> onStopRecord -> ", RNFetchBlob.wrap("/"+this.path))
-    console.log("TCL: MyQuestions -> onStopRecord -> result", result)
-    console.log("TCL: MyQuestions -> onStopRecord -> RNFetchBlob.wrap(result)", RNFetchBlob.wrap(result))
-    console.log("TCL: MyQuestions -> onStopRecord -> result", "RNFetchBlob-"+result)
-    
+
+
+
 
 //requete avec la lib RNFetchBlob
-if(cancel){
+  if(cancel){
  
     RNFetchBlob.fetch("post",'https://rabbin-dev.digitalcube.fr/api/audios/upload',{
       Authorization : "Bearer "+receiveResponseConnection,
@@ -591,9 +608,9 @@ if(cancel){
         
         filename : this.path,
         // use custom MIME type
-        type :'application/mp3',
+        type :'audio/mp3',
         // data it's the path
-        data: Platform.OS === "ios" ?pathIOS+this.path :RNFetchBlob.wrap(this.path)
+        data: Platform.OS === "ios" ? "RNFetchBlob-file://"+RNFetchBlob.fs.dirs.CacheDir+'/'+this.path  :RNFetchBlob.wrap(this.path)
         },
         {
           // name est la clé attendu pour le backend
@@ -603,7 +620,7 @@ if(cancel){
       ]).then((res) => {
       console.log("TCL: MyQuestions -> onStopRecord -> res", res.json(),recordDuration)
     
-       
+     
         let data = this._dataInfo()
         data.idMessage  = dataMessageCurrent.idMessage
         data.audio = res.json()["@id"]
@@ -629,7 +646,6 @@ if(cancel){
     
 
   onStartPlay = async (propsSounder) => {
-    // const path = osMobile(propsSounder)
 
     this.setState({
       play:true
@@ -639,30 +655,15 @@ if(cancel){
       const { duration ,contentUrl} = propsSounder.currentMessage.audio
     
 
-      // const msg = await this.audioRecorderPlayer.startPlayer(this.path);
-      // console.log("TCL: MyQuestions -> onStartPlay -> msg", msg)
-      // // this.path = msg
-      // console.log("thisptah==>",this.path);
-
-
-
-      // RNFetchBlob.fs.exists(this.path)
-      // .then((exist) => {
-      //     console.log(`file ${exist ? '' : 'not'} exists`)
-      // })
-      // RNFetchBlob.fs.exists(msg)
-      // .then((exist) => {
-      //     console.log(`file ${exist ? '' : 'not'} exists`)
-      // })
-
   try {
       console.log("TCL: MyQuestions -> openModal -> contentUrl", contentUrl)
       // or play from url
-      SoundPlayer.loadUrl(contentUrl)
-      const  _onFinishedLoadingURLSubscription = SoundPlayer.addEventListener('FinishedLoadingURL', ({ success, url }) => {
+     SoundPlayer.loadUrl(contentUrl)
+
+      SoundPlayer.addEventListener('FinishedLoadingURL', ({ success, url }) => {
         console.log('finished loading url', success, url)
-        SoundPlayer.play()
-      }) 
+          SoundPlayer.play()
+      })
       timer = setInterval(()=>{
       
         this.setState({
@@ -676,20 +677,6 @@ if(cancel){
     } catch (e) {
         console.log(`cannot play the sound file`, e)
     }
-
-
-    
-
-
-
-      // await this.audioRecorderPlayer.addPlayBackListener(async(e) => {
-
-      //   if (e.current_position === e.duration) {
-      //     this.audioRecorderPlayer.stopPlayer(this.path).catch(()=>{});
-      //   }
-      //   return e.current_position;
-      // });
- 
     
     
   }
@@ -697,7 +684,7 @@ if(cancel){
 
 
   onStopPlay=(propsSounder)=>{
-    //  const path = osMobile(propsSounder)
+   
      
   
     clearInterval(timer)  
@@ -712,18 +699,17 @@ if(cancel){
 
 
   onPausePlay =  (propsSounder,currentPositionSec) => {
-   
-//  const path = osMobile(propsSounder)
+
   clearInterval(timer) 
 
     SoundPlayer.stop()
 
-  // SoundPlayer.pause()
+
    this.setState({
      play:false ,
      currentPositionSec:0
     })
-  // this.audioRecorderPlayer.pausePlayer(this.path);
+
   
   };
 
@@ -736,38 +722,6 @@ if(cancel){
 
    console.log("TCL: MyQuestions -> openModal -> contentUrl", contentUrl)
 
-    // upload file audio on device
-    // RNFetchBlob
-    // .config({
-    //   // response data will be saved to this path if it has access right.
-    //   fileCache : false,
-    //   path : Platform.OS === "ios"? RNFetchBlob.fs.dirs.CacheDir+`/${Date.now()}.m4a`:`/sdcard/${Date.now()}.m4a`,
-      
-  
-    // })
-    // .fetch('GET', contentUrl)
-    // .then(async(res) => {
-    // console.log("TCL: MyQuestions -> openModal -> res", res.path() )
-    //   let pathIos =  res.path()
-    //   let namePathIos = pathIos.split('/')
-    //   console.log("TCL: MyQuestions -> openModal -> res", namePathIos[10] )
-    //   this.path = Platform.OS === 'ios'? res.path() : res.path()
-
-
-    //   RNFetchBlob.fs.exists(res.path())
-    //   .then((exist) => {
-     
-    //       console.log(`file ${exist ? '' : 'not'} exists`)
-    //   })
-      
-    //   if(Platform.OS === "android"){
-    //     RNFetchBlob.fs.scanFile([ { path : res.path(), mime : 'audio/mp3' } ])
-    //   }
-    // }).catch((err)=>{
-     
-    // console.log("TCL: MyQuestions -> openModal -> err", err)
-      
-    // })
    
 
       clearInterval(timer) 
@@ -784,9 +738,6 @@ if(cancel){
   clearInterval(timer) 
   
   SoundPlayer.stop()
-  // remove file audio 
-  // RNFetchBlob.fs.unlink(this.path)
-  // Platform.OS === "android" && RNFetchBlob.fs.scanFile([ { path : this.path, mime : 'audio/mp3' } ])
 
   this.setState({
     isModalVisible: false,

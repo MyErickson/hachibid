@@ -114,12 +114,3 @@ export const presetColors = {
  }
 
 
- export const   osMobile =(propsSounder)=>{
-    const currentPath = propsSounder.currentMessage.text.split('//')
-    var path 
-    if(Platform.OS === 'ios'){
-      return path =  currentPath[2]
-    }else{
-      return path =  currentPath[1]
-    }
-  }

@@ -5648,10 +5648,10 @@ react-native-animated-linear-gradient@^1.2.0:
     prop-types "^15.6.0"
     rgb2hex "^0.1.0"
 
-react-native-audio-recorder-player@^2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/react-native-audio-recorder-player/-/react-native-audio-recorder-player-2.4.3.tgz#430a84a751a245de4fd6b603b16479a5664e180e"
-  integrity sha512-JQsM92uSRjBXlY/6TAuk/aRwWTgZDaaZZmuSnv3wPrQJMQtSdg84EhJUAXawkT2H7URfymb9gELEqWxf0ChfWQ==
+react-native-audio-recorder-player@^2.4.4-rc.1:
+  version "2.4.4-rc.1"
+  resolved "https://registry.yarnpkg.com/react-native-audio-recorder-player/-/react-native-audio-recorder-player-2.4.4-rc.1.tgz#8f8e9dca8b7e43f5ee4327761b944ea9936f9937"
+  integrity sha512-OdPfVCPKimpA7D+fSu+k2SNCpedWpaqfcE+W25oj0T6LPqv0JLGsTRSRLWSFXHeCC/Zofc8+GdZH4PU7IZ1b3w==
   dependencies:
     dooboolab-welcome "^1.1.1"
 

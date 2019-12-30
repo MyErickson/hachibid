@@ -43,7 +43,7 @@ const PlaySound = ({
         </View>
           
       <View  style={Style.recorderPlaySound}>
-            {play?<IconElement  style={Style.iconRecorder} size={35} name="pause" onPress={()=>onPausePlay(propsSounder,currentPositionSec)
+            {play?<IconElement  style={Style.iconRecorder} size={35} name="stop" onPress={()=>onPausePlay(propsSounder,currentPositionSec)
         }/>  
             :<Icon style={Style.iconRecorder} name="play" onPress={()=>onStartPlay(propsSounder)}/> }
 
