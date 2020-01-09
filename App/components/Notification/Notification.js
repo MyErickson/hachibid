@@ -97,7 +97,7 @@ class Notification extends Component {
     
     return (
       <View style={{flex:1}}>
-        <Menu nameMenu="Notification" navigation={this.props.navigation} />
+        <Menu nameMenu="Notifications" navigation={this.props.navigation} />
         { profileUser  && profileUser.roles[0] !== "ROLE_USER" ?
         <Tabs
          textStyle={{coloe:"white"}}

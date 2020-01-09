@@ -2,12 +2,12 @@ import React, {Component} from 'react'
 import { View,  Text,  Platform } from 'react-native';
 import {Icon } from 'native-base'
 import { Style} from './styleMyQuestions';
-
+import "moment/locale/fr";
 import Menu from '../../containers/Menu/Menu'
 import FiltrateContainer from '../../containers/Filtrate/Filtrate'
 import {request, PERMISSIONS} from 'react-native-permissions';
 import AudioRecorderPlayer  from 'react-native-audio-recorder-player';
-import { GiftedChat , Bubble, Send , InputToolbar} from 'react-native-gifted-chat'
+import { GiftedChat , Bubble, Send , InputToolbar,Composer} from 'react-native-gifted-chat'
 import PlaySound from './PlaySound/PlaySound';
 import AsyncStorage from '@react-native-community/async-storage';
 import ViewBubble from './ViewBubble/ViewBubble';
@@ -23,7 +23,7 @@ import SoundPlayer from 'react-native-sound-player'
 var timer;
 var timerMessage;
 var  timerRecord ;
-// const pathIOS = "/var/mobile/Containers/Data/Application/EDF4B0AC-AFDD-40A4-B2CD-02B8916E11BD/tmp/"
+
 
 
 class MyQuestions extends Component {
@@ -50,7 +50,8 @@ class MyQuestions extends Component {
       dataMessageCurrent:undefined,
       isQuestion:undefined,
       hideInputGifted:undefined,
-      currentDurationSecRecord:0
+      currentDurationSecRecord:0,
+      hiddenIconSend :true
 
 
     };
@@ -414,13 +415,12 @@ class MyQuestions extends Component {
  
   }
 
-  renderSend(props,dataMessageCurrent,ProfileUser) {
+  renderSend(props,dataMessageCurrent,ProfileUser, hiddenIconSend  ) {
 
-
-    if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent){
+    if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent && hiddenIconSend ){
       return (
      
-        <Send {...props} label={<Icon name="paper-plane" />} />
+        <Send {...props}  label={<Icon name="paper-plane" />} />
   
       );
     }else if (ProfileUser && ProfileUser.roleTitle !== "Administrateur" ){
@@ -434,16 +434,17 @@ class MyQuestions extends Component {
   }
  
   renderInputToolbar(props) {
-
+ 
     return(
       <InputToolbar
       containerStyle={{paddingTop:5}}
+      
       {...props}
       />
     ); 
   }
- 
-  renderComposer=()=> {
+
+  renderChatFooter=()=> {
     const {params} = this.props.navigation.state
     const { showAboveInput , answerCurrent} = this.state
   
@@ -474,15 +475,14 @@ class MyQuestions extends Component {
  
  
   }
-
+   
   renderActions=(props)=>{
    
     const { ProfileUser, stop ,dataMessageCurrent ,currentDurationSecRecord} = this.state
-    console.log("TCL: MyQuestions -> renderActions -> currentDurationSecRecord", currentDurationSecRecord)
+
     const counter= currentDurationSecRecord && ((120-(parseInt(currentDurationSecRecord))/1000))/60
 
 
-    if(counter){console.log("TCL: MyQuestions -> renderActions -> counter", counter)}
     if(ProfileUser && ProfileUser.roleTitle === "Administrateur" && dataMessageCurrent ){
       if (stop){
         return (
@@ -524,7 +524,8 @@ class MyQuestions extends Component {
     const { stop} =this.state
     this.setState({
       stop:!stop,
-      hideInputGifted:true
+      hideInputGifted:true,
+      hiddenIconSend :false
     })
    
    
@@ -584,7 +585,8 @@ class MyQuestions extends Component {
     this.setState({
       stop:!stop,
       hideInputGifted:false,
-      currentDurationSecRecord:0
+      currentDurationSecRecord:0,
+      hiddenIconSend :true
     })
  
     const result = await this.audioRecorderPlayer.stopRecorder(this.path);
@@ -760,7 +762,8 @@ class MyQuestions extends Component {
       propsSounder,
       duration,
       currentPositionSec,
-      _textFilter
+      _textFilter,
+      hiddenIconSend 
      } = this.state
 
 
@@ -805,6 +808,7 @@ class MyQuestions extends Component {
               <GiftedChat
                 inverted={true}
                 scrollToBottom={true}
+                onChangeText={()=>console.log("testtttt")}
                 messages={filter?_messageFilter :_messages}
                 shouldUpdateMessage={()=>_messages}
                 maxComposerHeight={90}
@@ -815,16 +819,19 @@ class MyQuestions extends Component {
                 renderAvatar={null}
                 isAnimated= {true}
                 minInputToolbarHeight={currentScreen?0:49}
-                placeholder={hideInputGifted?"":"Poser une question..."}
+                placeholder={hideInputGifted?"":"Poser ma question"}
                 keyboardShouldPersistTaps="handled"
                 listViewProps={{keyboardDismissMode: 'on-drag' , keyboardShouldPersistTaps:"handled" }}
                 renderBubble={(props)=>this.renderBubble(props)}
-                renderSend={(props)=>this.renderSend(props,dataMessageCurrent,ProfileUser)}
-                renderInputToolbar={currentScreen?()=>undefined:this.renderInputToolbar}
+                renderSend={(props)=>this.renderSend(props,dataMessageCurrent,ProfileUser,  hiddenIconSend  )}
+                renderInputToolbar={currentScreen?()=>undefined:(props)=>this.renderInputToolbar(props,hiddenIconSend)}
                 renderActions={this.renderActions}
-                renderChatFooter={this.renderComposer}
+                renderChatFooter={this.renderChatFooter}
+                renderComposer={ (props)=><Composer {...props} textInputStyle={!hiddenIconSend&& {display:"none"}}/>}
                 timeFormat='HH:mm'
-              
+                dateFormat={'dddd DD MMMM YYYY'}
+                locale={'fr'}
+             
                 user={{
                   _id: ProfileUser ? ProfileUser.id : "user",
 

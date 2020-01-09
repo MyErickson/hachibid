@@ -164,7 +164,7 @@ class Connection extends Component {
     if(storageConnection ){
        
         let decode = await jwtDecode(storageConnection)
-        this.gotToHome(decode,storageConnection)
+         this.gotToHome(decode,storageConnection)
     }
    
    

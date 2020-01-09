@@ -92,18 +92,6 @@ export const Style = StyleSheet.create({
         height:40,
         alignItems:"flex-start"
     },
-    containerIconRecorderOff:{
-        flexDirection:"row",
-        justifyContent:"center",
-        marginBottom:10,
-        marginLeft:10 ,
-        backgroundColor:"red",
-        padding:7,
-        borderRadius:30,
-        width:40,
-        height:40,
-        alignItems:"flex-start"
-    },
     iconRecorder:{
      
         margin:5

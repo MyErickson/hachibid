@@ -93,8 +93,7 @@ class ChatHome extends Component {
         filter:undefined
       })
       this.props.navigation.navigate("MyQuestions")
-        // const allMessages =  this.state._messages
-        // console.log("je suis dans chat home pour alllmessages ",allMessages)
+
       
     }
 
@@ -127,7 +126,7 @@ class ChatHome extends Component {
             />
       <View style={Style.containerButton} >
         <Button  
-        title="Poser une question" 
+        title="Poser ma question" 
         buttonStyle={{ borderRadius:20,padding:10,marginBottom:5}} 
         onPress={this.goToMyQuestion} />
       </View>

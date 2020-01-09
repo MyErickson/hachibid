@@ -28,7 +28,8 @@ const  ViewListNotification =({
               <Card containerStyle={{padding: 0}} >
               {
                   notification&& notification.map((item, i) => {
-                    const { user , userAnswerer, createdAt, text , seen ,audio,question,precision} = item
+                    const { user , userAnswerer, createdAt, text, seen ,audio,question,precision} = item
+                   
                   return (
                       <ListItem
                       key={i}
@@ -49,10 +50,9 @@ const  ViewListNotification =({
                           >
                             <Text>{text.length > 100 ?`${text.slice(0,90)}...`:text}</Text>
                           </ScrollView>
-                          :(<Text style={{margin:5}}>Vous avez reçu un message vocal</Text>)) 
-
+                          :(<Text style={{margin:5}}>Vous avez reçu un message vocal</Text>))
                       }
-                      containerStyle={seen ? {backgroundColor:"#D7DCE1"}:{backgroundColor:"white"}}
+                      containerStyle={seen ? {backgroundColor:"white"}:{backgroundColor:"#D7DCE1"}}
                       chevron={user?<Text style={{fontSize:15,fontWeight:"bold"}}>></Text>:false}
                       leftIcon={{ name: `${audio?"voicemail":icon}` }}
                       subtitle= {
@@ -70,13 +70,13 @@ const  ViewListNotification =({
                           showsVerticalScrollIndicator={false}
                           keyboardShouldPersistTaps="always"
                           >
-                            <Text>{  text.length > 100 ?`${text.slice(0,90)}...`:text}</Text>
+                            <Text>{text && text.length > 100 ?`${text.slice(0,90)}...`:text}</Text>
                           </ScrollView>}
 
                           <View style={{flexDirection:'row',justifyContent:"space-between",}}>
                             <Text style={{color:"#009938"}}>{user?user.name :userAnswerer.name }</Text>
                             <Text style={{color:"white"}}>{`${createdAt.getDate()}.${createdAt.getMonth()}.${createdAt.getFullYear()}`}</Text>
-                          </View>
+                          </View> 
                         </View>}
                     
                       bottomDivider

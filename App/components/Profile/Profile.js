@@ -312,7 +312,7 @@ class Profile extends Component {
                          maxLength={255}
                          value={password}
                          onChange={this.collectDataForUpdate}
-                         onSubmitEditing={()=>this.openModal("êtes vous sur de vouloir modifier vos informations ?","register") }
+                         onSubmitEditing={()=>this.openModal("Êtes-vous sur de vouloir modifier vos informations ?","register") }
                          returnKeyType="send"
                          />
                         
@@ -325,14 +325,14 @@ class Profile extends Component {
                         <Button 
                         containerStyle={Style.button}
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(41,113,232,0.8)'}}
-                        onPress= {()=>this.openModal("êtes vous sur de vouloir modifier vos informations ?","register") }
+                        onPress= {()=>this.openModal("Êtes-vous sur de vouloir modifier vos informations ?","register") }
                         title= 'Modifier'
                        />
                         <Button 
                         containerStyle={Style.button}
                         buttonStyle={{borderRadius:30, backgroundColor:'rgba(232,63,63,0.8)'}}
-                        onPress= {()=>this.openModal("êtes vous sur de vouloir vous déconnecter ?","logOut") }
-                        title= 'déconnexion'
+                        onPress= {()=>this.openModal("Êtes-vous sur de vouloir vous déconnecter ?","logOut") }
+                        title= 'Déconnexion'
                        />
                        
                 </View>             

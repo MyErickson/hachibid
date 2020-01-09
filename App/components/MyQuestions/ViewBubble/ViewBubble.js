@@ -23,7 +23,7 @@ class viewBubble extends Component{
         this.setState({
           alertVisible:true,
          
-          alertText:"Pouvez vous me dire ce que vous n'avez pas compris ou ce que vous attendez comme précision ? ",
+          alertText:"Pouvez-vous me dire ce que vous n'avez pas compris ou ce que vous attendez comme précision ? ",
           askPrecision:true,
           alertConfirm:true,
           style:true,
@@ -44,7 +44,7 @@ class viewBubble extends Component{
       yesConfirm=(text)=>{
  
         this.setState({
-          alertText:"êtes vous sur de vouloir faire la demande  de précision ?",
+          alertText:"Êtes-vous sur de vouloir faire la demande de précision ?",
           textValue:text,
           askPrecision:false,
           alertConfirm:true,
@@ -124,7 +124,7 @@ class viewBubble extends Component{
                         onPress={question ? ()=>showMessage(true) :()=>showMessage(false)}
                         style={{flexDirection:"row"}}
                     >
-                        <Text  style={{fontSize:11, color:"green",fontWeight:"bold",marginTop:3}}>{question ? "plus d'info" : "répondre"}</Text>
+                        <Text  style={{fontSize:11, color:"green",fontWeight:"bold",marginTop:3}}>{question ? "Plus d'info" : "Répondre"}</Text>
                         <Text style={{fontSize:15,marginRight:10, color:"green",fontWeight:"bold"}}> + </Text>
             
                     </TouchableOpacity>)
@@ -133,7 +133,7 @@ class viewBubble extends Component{
                         onPress={()=>this.alertPrecision(props.currentMessage)}
                         style={{flexDirection:"row"}}
                         >
-                        <Text  style={{fontSize:11, marginLeft:50,color:"green",fontWeight:"bold",marginTop:3}}>plus de précision</Text>
+                        <Text  style={{fontSize:11, marginLeft:50,color:"green",fontWeight:"bold",marginTop:3}}>Plus de précision</Text>
                         <Text style={{fontSize:15, color:"green",fontWeight:"bold",marginRight:20}}> + </Text>
                 
                     </TouchableOpacity>)

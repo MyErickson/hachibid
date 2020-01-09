@@ -43,7 +43,7 @@ class AlertDialog extends Component{
             <Dialog.Container 
             visible={alertVisible}
             headerStyle={{borderRadius:30 }}
-            contentStyle={{width:wp("90%"),borderRadius:14,justifyContent:"space-between"}}
+            contentStyle={{width:wp("90%"),borderRadius:14,justifyContent:"space-between",marginBottom:Platform.OS==='ios'?30:0}}
             buttonSeparatorStyle={{color:"black"}} >
             
               <Dialog.Description style={style? [Style.register,{color:"green"}] :[Style.register,{color:"red"}] }>
@@ -54,6 +54,7 @@ class AlertDialog extends Component{
              { askPrecision &&
              
                <Dialog.Input
+               
                maxLength={255}
                value={textValue}
                onChangeText={this.textPrecision}
@@ -66,7 +67,7 @@ class AlertDialog extends Component{
                   bold={true} 
                   style={Platform.OS === "ios"? Style.buttonIos:[Style.buttonAndroid,{backgroundColor:"#0B6ACA"}]} 
                   color="white"
-                  label= { askPrecision ? "Envoyé" : "Oui"}
+                  label= { askPrecision ? "Envoyer" : "Oui"}
                   onPress={()=> askPrecision ? yesConfirm(textValue) :sendPrecision ? sendPrecision(): yesConfirm(logOutOrRegister) } />
                 
                   <Dialog.Button 
@@ -79,7 +80,7 @@ class AlertDialog extends Component{
               
               :
               
-              noTextClose ?<Dialog.Button  label="ok,j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
+              noTextClose ?<Dialog.Button  label="ok, j'ai compris" onPress={closeAlert}/> : <Dialog.Button label=""/> 
               
                }
         
