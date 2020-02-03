@@ -194,7 +194,6 @@ class Profile extends Component {
     yesConfirm=(logOutOrRegister)=>{
        
         if(logOutOrRegister === "register"){
-            console.log("yes confir vaut ",logOutOrRegister)
             this.goToRegister()
         }else{
             this.logOut()
@@ -269,7 +268,7 @@ class Profile extends Component {
                         <Item last style={Style.containerInput}>
                         <Icon  active name='person'/> 
                             <Input 
-                       
+                            
                              name="login"
                              maxLength={255}
                              placeholder='Identifiant *'

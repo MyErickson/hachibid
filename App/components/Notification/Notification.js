@@ -93,6 +93,7 @@ class Notification extends Component {
 
   render() {
      const { notificationQuestions ,profileUser,notificationPrecision,notificationAnswerUser } =this.state
+     console.log("TCL: Notification -> render -> notificationPrecision", notificationPrecision)
    
     
     return (

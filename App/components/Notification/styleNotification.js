@@ -25,7 +25,14 @@ export const Style = StyleSheet.create({
         backgroundColor:"white",
         padding:5,
         borderRadius:5
-    }
+    },
+    containerTitle:{
+        flexDirection:"row",
+        marginLeft:0,
+        paddingLeft:0,
+        backgroundColor:"white",
+        borderRadius:5}
+
   
     
 

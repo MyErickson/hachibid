@@ -11,7 +11,7 @@ import Menu from '../../components/Menu/Menu'
 
 // Action Creators
 import { dataMessagesHome, } from '../../store/actionCreator/ChatHome';
-
+import { initializeState,} from '../../store/actionCreator/Profile';
 /* === State (données) ===
  * - mapStateToProps retroune un objet de props pour le composant de présentation
  * - mapStateToProps met à dispo 2 params
@@ -37,6 +37,9 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   dataMessagesHome: (token) => {
     dispatch(dataMessagesHome(token));
+  },
+  initializeState:()=>{
+    dispatch(initializeState())
   },
 })
 

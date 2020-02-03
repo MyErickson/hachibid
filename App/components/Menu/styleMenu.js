@@ -18,7 +18,7 @@ export const Style = StyleSheet.create({
    
         position: 'absolute',
          top: -7,
-          right: -7 ,
+          right: 8 ,
           zIndex:1,
          minWidth:25,
          height:19,

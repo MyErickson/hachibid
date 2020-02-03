@@ -16,7 +16,10 @@ const  ViewListNotification =({
        profileUser
      
 })=> {
-
+            
+  const modif = (value)=>{
+    return value < 10 ?"0" + value  : value
+  }
         return (
           <ScrollView
             bounces={true}
@@ -29,7 +32,20 @@ const  ViewListNotification =({
               {
                   notification&& notification.map((item, i) => {
                     const { user , userAnswerer, createdAt, text, seen ,audio,question,precision} = item
-                   
+                    const date = new Date(createdAt)
+
+                    const hours = date.getHours()
+                    const modifHours = modif(hours)
+
+                    const minutes = date.getMinutes()
+                    const modifMinutes  = modif(minutes)
+
+                    const showTime = modifHours+ ":"+modifMinutes
+
+                    const month = date.getUTCMonth()
+                    const modifMonth = month  < 10 ?"0" + (month  +1) : month 
+                    
+                    const showDate = date.getDate() +"/"+ modifMonth +"/"+date.getFullYear()
                   return (
                       <ListItem
                       key={i}
@@ -39,8 +55,8 @@ const  ViewListNotification =({
                       roundAvatar
                       title={
                         question || precision?
-                        <View style={{flexDirection:"row",marginLeft:0,paddingLeft:0}}>
-                          <View style={profileUser === "user" ? [Style.title,{ width:wp("65%")}] : [Style.title,{ width:wp("70%")}]}>
+                        <View style={Style.containerTitle}>
+                          <View style={profileUser === "user" ? [Style.title] : [Style.title]}>
                             <Text>{question ? question.text:precision}</Text>
                           </View>
                         </View>:profileUser ==="admin" &&( !audio  ?
@@ -52,9 +68,13 @@ const  ViewListNotification =({
                           </ScrollView>
                           :(<Text style={{margin:5}}>Vous avez reçu un message vocal</Text>))
                       }
+
+
                       containerStyle={seen ? {backgroundColor:"white"}:{backgroundColor:"#D7DCE1"}}
                       chevron={user?<Text style={{fontSize:15,fontWeight:"bold"}}>></Text>:false}
                       leftIcon={{ name: `${audio?"voicemail":icon}` }}
+
+
                       subtitle= {
                         <View style={{backgroundColor:"#8ECCE7"}}>
                           {profileUser === "user"  && ( !audio ?
@@ -66,7 +86,8 @@ const  ViewListNotification =({
                           </ScrollView>
                           : (<Text style={{padding:5}}>Vous avez reçu un message vocal</Text>) ) }
 
-                          { precision && <ScrollView style={{maxHeight:92,margin:5}}
+                          { precision && 
+                          <ScrollView style={{maxHeight:92,margin:5}}
                           showsVerticalScrollIndicator={false}
                           keyboardShouldPersistTaps="always"
                           >
@@ -75,7 +96,8 @@ const  ViewListNotification =({
 
                           <View style={{flexDirection:'row',justifyContent:"space-between",}}>
                             <Text style={{color:"#009938"}}>{user?user.name :userAnswerer.name }</Text>
-                            <Text style={{color:"white"}}>{`${createdAt.getDate()}.${createdAt.getMonth()}.${createdAt.getFullYear()}`}</Text>
+                            <Text style={{color:"white"}}>{showTime }</Text>
+                            <Text style={{color:"white"}}>{showDate }</Text>
                           </View> 
                         </View>}
                     
