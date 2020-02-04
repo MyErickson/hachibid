@@ -114,3 +114,33 @@ export const presetColors = {
  }
 
 
+
+ export const modif = (value)=>{
+    return value < 10 ?"0" + value  : value
+  }
+
+
+  export const dateTime =(date)=>{
+      
+    const data = new FormData()
+
+
+    const hours = date.getHours()
+    const modifHours = modif(hours)
+
+
+    const minutes = date.getMinutes()
+    const modifMinutes  = modif(minutes)
+
+
+    const showTime = modifHours+ ":"+modifMinutes
+    data.showTime = showTime
+
+    const month = date.getUTCMonth()
+    const modifMonth = month  < 10 ?"0" + (month  +1) : month 
+    
+    const showDate = date.getDate() +"/"+ modifMonth +"/"+date.getFullYear()
+    data.showDate = showDate
+    return data 
+
+  }

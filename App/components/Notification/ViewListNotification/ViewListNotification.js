@@ -3,10 +3,7 @@ import { ScrollView,View,Text  } from 'react-native'
 import { Card, ListItem } from 'react-native-elements'
 
 import { Style } from '../styleNotification'
-import {
-  widthPercentageToDP as wp,
-
-} from "react-native-responsive-screen";
+import { dateTime } from "../../../store/actionRequetes/actionRequetes"
 
 const  ViewListNotification =({ 
        notification,
@@ -33,19 +30,8 @@ const  ViewListNotification =({
                   notification&& notification.map((item, i) => {
                     const { user , userAnswerer, createdAt, text, seen ,audio,question,precision} = item
                     const date = new Date(createdAt)
+                    const data = dateTime(date)
 
-                    const hours = date.getHours()
-                    const modifHours = modif(hours)
-
-                    const minutes = date.getMinutes()
-                    const modifMinutes  = modif(minutes)
-
-                    const showTime = modifHours+ ":"+modifMinutes
-
-                    const month = date.getUTCMonth()
-                    const modifMonth = month  < 10 ?"0" + (month  +1) : month 
-                    
-                    const showDate = date.getDate() +"/"+ modifMonth +"/"+date.getFullYear()
                   return (
                       <ListItem
                       key={i}
@@ -96,8 +82,8 @@ const  ViewListNotification =({
 
                           <View style={{flexDirection:'row',justifyContent:"space-between",}}>
                             <Text style={{color:"#009938"}}>{user?user.name :userAnswerer.name }</Text>
-                            <Text style={{color:"white"}}>{showTime }</Text>
-                            <Text style={{color:"white"}}>{showDate }</Text>
+                            <Text style={{color:"white"}}>{data.showTime }</Text>
+                            <Text style={{color:"white"}}>{data.showDate }</Text>
                           </View> 
                         </View>}
                     

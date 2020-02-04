@@ -31,7 +31,15 @@ export const Style = StyleSheet.create({
         marginLeft:0,
         paddingLeft:0,
         backgroundColor:"white",
-        borderRadius:5}
+        borderRadius:5
+    },
+    button:{
+        justifyContent:"center",
+        borderRadius:20,
+        height:30,
+        paddingTop:0
+    }
+
 
   
     

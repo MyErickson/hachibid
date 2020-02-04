@@ -7,6 +7,7 @@ import Playsound  from '../MyQuestions/PlaySound/PlaySound'
 import { Style } from './styleNotification';
 import axios from 'axios';
 import { osMobile } from '../../store/actionRequetes/actionRequetes'
+import ViewQuestion from './ViewQuestion/ViewQuestion'
 
 var timer;
 
@@ -21,15 +22,16 @@ class Notification extends Component {
     }
   
     async componentDidMount(){
-       const { notificationPrecision , receiveResponseConnection} = this.props
+       const { notificationPrecision , receiveResponseConnection,GetQuestionNoValid} = this.props
       notificationPrecision(receiveResponseConnection)
+      GetQuestionNoValid(receiveResponseConnection)
     }
 
 
 
   static getDerivedStateFromProps(props,state){ 
      
-      const { notificationQuestions ,dataProfileUser,allPrecision , answerUser } = props
+      const { notificationQuestions ,dataProfileUser,allPrecision , answerUser ,questionNoValid} = props
       if(notificationQuestions){
  
   
@@ -51,6 +53,9 @@ class Notification extends Component {
       if(answerUser){
 
         state.notificationAnswerUser = answerUser
+      }
+      if(questionNoValid){
+        state.questionNoValid = questionNoValid
       }
    
   }
@@ -92,8 +97,12 @@ class Notification extends Component {
  }
 
   render() {
-     const { notificationQuestions ,profileUser,notificationPrecision,notificationAnswerUser } =this.state
-     console.log("TCL: Notification -> render -> notificationPrecision", notificationPrecision)
+     const { notificationQuestions ,
+      profileUser,
+      notificationPrecision,
+      notificationAnswerUser,
+      questionNoValid } =this.state
+     
    
     
     return (
@@ -103,10 +112,27 @@ class Notification extends Component {
         <Tabs
          textStyle={{coloe:"white"}}
         >
-              <Tab 
+             <Tab 
               heading={ 
               <TabHeading style={{backgroundColor:"#34A1DC"}} >
                 <Text style={{color:"white"}}>Questions</Text>
+                </TabHeading>
+              }> 
+
+                <ViewQuestion
+                questionNoValid={questionNoValid}
+                goToCategoryPage={this.goToCategoryPage}
+                requete="messages"
+                profileUser={profileUser}
+                token={this.props.receiveResponseConnection}
+                GetQuestionNoValid={this.props.GetQuestionNoValid}
+                />
+
+              </Tab>
+              <Tab 
+              heading={ 
+              <TabHeading style={{backgroundColor:"#34A1DC"}} >
+                <Text style={{color:"white"}}>Questions Validées</Text>
                 </TabHeading>
               }> 
 

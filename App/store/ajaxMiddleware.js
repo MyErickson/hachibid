@@ -3,7 +3,7 @@ import axios from 'axios';
 import { SEND_DATA_FILTER_MESSAGE_MYQUESTION, SEND_MESSAGE_USER,DATA_PROFILE_USERS,ALL_PRECISION,ANSWERS_USER,
      RECEIVE_TOP_DATA_CATEGORY,SEND_DATA_UPDATE_PROFILE,SEND_DATA_FILTER_CATEGORY,SEND_PRECISION_FOR_QUESTION,
         RECEIVE_DATA_MESSAGES_MYQUESTIONS, RECEIVE_DATA_MESSAGES_CATEGORY,DATA_ALL_CATEGORY,SEND_ANSWERS_FOR_QUESTION,
-        SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,ASK_PRECISION  } from './reducer'
+        SEND_DATA_FILTER_HOME_MESSAGE,DATA_MESSAGES_HOME,SEND_DATA_FILTER_MESSAGES_CATEGORY,ASK_PRECISION , GET_QUESTION_NO_VALID } from './reducer'
 
 
 import { receiveMessagesHome,receiveDataFilterMessagesHome ,dataMessagesHome} from './actionCreator/ChatHome';
@@ -14,7 +14,7 @@ import { receiveDataMessagesMyQuestions,DataMessagesMyQuestions,receiveDatafilte
 import { receiveDataFilterCategory,receiveDataAllCategory  } from './actionCreator/Category'
 import { actionRequeteDataMessage,actionRequeteFilter,actionRequeteSort } from "./actionRequetes/actionRequetes"
 import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notification"
-
+import {requestGetQuestionNoValid } from "./request/Notification"
 
 
 
@@ -491,6 +491,17 @@ import { receiveAllPrecision ,receiveAnswerUser } from "./actionCreator/Notifica
             })
         break;
 
+        case  GET_QUESTION_NO_VALID:
+            next(action)
+            
+            let questionNoValid =  new FormData()
+            questionNoValid.action = action
+            questionNoValid.store = store
+
+            requestGetQuestionNoValid(questionNoValid )
+            
+
+        break;
 
     }
 

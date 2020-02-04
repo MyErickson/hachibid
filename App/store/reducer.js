@@ -22,7 +22,8 @@ const initialState = {
   allPrecision:undefined,
   answerUser:undefined,
   currentNotification:undefined,
-  isStorage:undefined
+  isStorage:undefined,
+  questionNoValid:undefined
   
 };
 
@@ -68,7 +69,9 @@ export const RECEIVE_ALL_PRECISION ="RECEIVE_ALL_PRECISION";
 export const ANSWERS_USER = "ANSWERS_USER";
 export const RECEIVE_ANSWER_USER= "RECEIVE_ANSWER_USER";
 export const CURRENT_NOTIFICATION ="CURRENT_NOTIFICATION"
-export const IS_STORAGE ="IS_STORAGE"
+export const IS_STORAGE ="IS_STORAGE";
+export const GET_QUESTION_NO_VALID ="GET_QUESTION_NO_VALID";
+export const QUESTION_NO_VALID = "QUESTION_NO_VALID"
 /**
  * Traitements
  */
@@ -188,6 +191,11 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         isStorage:action.isStorage
       }
+    case QUESTION_NO_VALID:
+      return{
+        ...state,
+        questionNoValid:action.data
+      }
 
     case INITITALIZE_STATE:
     
@@ -205,7 +213,8 @@ const reducer = (state = initialState, action = {}) => {
         dataFilterMessagesCategory:undefined,
         dataFilterCategory:undefined,
         topDataCategory:undefined,
-        dataNotification:undefined
+        dataNotification:undefined,
+        questionNoValid:undefined
       };
 
 

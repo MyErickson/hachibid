@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,Platform } from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
@@ -9,7 +9,8 @@ export const Style = StyleSheet.create({
     register:{
         textAlign:'center',
         fontSize:18,
-        padding:10
+        padding:10,
+       
     },
     buttonIos:{
         fontSize:15,
@@ -38,6 +39,16 @@ export const Style = StyleSheet.create({
         borderRadius:30
         
     },
+    picker:{ 
+        height: 50,
+        width:Platform.OS ==="ios"?wp("90%") :220 ,
+        color:'blue',
+        fontWeight:"bold",
+        textAlign:'center',
+        justifyContent:"center",
+        marginVertical:Platform.OS ==="ios"?30:0
+   
+    }
 
        
     

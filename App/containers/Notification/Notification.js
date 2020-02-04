@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import Notification from '../../components/Notification/Notification'
 
 // Action Creators
-import {notificationPrecision,currentNotif} from '../../store/actionCreator/Notification'
+import {notificationPrecision,currentNotif,GetQuestionNoValid} from '../../store/actionCreator/Notification'
 import { sendDataFilterHomeMessage} from '../../store/actionCreator/ChatHome';
 import { receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
 /* === State (données) ===
@@ -26,7 +26,8 @@ const mapStateToProps = (state, ownProps) => ({
     receiveResponseConnection: state.receiveResponseConnection,
     dataProfileUser: state.dataProfileUser,
     allPrecision:state.allPrecision,
-    answerUser:state.answerUser
+    answerUser:state.answerUser,
+    questionNoValid:state.questionNoValid
 });
 
 /* === Actions ===
@@ -47,6 +48,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   receiveDatafilterMessageMyQuestion:()=>{
     dispatch(receiveDatafilterMessageMyQuestion(undefined))
+  },
+  GetQuestionNoValid:(data)=>{
+    dispatch(GetQuestionNoValid(data))
   }
 });
 

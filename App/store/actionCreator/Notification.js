@@ -1,4 +1,11 @@
-import { CURRENT_NOTIFICATION, DATA_MESSAGES_HOME, ALL_PRECISION,RECEIVE_ALL_PRECISION,ANSWERS_USER,RECEIVE_ANSWER_USER } from "../reducer";
+import { CURRENT_NOTIFICATION,
+     DATA_MESSAGES_HOME,
+      ALL_PRECISION,
+      RECEIVE_ALL_PRECISION,
+      ANSWERS_USER,
+      RECEIVE_ANSWER_USER,
+      QUESTION_NO_VALID,
+      GET_QUESTION_NO_VALID,} from "../reducer";
 
 
 export const notificationPrecision=(data)=>({
@@ -31,4 +38,14 @@ export const receiveAnswerUser=(answerUser)=>({
 export const currentNotif = ( currentNotification)=>({
    type:CURRENT_NOTIFICATION,
    currentNotification
+})
+
+export const QuestionNoValid =(data)=>({
+    type:QUESTION_NO_VALID,
+    data
+})
+
+export const GetQuestionNoValid =(data)=>({
+    type:GET_QUESTION_NO_VALID,
+    data
 })
