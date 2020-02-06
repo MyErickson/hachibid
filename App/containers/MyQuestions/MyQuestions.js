@@ -16,7 +16,7 @@ import { sendMessageUser ,
         sendDatafilterMessageMyQuestion,
         sendAnswersForQuestion,
         sendPrecisionForQuestion,DataMessagesMyQuestions,receiveDatafilterMessageMyQuestion} from '../../store/actionCreator/MyQuestions'
-import { notificationPrecision} from '../../store/actionCreator/Notification'
+import { notificationPrecision,GetQuestionNoValid} from '../../store/actionCreator/Notification'
 import {sendDatafilterMessageCategory, } from '../../store/actionCreator/MessageCategory';
 
 /* === State (données) ===
@@ -86,6 +86,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   askPrecision:(data)=>{
     dispatch(askPrecision(data))
   },
+  GetQuestionNoValid:(data)=>{
+    dispatch(GetQuestionNoValid(data))
+  }
 
 })
 // Container

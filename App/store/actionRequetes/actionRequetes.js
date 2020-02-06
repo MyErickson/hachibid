@@ -25,7 +25,7 @@ export const actionRequeteDataMessage = (response)=>{
 
           response.data["hydra:member"].map((value)=>{
        
-            if(value.valid){
+          
                 if(value.answers.length){
                     var date = 0 ;
                     value.answers.map((valueAnswers)=>{
@@ -64,7 +64,7 @@ export const actionRequeteDataMessage = (response)=>{
                     date++
                      })   
                }
-            }  
+             
         })
        
         return dataMessage
@@ -83,9 +83,9 @@ export const actionRequeteSort =(filterDataMessage )=>{
     return allDataMessageUser   
 }
 
-export const counterNotif = (notificationQ = null, notificationP = null)=>{
+export const counterNotif = (notificationQ = null, notificationP = null,notifQnoValid=null)=>{
 
-    var x  = 0 , i = 0
+    var x  = 0 , i = 0 , y=0
     if(notificationQ){
         let counterNotif = notificationQ.filter((value)=> value.answered !== true && value.seen === false)
         i = counterNotif.length
@@ -94,8 +94,12 @@ export const counterNotif = (notificationQ = null, notificationP = null)=>{
        let counterNotif = notificationP.filter((value)=> value.answered !== true && value.seen === false)
        x =  counterNotif.length
     }
+    if(notifQnoValid){
+        let counterNotif = notifQnoValid.filter((value)=>  value.seen === false)
+        y =  counterNotif.length
+     }
  
-    return x + i 
+    return x + i +y
 }
 
 export const presetColors = {

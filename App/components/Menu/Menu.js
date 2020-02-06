@@ -12,16 +12,17 @@ class Menu extends Component {
       state = {
       notifQandP:undefined,
       profileUser:undefined,
-      notifAnswers:undefined 
+      notifAnswers:undefined,
+      
     }
    
   
   static getDerivedStateFromProps(props,state){
-    const { notificationQuestion,dataProfileUser,allPrecision,answerUser} = props
+    const { notificationQuestion,dataProfileUser,allPrecision,answerUser,questionNoValid} = props
 
 
     if(notificationQuestion && allPrecision ){
-    state.notifQandP = counterNotif(notificationQuestion,allPrecision)
+    state.notifQandP = counterNotif(notificationQuestion,allPrecision,questionNoValid)
 
     }
     if(dataProfileUser){

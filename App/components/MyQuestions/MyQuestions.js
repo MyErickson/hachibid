@@ -69,10 +69,12 @@ class MyQuestions extends Component {
           dataProfileUser ,
           dataMessagesHome,
           receiveMessagesHome,
+          GetQuestionNoValid,
           notificationPrecision,
           DataMessagesMyQuestions,
           receiveResponseConnection,
           receiveDataMessagesMyQuestions,
+
           } = this.props
 
         var isInternetReachable ;
@@ -98,6 +100,7 @@ class MyQuestions extends Component {
                
                 dataMessagesHome(receiveResponseConnection)
                 notificationPrecision(receiveResponseConnection)
+                GetQuestionNoValid(receiveResponseConnection)
               }
               
             },3000)

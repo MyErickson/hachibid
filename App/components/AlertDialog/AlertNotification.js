@@ -74,6 +74,7 @@ class AlertNotification extends Component{
                     
                     >
                         {category && category.map((value,key)=>{
+                            
                             return(
                                 <Picker.Item  key={key} label={value.title} value={value.id} />
                             )
@@ -97,7 +98,7 @@ class AlertNotification extends Component{
                   style={Platform.OS === "ios"? Style.buttonIos:[Style.buttonAndroid,{backgroundColor:"#0B6ACA"}]} 
                   color="white"
                   label= {confirmValid ?"Valider":"Oui"}
-                  onPress={()=> confirmValid ? validConfirm(idCategory):yesConfirm()} />
+                  onPress={()=> confirmValid ? validConfirm(idCategory):yesConfirm(idCategory)} />
                 
                   <Dialog.Button 
                   bold={true}  

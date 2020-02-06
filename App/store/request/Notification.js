@@ -10,7 +10,7 @@ export const requestGetQuestionNoValid =(value)=>{
             'Authorization':"Bearer "+action.data
         } 
     }).then((response)=>{
-    console.log("TCL: requestGetQuestionNoValid -> response", response)
+
  
     const dataMessage = response.data['hydra:member'].map((value)=>{
 
@@ -29,11 +29,11 @@ export const requestGetQuestionNoValid =(value)=>{
           }
   
       })
-    console.log("TCL: requestGetQuestionNoValid -> ataMessage ", dataMessage )
+
 
          const allDataMessageUser = actionRequeteSort(dataMessage)
          store.dispatch(QuestionNoValid(allDataMessageUser.reverse()) )
-         console.log("TCL: requestGetQuestionNoValid -> allDataMessageUser ", allDataMessageUser )
+       
 
         
     }).catch((err)=>{
