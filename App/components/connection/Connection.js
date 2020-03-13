@@ -60,11 +60,11 @@ class Connection extends Component {
     }
 
     sendInformation= async ()=>{
-
-        let isInternetReachable 
-        let isConnected  
-        let NetInfoCellularGeneration
         const { login , password } = this.state;
+        let isInternetReachable 
+        let isConnected , NetInfoCellularGeneration
+    
+      
 
         await NetInfo.fetch().then(state => {
             isInternetReachable = state.isInternetReachable
